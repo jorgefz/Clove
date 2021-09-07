@@ -4,3 +4,5 @@ bin-int/
 *.sln
 Clove/*.vcxproj*
 Game/*.vcxproj*
+
+vendor/GLAD/*.vcxproj*

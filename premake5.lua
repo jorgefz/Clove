@@ -10,6 +10,11 @@ workspace "Clove"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+IncludeDir = {}
+IncludeDir["GLAD"] = "vendor/GLAD/include"
+
+include "vendor/GLAD"
+
 project "Clove"
 	location "Clove"
 	kind "StaticLib"
@@ -25,20 +30,20 @@ project "Clove"
 
 	includedirs {
 		"vendor/GLFW/include",
-		"vendor/GLEW/include",
+		"vendor/GLAD/include",
 		"vendor/stb/include",
 		"vendor/glm",
 	}
 
 	links { 
 		"glfw3",
-		"glew32s",
+		"GLAD",
 		"opengl32"
 	}
 
 	libdirs {
 		"vendor/GLFW/lib-vc2019",
-		"vendor/GLEW/lib"
+		"bin/" ..outputdir .. "/GLAD"
 	}
 
 	filter "system:windows"
@@ -46,22 +51,17 @@ project "Clove"
 		staticruntime "On"
 		systemversion "latest"
 
-		defines {
-			"GLEW_STATIC",
-			--"WIN32",
-		}
-
 		--postbuildcommands {
 		--	("{COPY} %{cfg.buildtarget.replath} ../bin/" .. outputdir .. "/Game")
 		--}
 
 	filter "configurations:Debug"
-		--defines "_DEBUG"
+		defines "CLOVE_DEBUG"
 		symbols "On"
 		buildoptions "/MDd"
 
 	filter "configurations:Release"
-		--defines "_RELEASE"
+		defines "CLOVE_RELEASE"
 		optimize "On"
 		buildoptions "/MD"
 
@@ -80,14 +80,14 @@ project "Game"
 	includedirs {
 		"Clove/src",
 		"vendor/GLFW/include",
-		"vendor/GLEW/include",
+		"vendor/GLAD/include",
 		"vendor/stb/include",
 		"vendor/glm",
 	}
 
 	links {
 		"glfw3",
-	 	"glew32s",
+	 	"GLAD",
 	 	"opengl32",
 		"Clove"
 	}
@@ -95,7 +95,7 @@ project "Game"
 	libdirs {
 		"bin/" .. outputdir .. "/Clove",
 		"vendor/GLFW/lib-vc2019",
-		"vendor/GLEW/lib"
+		"bin/" ..outputdir .. "/GLAD"
 	}
 
 	filter "system:windows"
@@ -103,17 +103,10 @@ project "Game"
 		staticruntime "On"
 		systemversion "latest"
 
-		defines {
-			"GLEW_STATIC",
-			--"WIN32",
-		}
-
 	filter "configurations:Debug"
-		--defines "_DEBUG"
 		symbols "On"
 		buildoptions "/MDd"
 
 	filter "configurations:Release"
-		--defines "_RELEASE"
 		optimize "On"
 		buildoptions "/MD"

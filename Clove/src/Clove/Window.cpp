@@ -41,20 +41,21 @@ namespace Clove {
 			glfwTerminate();
 			throw std::runtime_error("[GLFW] Fatal error: failed to create window");
 		}
-
 		glfwMakeContextCurrent(m_window_ptr);
+
+		// Load Glad
+		int status = gladLoadGLLoader( (GLADloadproc)glfwGetProcAddress );
+		if (status != 1) {
+			throw std::runtime_error("[GLAD] Fatal error: failed to load!\n");
+		}
+
 		glfwSwapInterval(1); // activate VSYNC, problems with NVIDIA cards
 		glViewport(0, 0, width, height);
-		if (glewInit() != GLEW_OK) {
-			glfwTerminate();
-			glfwDestroyWindow(m_window_ptr);
-			throw std::runtime_error("[GLEW] Fatal error: failed to load!");
-		}
 		
-		#ifdef _DEBUG
+		#ifdef CLOVE_DEBUG
 		int glfw_major, glfw_minor, glfw_rev;
 		glfwGetVersion(&glfw_major, &glfw_minor, &glfw_rev);
-		std::cout << "[GLEW] Version " << glewGetString(GLEW_VERSION) << std::endl;
+		std::cout << "[GLAD] Version " << GL_VERSION << std::endl;
 		std::cout << "[GLFW] Version " << glfw_major << '.' << glfw_minor << '.' << glfw_rev << std::endl;
 		#endif
 

@@ -17,6 +17,6 @@ This project uses public domain software, which is already included in this repo
 
 * std_image.h, by Sean Barret (https://github.com/nothings/stb/blob/master/stb\_image.h)
 * GLFW, Graphics Library Framework (https://www.glfw.org/)
-* GLEW, The OpenGL Extension Wrangler Library (http://glew.sourceforge.net/)
+* Glad, https://glad.dav1d.de/
 * glm, OpenGL Mathematics (https://github.com/g-truc/glm)
 * Premake5 (https://premake.github.io/)
