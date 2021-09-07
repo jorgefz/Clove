@@ -1,4 +1,4 @@
-
+#include "clovepch.h"
 #include "Texture.h"
 
 // this definition must stay within this cpp file

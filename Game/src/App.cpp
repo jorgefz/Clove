@@ -22,7 +22,6 @@ class GameTest : public Clove::GameApp {
 public:
 	GameTest() {
 		PushLayer( new TestLayer() ); // GameApp method
-
 	}
 
 	~GameTest() {

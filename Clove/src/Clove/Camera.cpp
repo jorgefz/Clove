@@ -1,3 +1,4 @@
+#include "clovepch.h"
 #include "Camera.h"
 
 namespace Clove {

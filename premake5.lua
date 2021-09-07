@@ -23,6 +23,9 @@ project "Clove"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}") 
 
+	pchheader "clovepch.h"
+	pchsource "%{prj.name}/src/Clove/clovepch.cpp"
+
 	files {
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
@@ -43,13 +46,16 @@ project "Clove"
 
 	libdirs {
 		"vendor/GLFW/lib-vc2019",
-		"bin/" ..outputdir .. "/GLAD"
+		"vendor/GLAD/bin/" ..outputdir .. "/GLAD"
 	}
 
 	filter "system:windows"
 		cppdialect "C++17"
 		staticruntime "On"
 		systemversion "latest"
+		defines {
+			"CLOVE_WINDOWS"
+		}
 
 		--postbuildcommands {
 		--	("{COPY} %{cfg.buildtarget.replath} ../bin/" .. outputdir .. "/Game")
@@ -95,7 +101,7 @@ project "Game"
 	libdirs {
 		"bin/" .. outputdir .. "/Clove",
 		"vendor/GLFW/lib-vc2019",
-		"bin/" ..outputdir .. "/GLAD"
+		"vendor/GLAD/bin/" ..outputdir .. "/GLAD"
 	}
 
 	filter "system:windows"

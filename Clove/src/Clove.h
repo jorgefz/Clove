@@ -1,6 +1,5 @@
 #pragma once
 
-
 /*
 
 * Core.h - variables & enums?
