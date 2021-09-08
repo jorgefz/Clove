@@ -1,8 +1,10 @@
 .vs
 bin/
 bin-int/
+!/vendor/premake/bin
 *.sln
-Clove/*.vcxproj*
-Game/*.vcxproj*
-
-vendor/GLAD/*.vcxproj*
+*.vcxproj*
+vendor/ImGui/*
+!/vendor/ImGui/**.[h,cpp]
+!/vendor/ImGui/LICENSE.txt
+!/vendor/ImGui/premake.lua
