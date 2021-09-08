@@ -15,6 +15,7 @@ namespace Clove {
 
 	void LayerStack::PushLayer(Layer* layer) {
 		m_layer_insert = m_layers.emplace(m_layer_insert, layer);
+		layer->OnAttach();
 		// m_layer_insert++;
 	}
 	void LayerStack::PopLayer(Layer* layer) {
@@ -27,6 +28,7 @@ namespace Clove {
 
 	void LayerStack::PushOverlay(Layer* overlay) {
 		m_layers.emplace_back(overlay);
+		overlay->OnAttach();
 	}
 	void LayerStack::PopOverlay(Layer* overlay) {
 		auto it = std::find(m_layers.begin(), m_layers.end(), overlay);

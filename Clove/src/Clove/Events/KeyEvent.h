@@ -42,4 +42,22 @@ namespace Clove {
 		}
 	};
 
+	class KeyTypeEvent : public Clove::Event {
+	private:
+		int m_keycode;
+	public:
+		KeyTypeEvent(int keycode) : m_keycode(keycode) {  }
+		int GetKeyCode() const { return m_keycode; }
+
+		static EventType GetStaticEventType() { return EventType::KeyType; }
+		EventType GetEventType() const override { return GetStaticEventType(); }
+		int GetGroupFlags() const override { return EventGroupInput | EventGroupKeyboard; }
+		std::string GetName() const override { return "KeyTypeEvent"; }
+		std::string GetDebugName() const override {
+			std::stringstream ss;
+			ss << GetName() << ": " << m_keycode;
+			return ss.str();
+		}
+	};
+
 }

@@ -3,7 +3,14 @@
 
 namespace Clove {
 
+	// singleton instance
+	GameApp* GameApp::m_instance = nullptr;
+
 	GameApp::GameApp() {
+
+		if (m_instance) throw std::runtime_error("Application already exists!\n");
+		m_instance = this;
+
 		m_window = std::unique_ptr<Clove::Window>( new Clove::Window );
 		m_window->Create(1280, 720);
 		// When event occurs, OnEvent is called and the event is passed to it.
@@ -33,6 +40,7 @@ namespace Clove {
 	void GameApp::Run() {
 		//while (!m_window->ShouldClose()) {
 		while (m_running) {
+			glClear(GL_COLOR_BUFFER_BIT);
 			// update layers forward
 			for (Layer* layer : m_layer_stack) layer->OnUpdate();
 			m_window->Update();

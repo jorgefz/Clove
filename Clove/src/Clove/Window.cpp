@@ -130,6 +130,12 @@ namespace Clove {
 		}
 	}
 
+	static void CharCallback(GLFWwindow* w, unsigned int key_typed) {
+		Clove::WindowData* data = (Clove::WindowData*)(glfwGetWindowUserPointer(w));
+		KeyTypeEvent e(key_typed);
+		data->event_callback(e);
+	}
+
 	static void MouseMovedCallback(GLFWwindow* w, double xpos, double ypos) {
 		Clove::WindowData* data = (Clove::WindowData*)(glfwGetWindowUserPointer(w));
 		MouseMovedEvent e(static_cast<float>(xpos), static_cast<float>(ypos));
@@ -164,6 +170,7 @@ namespace Clove {
 		glfwSetFramebufferSizeCallback(window, WindowResizeCallback);
 		glfwSetWindowCloseCallback(window, WindowCloseCallback);
 		glfwSetKeyCallback(window, KeyCallback);
+		glfwSetCharCallback(window, CharCallback);
 		glfwSetMouseButtonCallback(window, MouseButtonCallback);
 		glfwSetScrollCallback(window, MouseScrolledCallback);
 		glfwSetCursorPosCallback(window, MouseMovedCallback);

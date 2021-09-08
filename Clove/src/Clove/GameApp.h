@@ -17,6 +17,9 @@ namespace Clove {
 		void PushLayer(Layer* layer) { m_layer_stack.PushLayer(layer); }
 		void PushOverlay(Layer* overlay) { m_layer_stack.PushOverlay(overlay); }
 
+		Window& GetWindow() { return *m_window; }
+		static GameApp& GetInstance() { return *m_instance; }
+
 	private: // Event methods
 		bool OnWindowClose();
 
@@ -24,6 +27,9 @@ namespace Clove {
 		std::unique_ptr<Clove::Window> m_window = nullptr;
 		bool m_running = true;
 		LayerStack m_layer_stack;
+
+	private:
+		static GameApp* m_instance;
 	};
 
 	Clove::GameApp* CreateApp();

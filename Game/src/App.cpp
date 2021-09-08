@@ -22,6 +22,7 @@ class GameTest : public Clove::GameApp {
 public:
 	GameTest() {
 		PushLayer( new TestLayer() ); // GameApp method
+		PushOverlay( new Clove::ImGuiLayer() );
 	}
 
 	~GameTest() {

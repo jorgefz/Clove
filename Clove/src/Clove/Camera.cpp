@@ -38,7 +38,7 @@ namespace Clove {
 		return m_view;
 	}
 	const glm::mat4& Camera::GetViewProjectionMatrix() const {
-		return m_proj * m_view;
+		return glm::mat4(m_proj * m_view);
 	}
 	void Camera::UpdateMatrices(Clove::Window& window) {
 		const glm::mat4 identity = glm::mat4(1.0f);

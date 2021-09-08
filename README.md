@@ -20,3 +20,4 @@ This project uses public domain software, which is already included in this repo
 * Glad, https://glad.dav1d.de/
 * glm, OpenGL Mathematics (https://github.com/g-truc/glm)
 * Premake5 (https://premake.github.io/)
+* ImGui (https://github.com/ocornut/imgui/releases/tag/v1.84.2 )

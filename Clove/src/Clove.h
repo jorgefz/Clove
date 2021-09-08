@@ -30,7 +30,9 @@ and use the namespace "Clove::" to access classes and functions
 #include "Clove/Events/MouseEvent.h"
 #include "Clove/Events/WindowEvent.h"
 
-#include "Clove/Layer.h"
 
 #include "Clove/GameApp.h"
 #include "Clove/EntryPoint.h"
+
+#include "Clove/Layer.h"
+#include "Clove/ImGui/ImGuiLayer.h"
