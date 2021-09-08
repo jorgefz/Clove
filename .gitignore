@@ -8,4 +8,4 @@ vendor/ImGui/*
 !/vendor/ImGui/**.h
 !/vendor/ImGui/**.cpp
 !/vendor/ImGui/LICENSE.txt
-!/vendor/ImGui/premake.lua
+!/vendor/ImGui/premake5.lua
