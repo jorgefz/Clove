@@ -5,6 +5,7 @@ bin-int/
 *.sln
 *.vcxproj*
 vendor/ImGui/*
-!/vendor/ImGui/**.[h,cpp]
+!/vendor/ImGui/**.h
+!/vendor/ImGui/**.cpp
 !/vendor/ImGui/LICENSE.txt
 !/vendor/ImGui/premake.lua
