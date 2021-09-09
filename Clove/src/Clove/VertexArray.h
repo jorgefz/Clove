@@ -36,7 +36,7 @@ namespace Clove {
 
 	private:
 		unsigned int m_stride, m_count, m_renderer_id;
-		GLbyte m_sdims, m_tdims, m_cdims; //spatial, texture, and color dimensions
+		GLubyte m_sdims, m_tdims, m_cdims; //spatial, texture, and color dimensions
 		std::vector<char> m_data; //raw vertex byte data (unpadded)
 
 	public:
@@ -54,17 +54,17 @@ namespace Clove {
 		float&  y(unsigned int vertex);
 		float&  s(unsigned int vertex);
 		float&  t(unsigned int vertex);
-		GLbyte& r(unsigned int vertex);
-		GLbyte& g(unsigned int vertex);
-		GLbyte& b(unsigned int vertex);
-		GLbyte& a(unsigned int vertex);
+		GLubyte& r(unsigned int vertex);
+		GLubyte& g(unsigned int vertex);
+		GLubyte& b(unsigned int vertex);
+		GLubyte& a(unsigned int vertex);
 
 		void UpdateAttributes(VertexBuffer& vb); // Calls buffer data and vertex attrib pointer functions
-		void AddVertex(float x, float y, float s = 0.0f, float t = 0.0f, GLbyte r=255, GLbyte g=255, GLbyte b=255, GLbyte a=255);
+		void AddVertex(float x, float y, float s = 0.0f, float t = 0.0f, GLubyte r=255, GLubyte g=255, GLubyte b=255, GLubyte a=255);
 		void SetVertexPos(unsigned int i, float x, float y);
 		void SetVertexTex(unsigned int i, float s, float t);
-		void SetVertexColor(unsigned int i, GLbyte r, GLbyte g, GLbyte b);
-		void SetVertexAlpha(unsigned int i, GLbyte a);
+		void SetVertexColor(unsigned int i, GLubyte r, GLubyte g, GLubyte b);
+		void SetVertexAlpha(unsigned int i, GLubyte a);
 
 		void Translate(float dx, float dy); // Moves vertices by dx and dy.
 		void center(float& cx, float& cy); //returns center of rectangle in screen coordinates

@@ -28,7 +28,6 @@ namespace Clove {
 
 		const glm::mat4& GetProjectionMatrix() const;
 		const glm::mat4& GetViewMatrix() const;
-		const glm::mat4& GetViewProjectionMatrix() const;
 		void UpdateMatrices(Clove::Window& window);
 	};
 }

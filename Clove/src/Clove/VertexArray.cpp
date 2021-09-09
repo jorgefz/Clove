@@ -51,7 +51,7 @@ namespace Clove {
 		m_count(0), m_renderer_id(0), m_stride(0),
 		m_data() {
 
-		m_stride = sizeof(GLfloat) * (m_sdims + m_tdims) + sizeof(GLbyte) * m_cdims;
+		m_stride = sizeof(GLfloat) * (m_sdims + m_tdims) + sizeof(GLubyte) * m_cdims;
 		glCreateVertexArrays(1, &m_renderer_id);
 		for (unsigned int i = 0; i != vertices; ++i) VertexArray::AddVertex(0.0f, 0.0f);
 	}
@@ -77,10 +77,10 @@ namespace Clove {
 	float&  VertexArray::y(unsigned int vertex) { return *(float*) (m_data.data() + vertex * m_stride + sizeof(float)); }
 	float&  VertexArray::s(unsigned int vertex) { return *(float*) (m_data.data() + vertex * m_stride + 2 * sizeof(float)); }
 	float&  VertexArray::t(unsigned int vertex) { return *(float*) (m_data.data() + vertex * m_stride + 3 * sizeof(float)); }
-	GLbyte& VertexArray::r(unsigned int vertex) { return *(GLbyte*)(m_data.data() + vertex * m_stride + 4 * sizeof(float)); }
-	GLbyte& VertexArray::g(unsigned int vertex) { return *(GLbyte*)(m_data.data() + vertex * m_stride + 4 * sizeof(float) + sizeof(GLbyte)); }
-	GLbyte& VertexArray::b(unsigned int vertex) { return *(GLbyte*)(m_data.data() + vertex * m_stride + 4 * sizeof(float) + 2 * sizeof(GLbyte)); }
-	GLbyte& VertexArray::a(unsigned int vertex) { return *(GLbyte*)(m_data.data() + vertex * m_stride + 4 * sizeof(float) + 3 * sizeof(GLbyte)); }
+	GLubyte& VertexArray::r(unsigned int vertex) { return *(GLubyte*)(m_data.data() + vertex * m_stride + 4 * sizeof(float)); }
+	GLubyte& VertexArray::g(unsigned int vertex) { return *(GLubyte*)(m_data.data() + vertex * m_stride + 4 * sizeof(float) + sizeof(GLubyte)); }
+	GLubyte& VertexArray::b(unsigned int vertex) { return *(GLubyte*)(m_data.data() + vertex * m_stride + 4 * sizeof(float) + 2 * sizeof(GLubyte)); }
+	GLubyte& VertexArray::a(unsigned int vertex) { return *(GLubyte*)(m_data.data() + vertex * m_stride + 4 * sizeof(float) + 3 * sizeof(GLubyte)); }
 
 	void VertexArray::UpdateAttributes(VertexBuffer& vb) {
 		unsigned int offset = 0;
@@ -98,7 +98,7 @@ namespace Clove {
 		glEnableVertexAttribArray(2); // r,g,b,a
 		glVertexAttribPointer(2, m_cdims, GL_BYTE, GL_TRUE, m_stride, (const void*)offset);
 	}
-	void VertexArray::AddVertex(float x, float y, float s, float t, GLbyte r, GLbyte g, GLbyte b, GLbyte a) {
+	void VertexArray::AddVertex(float x, float y, float s, float t, GLubyte r, GLubyte g, GLubyte b, GLubyte a) {
 		m_data.resize(m_stride * (m_count + 1));
 		char* ptr = m_data.data() + m_count * m_stride;
 		this->x(m_count) = x; this->y(m_count) = y;
@@ -109,8 +109,8 @@ namespace Clove {
 	}
 	void VertexArray::SetVertexPos(unsigned int i, float x, float y) { this->x(i) = x; this->y(i) = y; }
 	void VertexArray::SetVertexTex(unsigned int i, float s, float t) { this->s(i) = s; this->t(i) = t; }
-	void VertexArray::SetVertexColor(unsigned int i, GLbyte r, GLbyte g, GLbyte b) { this->r(i) = r; this->g(i) = g; this->b(i) = b; }
-	void VertexArray::SetVertexAlpha(unsigned int i, GLbyte a) { this->a(i) = a; }
+	void VertexArray::SetVertexColor(unsigned int i, GLubyte r, GLubyte g, GLubyte b) { this->r(i) = r; this->g(i) = g; this->b(i) = b; }
+	void VertexArray::SetVertexAlpha(unsigned int i, GLubyte a) { this->a(i) = a; }
 
 	void VertexArray::Translate(float dx, float dy) {
 		for (unsigned int i = 0; i != m_count; ++i) {
