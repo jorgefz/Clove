@@ -1,4 +1,5 @@
 #include "clovepch.h"
+#include "Core.h"
 #include "Window.h"
 
 namespace Clove {
@@ -20,7 +21,7 @@ namespace Clove {
 	}
 
 
-	void Window::Create(GLuint width, GLuint height) {
+	void Window::Create(unsigned int width, unsigned int height) {
 
 		m_data.width = width;
 		m_data.height = height;
@@ -41,7 +42,7 @@ namespace Clove {
 			glfwTerminate();
 			throw std::runtime_error("[GLFW] Fatal error: failed to create window");
 		}
-		glfwMakeContextCurrent(m_window_ptr);
+		glfwMakeContextCurrent((GLFWwindow*)m_window_ptr);
 
 		// Load Glad
 		int status = gladLoadGLLoader( (GLADloadproc)glfwGetProcAddress );
@@ -60,33 +61,33 @@ namespace Clove {
 		#endif
 
 		m_initialised = true;
-		glfwSetWindowUserPointer(m_window_ptr, &m_data);
+		glfwSetWindowUserPointer((GLFWwindow*)m_window_ptr, &m_data);
 
 		// Adds up alpha channels
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		Clove::SetGLFWCallbacks(m_window_ptr);
+		Clove::SetGLFWCallbacks((GLFWwindow*)m_window_ptr);
 	}
 
-	GLFWwindow* Window::GetWindow() {
+	void* Window::GetWindow() {
 		return m_window_ptr;
 	}
 
 	void Window::Update() {
-		glfwSwapBuffers(m_window_ptr);
+		glfwSwapBuffers((GLFWwindow*)m_window_ptr);
 		glfwPollEvents();
 	}
 
 	void Window::Destroy() {
 		if (m_initialised) glfwTerminate();
-		if (m_window_ptr) glfwDestroyWindow(m_window_ptr);
+		if (m_window_ptr) glfwDestroyWindow((GLFWwindow*)m_window_ptr);
 		m_initialised = false;
 		m_window_ptr = nullptr;
 	}
 
 	bool Window::ShouldClose() {
-		return glfwWindowShouldClose(m_window_ptr);
+		return glfwWindowShouldClose((GLFWwindow*)m_window_ptr);
 	}
 
 
@@ -96,8 +97,8 @@ namespace Clove {
 	static void WindowResizeCallback(GLFWwindow* w, int width, int height) {
 		glViewport(0, 0, width, height);
 		Clove::WindowData* data = static_cast<Clove::WindowData*>(glfwGetWindowUserPointer(w));
-		data->width = static_cast<GLuint>(width);
-		data->height = static_cast<GLuint>(height);
+		data->width = static_cast<unsigned int>(width);
+		data->height = static_cast<unsigned int>(height);
 
 		WindowResizeEvent e(width, height);
 		data->event_callback(e);

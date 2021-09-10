@@ -21,11 +21,11 @@ namespace Clove {
 
 	class WindowResizeEvent : public Clove::Event {
 	private:
-		GLuint m_width, m_height;
+		unsigned int m_width, m_height;
 	public:
-		WindowResizeEvent(GLuint width, GLuint height) : m_width(width), m_height(height) {  }
-		GLuint GetWidth() { return m_width; }
-		GLuint GetHeight() { return m_height; }
+		WindowResizeEvent(unsigned int width, unsigned int height) : m_width(width), m_height(height) {  }
+		unsigned int GetWidth() { return m_width; }
+		unsigned int GetHeight() { return m_height; }
 
 		static EventType GetStaticEventType() { return EventType::WindowResize; }
 		EventType GetEventType() const override { return GetStaticEventType(); }

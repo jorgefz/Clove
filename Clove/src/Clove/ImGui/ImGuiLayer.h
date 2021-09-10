@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Clove/GameApp.h"
-#include "Clove/Core.h"
 #include "Clove/Layer.h"
 
 namespace Clove {

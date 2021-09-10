@@ -1,4 +1,5 @@
 #include "clovepch.h"
+#include "Core.h"
 #include "Renderer.h"
 #include "VertexArray.h"
 #include "Shader.h"

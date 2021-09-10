@@ -1,7 +1,5 @@
 #pragma once
 #include "clovepch.h"
-
-#include "Core.h"
 #include "Renderer.h"
 
 namespace Clove {

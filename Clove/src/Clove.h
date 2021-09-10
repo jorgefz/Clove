@@ -15,8 +15,6 @@ and use the namespace "Clove::" to access classes and functions
 */
 
 
-#include "Clove/Core.h"
-
 #include "Clove/Window.h"
 #include "Clove/Camera.h"
 #include "Clove/Renderer.h"
@@ -30,6 +28,9 @@ and use the namespace "Clove::" to access classes and functions
 #include "Clove/Events/MouseEvent.h"
 #include "Clove/Events/WindowEvent.h"
 
+#include "Clove/Input.h"
+#include "Clove/KeyCodes.h"
+#include "Clove/MouseCodes.h"
 
 #include "Clove/GameApp.h"
 #include "Clove/EntryPoint.h"

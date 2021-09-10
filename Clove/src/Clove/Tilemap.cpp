@@ -10,7 +10,7 @@ namespace Clove {
 		: Clove::Texture(),
 		m_tiles_x(0), m_tiles_y(0), m_tile_sz(0) { }
 
-	Tileset::Tileset(std::string filename, GLuint tile_sz)
+	Tileset::Tileset(std::string filename, unsigned int tile_sz)
 		: Clove::Texture(filename),
 		m_tiles_x(0), m_tiles_y(0), m_tile_sz(tile_sz) {
 
@@ -29,9 +29,9 @@ namespace Clove {
 		#endif
 
 		// Generate texture coordinates
-		for (GLuint j = 0; j != m_tiles_y; ++j) {
+		for (unsigned int j = 0; j != m_tiles_y; ++j) {
 			float fj = static_cast<float>(m_tiles_y - j - 1);
-			for (GLuint i = 0; i != m_tiles_x; ++i) {
+			for (unsigned int i = 0; i != m_tiles_x; ++i) {
 				float fi = static_cast<float>(i);
 				std::array<float,8> tex_coords = {
 					tx * fi,          ty * (fj + 1.0f),
@@ -47,11 +47,11 @@ namespace Clove {
 
 	Tileset::~Tileset() { }
 	
-	GLuint Tileset::TileNum() {
+	unsigned int Tileset::TileNum() {
 		return m_tiles_x * m_tiles_y;
 	}
 
-	std::array<float,8> Tileset::GetTileTextureCoords(GLuint tile) {
+	std::array<float,8> Tileset::GetTileTextureCoords(unsigned int tile) {
 		if (tile > m_tiles_x * m_tiles_y) throw std::runtime_error("Clove::Tileset: requested tile out of bounds");
 		return m_coords.at(tile);
 	}
@@ -64,7 +64,7 @@ namespace Clove {
 		m_tileset(), m_indices(), m_vertices(nullptr), m_vb(nullptr), m_ib(nullptr)
 	{ }
 
-	Tilemap::Tilemap(GLuint sx, GLuint sy, std::vector<GLuint>& tmap, std::vector<GLuint>& lmap, Clove::Tileset& tset) :
+	Tilemap::Tilemap(unsigned int sx, unsigned int sy, std::vector<unsigned int>& tmap, std::vector<unsigned int>& lmap, Clove::Tileset& tset) :
 		m_side_x(sx), m_side_y(sy),
 		m_tile_grid(tmap), m_logic_grid(lmap),
 		m_tileset(&tset), m_indices(), m_vertices(nullptr), m_vb(nullptr), m_ib(nullptr) {
@@ -79,7 +79,7 @@ namespace Clove {
 		// Generate vertices and indices
 		for (unsigned int j = 0; j != sy; ++j) {
 			for (unsigned int i = 0; i != sx; ++i) {
-				GLuint ntile = j * sx + i;
+				unsigned int ntile = j * sx + i;
 				float fi = static_cast<float>(i);
 				float fj = -static_cast<float>(j); //-ve sign generates map top to bottom
 				std::array<float, 8> txcoords = tset.GetTileTextureCoords(m_tile_grid[ntile]);
@@ -89,8 +89,8 @@ namespace Clove {
 				m_vertices->AddVertex(fi+1.0f, fj+1.0f, txcoords[4], txcoords[5]);
 				m_vertices->AddVertex(fi,      fj+1.0f, txcoords[6], txcoords[7]);
 				// generate indices
-				GLuint ind = ntile * 4; // 0 1 2 2 3 0 -> 4 5 6 6 7 4 ->  etc
-				GLuint tile_indices[] = {
+				unsigned int ind = ntile * 4; // 0 1 2 2 3 0 -> 4 5 6 6 7 4 ->  etc
+				unsigned int tile_indices[] = {
 					0 + ind, 1 + ind, 2 + ind,
 					2 + ind, 3 + ind, 0 + ind
 				};
@@ -128,19 +128,19 @@ namespace Clove {
 
 	void Tilemap::Debug() {
 		// Debugging - printing each tile
-		GLuint icount = 0;
-		GLuint vcount = 0;
-		for (GLuint i = 0; i != m_side_x * m_side_y; ++i) {
+		unsigned int icount = 0;
+		unsigned int vcount = 0;
+		for (unsigned int i = 0; i != m_side_x * m_side_y; ++i) {
 			std::cout << "Tile " << i << std::endl;
 			// print vertices
-			for (GLuint j = 0; j != 4; ++j) {
+			for (unsigned int j = 0; j != 4; ++j) {
 				std::cout << "v" << j << ") ";
 				std::cout << m_vertices->x(i * 4 + j) << ", " << m_vertices->y(i * 4 + j) << ", ";
 				std::cout << m_vertices->s(i * 4 + j) << ", " << m_vertices->t(i * 4 + j) << std::endl;
 			}
 			// print indices
 			std::cout << "[";
-			for (GLuint j = icount; j != icount + 6; ++j) {
+			for (unsigned int j = icount; j != icount + 6; ++j) {
 				std::cout << m_indices[j] << ", ";
 			}
 			std::cout << " ]" << std::endl;

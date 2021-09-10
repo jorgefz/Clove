@@ -1,8 +1,6 @@
 #pragma once
 #include "clovepch.h"
 
-#include "Core.h"
-
 namespace Clove {
 
 	// --------------------------------
@@ -36,7 +34,7 @@ namespace Clove {
 
 	private:
 		unsigned int m_stride, m_count, m_renderer_id;
-		GLubyte m_sdims, m_tdims, m_cdims; //spatial, texture, and color dimensions
+		uint8_t m_sdims, m_tdims, m_cdims; //spatial, texture, and color dimensions
 		std::vector<char> m_data; //raw vertex byte data (unpadded)
 
 	public:
@@ -54,17 +52,17 @@ namespace Clove {
 		float&  y(unsigned int vertex);
 		float&  s(unsigned int vertex);
 		float&  t(unsigned int vertex);
-		GLubyte& r(unsigned int vertex);
-		GLubyte& g(unsigned int vertex);
-		GLubyte& b(unsigned int vertex);
-		GLubyte& a(unsigned int vertex);
+		uint8_t& r(unsigned int vertex);
+		uint8_t& g(unsigned int vertex);
+		uint8_t& b(unsigned int vertex);
+		uint8_t& a(unsigned int vertex);
 
 		void UpdateAttributes(VertexBuffer& vb); // Calls buffer data and vertex attrib pointer functions
-		void AddVertex(float x, float y, float s = 0.0f, float t = 0.0f, GLubyte r=255, GLubyte g=255, GLubyte b=255, GLubyte a=255);
+		void AddVertex(float x, float y, float s = 0.0f, float t = 0.0f, uint8_t r=255, uint8_t g=255, uint8_t b=255, uint8_t a=255);
 		void SetVertexPos(unsigned int i, float x, float y);
 		void SetVertexTex(unsigned int i, float s, float t);
-		void SetVertexColor(unsigned int i, GLubyte r, GLubyte g, GLubyte b);
-		void SetVertexAlpha(unsigned int i, GLubyte a);
+		void SetVertexColor(unsigned int i, uint8_t r, uint8_t g, uint8_t b);
+		void SetVertexAlpha(unsigned int i, uint8_t a);
 
 		void Translate(float dx, float dy); // Moves vertices by dx and dy.
 		void center(float& cx, float& cy); //returns center of rectangle in screen coordinates

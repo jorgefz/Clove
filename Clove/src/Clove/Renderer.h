@@ -1,8 +1,5 @@
 #pragma once
 #include "clovepch.h"
-
-#include "Core.h"
-
 #include "VertexArray.h"
 #include "Shader.h"
 

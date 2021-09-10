@@ -91,23 +91,15 @@ project "Game"
 
 	includedirs {
 		"Clove/src",
-		"vendor/GLFW/include",
-		"vendor/GLAD/include",
-		"vendor/stb/include",
 		"vendor/glm",
 	}
 
 	links {
-		"glfw3",
-	 	"GLAD",
-	 	"opengl32",
 		"Clove"
 	}
 
 	libdirs {
 		"bin/" .. outputdir .. "/Clove",
-		"vendor/GLFW/lib-vc2019",
-		"vendor/GLAD/bin/" ..outputdir .. "/GLAD"
 	}
 
 	filter "system:windows"

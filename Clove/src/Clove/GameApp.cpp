@@ -1,4 +1,5 @@
 #include "clovepch.h"
+#include "Clove/Core.h"
 #include "GameApp.h"
 
 namespace Clove {
