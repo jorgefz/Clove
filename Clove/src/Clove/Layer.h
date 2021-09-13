@@ -16,6 +16,8 @@ namespace Clove {
 		virtual void OnDetach() {  } // when layer is popped from layer stack
 		virtual void OnUpdate() {  }
 		virtual void OnEvent(Event& e) {  }
+
+		virtual void OnImGuiRender() {  }
 	};
 
 	/*
@@ -28,7 +30,7 @@ namespace Clove {
 	class LayerStack {
 	private:
 		std::vector<Layer*> m_layers;
-		std::vector<Layer*>::iterator m_layer_insert; // iterator, aka a pointer
+		unsigned int m_insert_index = 0;
 	public:
 		LayerStack();
 		~LayerStack();

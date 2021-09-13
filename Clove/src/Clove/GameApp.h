@@ -3,6 +3,7 @@
 
 #include "Events/Event.h"
 #include "Layer.h"
+#include "Clove/ImGui/ImGuiLayer.h"
 #include "Window.h"
 
 namespace Clove {
@@ -24,7 +25,8 @@ namespace Clove {
 		bool OnWindowClose();
 
 	private:
-		std::unique_ptr<Clove::Window> m_window = nullptr;
+		std::unique_ptr<Window> m_window = nullptr;
+		ImGuiLayer* m_imgui_layer = nullptr;
 		bool m_running = true;
 		LayerStack m_layer_stack;
 

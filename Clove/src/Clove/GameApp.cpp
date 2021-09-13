@@ -17,6 +17,9 @@ namespace Clove {
 		// When event occurs, OnEvent is called and the event is passed to it.
 		// placeholder::1 is the Event& e
 		m_window->SetEventCallback( std::bind(&GameApp::OnEvent, this, std::placeholders::_1) );
+		
+		m_imgui_layer = new ImGuiLayer();
+		m_layer_stack.PushOverlay(m_imgui_layer);
 	}
 
 	GameApp::~GameApp() {
@@ -44,6 +47,11 @@ namespace Clove {
 			glClear(GL_COLOR_BUFFER_BIT);
 			// update layers forward
 			for (Layer* layer : m_layer_stack) layer->OnUpdate();
+
+			m_imgui_layer->Begin();
+			for (Layer* layer : m_layer_stack) layer->OnImGuiRender();
+			m_imgui_layer->End();
+
 			m_window->Update();
 		}
 	}

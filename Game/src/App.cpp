@@ -9,12 +9,17 @@ public:
 
 	}
 
-	void OnUpdate() {
+	void OnUpdate() override {
 
 	}
 
 	void OnEvent(Clove::Event& e) override {
-		std::cout << "TestLayer event -> " << e.GetDebugName() << std::endl;
+		if (e.GetEventType() == Clove::EventType::KeyPressed) {
+			int key = dynamic_cast<Clove::KeyPressEvent&>(e).GetKeyCode();
+			if (key > 0 && key < CHAR_MAX) {
+				std::cout << (char)key;
+			}
+		}
 	}
 };
 
@@ -22,7 +27,6 @@ class GameTest : public Clove::GameApp {
 public:
 	GameTest() {
 		PushLayer( new TestLayer() ); // GameApp method
-		PushOverlay( new Clove::ImGuiLayer() );
 	}
 
 	~GameTest() {
