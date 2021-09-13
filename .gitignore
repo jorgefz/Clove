@@ -1,11 +1,11 @@
 .vs
 bin/
 bin-int/
-!/vendor/premake/bin
+!/Clove/vendor/premake/bin
 *.sln
 *.vcxproj*
-vendor/ImGui/*
-!/vendor/ImGui/**.h
-!/vendor/ImGui/**.cpp
-!/vendor/ImGui/LICENSE.txt
-!/vendor/ImGui/premake5.lua
+/Clove/vendor/ImGui/*
+!/Clove/vendor/ImGui/**.h
+!/Clove/vendor/ImGui/**.cpp
+!/Clove/vendor/ImGui/LICENSE.txt
+!/Clove/vendor/ImGui/premake5.lua
