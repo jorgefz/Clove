@@ -11,16 +11,22 @@ workspace "Clove"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
-IncludeDir["GLAD"] = "vendor/GLAD/include"
-IncludeDir["ImGui"] = "vendor/ImGui"
+IncludeDir["GLFW"] = "Clove/vendor/GLFW/include"
+IncludeDir["GLAD"] = "Clove/vendor/GLAD/include"
+IncludeDir["ImGui"] = "Clove/vendor/ImGui"
+IncludeDir["stb"] = "Clove/vendor/stb/include"
+IncludeDir["glm"] = "Clove/vendor/glm"
 
-include "vendor/GLAD"
-include "vendor/ImGui"
+include "Clove/vendor/GLFW"
+include "Clove/vendor/GLAD"
+include "Clove/vendor/ImGui"
 
 project "Clove"
 	location "Clove"
 	kind "StaticLib"
 	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}") 
@@ -36,51 +42,47 @@ project "Clove"
 	includedirs {
 		"%{prj.name}/src",
 		"%{prj.name}/src/Clove",
-		"vendor/GLFW/include",
-		"vendor/GLAD/include",
-		"vendor/stb/include",
-		"vendor/glm",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.GLAD}",
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb}"
 	}
 
 	links { 
-		"glfw3",
+		"GLFW",
 		"GLAD",
 		"ImGui",
 		"opengl32"
 	}
 
 	libdirs {
-		"vendor/GLFW/lib-vc2019",
-		"vendor/GLAD/bin/" ..outputdir .. "/GLAD"
+		"vendor/GLAD/bin/" ..outputdir .. "/GLAD",
+		"vendor/GLFW/bin/" ..outputdir .. "/GLFW"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 		defines {
 			"CLOVE_WINDOWS"
 		}
 
-		--postbuildcommands {
-		--	("{COPY} %{cfg.buildtarget.replath} ../bin/" .. outputdir .. "/Game")
-		--}
-
 	filter "configurations:Debug"
 		defines "CLOVE_DEBUG"
-		symbols "On"
-		buildoptions "/MDd"
+		symbols "on"
 
 	filter "configurations:Release"
 		defines "CLOVE_RELEASE"
-		optimize "On"
-		buildoptions "/MD"
+		optimize "on"
+
+
 
 project "Game"
 	location "Game"
 	kind "ConsoleApp"
 	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}") 
@@ -91,7 +93,7 @@ project "Game"
 
 	includedirs {
 		"Clove/src",
-		"vendor/glm",
+		"%{IncludeDir.glm}"
 	}
 
 	links {
@@ -103,14 +105,12 @@ project "Game"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
 	filter "configurations:Debug"
-		symbols "On"
-		buildoptions "/MDd"
+		runtime "Debug"
+		symbols "on"
 
 	filter "configurations:Release"
-		optimize "On"
-		buildoptions "/MD"
+		runtime "Release"
+		optimize "on"

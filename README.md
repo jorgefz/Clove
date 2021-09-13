@@ -5,9 +5,9 @@
 
 This project is built using Visual Studio 2019 and is targeted for Windows exclusively.
 
-First, use Premake5 to build the VS2019 solution:
+First, use Premake5 to build the VS2019 solution by running the "GenerateProjects.bat" file, or running the following command:
 ```
-vendor\premake\bin\premake5.exe vs2019
+Clove\vendor\premake\bin\premake5.exe vs2019
 ```
 
 Then, open the solution file Clove.sln, and build the solution. You should then find the game executable in 'bin/Config-Platform-Arch/Game/Game.exe'.
