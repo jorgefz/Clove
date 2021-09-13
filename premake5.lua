@@ -64,7 +64,8 @@ project "Clove"
 	filter "system:windows"
 		systemversion "latest"
 		defines {
-			"CLOVE_WINDOWS"
+			"CLOVE_WINDOWS",
+			"_CRT_SECURE_NO_WARNINGS"
 		}
 
 	filter "configurations:Debug"
@@ -85,10 +86,15 @@ project "Game"
 	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}") 
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	defines {
+		"_CRT_SECURE_NO_WARNINGS"
+	}
 
 	files {
-		"%{prj.name}/src/App.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/src/**.h"
 	}
 
 	includedirs {
