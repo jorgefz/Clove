@@ -6,6 +6,8 @@
 #include "Clove/ImGui/ImGuiLayer.h"
 #include "Window.h"
 
+#include "Shader.h"
+
 namespace Clove {
 
 	class GameApp {
@@ -29,6 +31,9 @@ namespace Clove {
 		ImGuiLayer* m_imgui_layer = nullptr;
 		bool m_running = true;
 		LayerStack m_layer_stack;
+		
+		unsigned int m_vao, m_vbo, m_ib; // Temporary
+		std::unique_ptr<Shader> m_shader;
 
 	private:
 		static GameApp* m_instance;

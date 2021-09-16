@@ -7,6 +7,8 @@
 #include "Events/KeyEvent.h"
 #include "Events/MouseEvent.h"
 
+#include "Renderer/GraphicsContext.h"
+
 namespace Clove{
 
 	struct WindowData {
@@ -19,10 +21,6 @@ namespace Clove{
 
 	class Window {
 		using EventCallbackFn = std::function<void(Event&)>;
-	private:
-		void* m_window_ptr;
-		bool m_initialised;
-		WindowData m_data;
 
 	public:
 		Window();
@@ -33,7 +31,7 @@ namespace Clove{
 		void Destroy();
 		bool ShouldClose();
 
-		void* GetWindow();
+		void* GetHandle();
 		unsigned int GetHeight() { return m_data.height; }
 		unsigned int GetWidth() { return m_data.width; }
 
@@ -42,6 +40,12 @@ namespace Clove{
 		}
 
 		void SetEventCallback(const EventCallbackFn& callback) { m_data.event_callback = callback; }
+	
+	private:
+		void* m_window_ptr;
+		bool m_initialised;
+		WindowData m_data;
+		GraphicsContext* m_context;
 	};
 
 }

@@ -1,6 +1,11 @@
 #include "clovepch.h"
 #include "Core.h"
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include "Window.h"
+#include "Renderer/OpenGLContext.h"
 
 namespace Clove {
 
@@ -14,7 +19,8 @@ namespace Clove {
 
 	Window::Window()
 		: m_window_ptr(nullptr),
-		m_initialised(false) { }
+		m_initialised(false),
+		m_context(nullptr) {  }
 
 	Window::~Window() { 
 		Window::Destroy();
@@ -25,30 +31,20 @@ namespace Clove {
 
 		m_data.width = width;
 		m_data.height = height;
-		m_data.title = "Clove";
+		m_data.title = "Clove Game";
 		m_data.event_callback = nullptr;
 
-		GLFWmonitor* monitor = nullptr;
-		bool fullscreen = false;
-
-		if (!glfwInit()) {
-			throw std::runtime_error("[GLFW] Fatal error: failed to load!");
-		}
+		CLOVE_ASSERT(glfwInit(), "[GLFW] Fatal error: failed to load!");
 		glfwSetErrorCallback(GLFWErrorCallback);
 
-		if (fullscreen) monitor = glfwGetPrimaryMonitor();
-		m_window_ptr = glfwCreateWindow(width, height, m_data.title.c_str(), monitor, nullptr);
+		m_window_ptr = glfwCreateWindow(width, height, m_data.title.c_str(), nullptr, nullptr);
 		if (!m_window_ptr) {
 			glfwTerminate();
 			throw std::runtime_error("[GLFW] Fatal error: failed to create window");
 		}
-		glfwMakeContextCurrent((GLFWwindow*)m_window_ptr);
 
-		// Load Glad
-		int status = gladLoadGLLoader( (GLADloadproc)glfwGetProcAddress );
-		if (status != 1) {
-			throw std::runtime_error("[GLAD] Fatal error: failed to load!\n");
-		}
+		m_context = new OpenGLContext((GLFWwindow*)m_window_ptr);
+		m_context->Init();
 
 		glfwSwapInterval(1); // activate VSYNC, problems with NVIDIA cards
 		glViewport(0, 0, width, height);
@@ -70,7 +66,7 @@ namespace Clove {
 		Clove::SetGLFWCallbacks((GLFWwindow*)m_window_ptr);
 	}
 
-	void* Window::GetWindow() {
+	void* Window::GetHandle() {
 		return m_window_ptr;
 	}
 
@@ -84,6 +80,7 @@ namespace Clove {
 		if (m_window_ptr) glfwDestroyWindow((GLFWwindow*)m_window_ptr);
 		m_initialised = false;
 		m_window_ptr = nullptr;
+		//delete m_context;
 	}
 
 	bool Window::ShouldClose() {
@@ -128,6 +125,8 @@ namespace Clove {
 				data->event_callback(e);
 				break;
 			}
+			default:
+				break;
 		}
 	}
 

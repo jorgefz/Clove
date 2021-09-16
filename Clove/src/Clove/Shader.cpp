@@ -1,5 +1,9 @@
 #include "clovepch.h"
 #include "Core.h"
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include "Shader.h"
 
 
@@ -16,7 +20,7 @@ namespace Clove {
 	void Shader::Bind() const {
 		glUseProgram(m_renderer_id);
 	}
-	void Shader::Unbind() const {
+	void Shader::Unbind() {
 		glUseProgram(0);
 	}
 	void Shader::SetUniform1i(const std::string& name, int value) {
@@ -59,8 +63,8 @@ namespace Clove {
 		std::string line;
 		std::stringstream ss;
 		if (stream.fail()) {
-			std::cout << "Error: shader file '" << filepath << "' not found" << std::endl;
-			exit(-1);
+			std::cerr << "Error: shader file '" << filepath << "' not found" << std::endl;
+			throw std::runtime_error("");
 		}
 		while (std::getline(stream, line)) ss << line << '\n';
 		source = ss.str();

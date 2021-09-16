@@ -34,6 +34,10 @@ project "Clove"
 	pchheader "clovepch.h"
 	pchsource "%{prj.name}/src/Clove/clovepch.cpp"
 
+	defines {
+		"GLFW_INCLUDE_NONE"
+	}
+
 	files {
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",

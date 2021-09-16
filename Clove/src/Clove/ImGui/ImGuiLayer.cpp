@@ -1,9 +1,12 @@
 #include "clovepch.h"
 #include "Clove/Core.h"
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include "imgui.h"
 #include "ImGuiLayer.h"
 
-//#define IMGUI_IMPL_API
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
@@ -47,7 +50,7 @@ namespace Clove {
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
 
-		GLFWwindow* window = static_cast<GLFWwindow*>(GameApp::GetInstance().GetWindow().GetWindow());
+		GLFWwindow* window = static_cast<GLFWwindow*>(GameApp::GetInstance().GetWindow().GetHandle());
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 410");
 	}
