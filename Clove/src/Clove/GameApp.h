@@ -7,6 +7,8 @@
 #include "Window.h"
 
 #include "Shader.h"
+#include "Renderer/Buffer.h"
+#include "Renderer/VertexArray.h"
 
 namespace Clove {
 
@@ -32,8 +34,8 @@ namespace Clove {
 		bool m_running = true;
 		LayerStack m_layer_stack;
 		
-		unsigned int m_vao, m_vbo, m_ib; // Temporary
-		std::unique_ptr<Shader> m_shader;
+		std::shared_ptr<Shader> m_shader;
+		std::shared_ptr<VertexArray> m_vao;
 
 	private:
 		static GameApp* m_instance;

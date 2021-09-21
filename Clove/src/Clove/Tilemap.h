@@ -1,7 +1,7 @@
 #pragma once
 #include "clovepch.h"
 
-#include "VertexArray.h"
+#include "Renderer/VertexArray.h"
 #include "Texture.h"
 
 #ifdef CLOVE_DEBUG

@@ -1,6 +1,6 @@
 #include "clovepch.h"
 
-#include "VertexArray.h"
+#include "Renderer/VertexArray.h"
 #include "Texture.h"
 #include "Tilemap.h"
 
@@ -98,7 +98,7 @@ namespace Clove {
 			}
 		}
 		m_ib = new Clove::IndexBuffer(m_indices.data(), m_indices.size());
-		m_vb = new Clove::VertexBuffer(m_vertices->data(), m_vertices->size() * sizeof(float));
+		m_vb = new Clove::VertexBuffer((float*)m_vertices->data(), m_vertices->size() * sizeof(float));
 		//Tilemap::Update();
 		m_vertices->UpdateAttributes(*m_vb);
 		m_vb->Unbind();

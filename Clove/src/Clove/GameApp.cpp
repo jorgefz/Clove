@@ -5,6 +5,10 @@
 #include <GLFW/glfw3.h>
 
 #include "GameApp.h"
+#include "Renderer/Buffer.h"
+#include "Renderer/VertexArray.h"
+#include "Renderer/Renderer.h"
+#include "Renderer/RenderCommand.h"
 
 namespace Clove {
 
@@ -25,37 +29,68 @@ namespace Clove {
 		m_imgui_layer = new ImGuiLayer();
 		m_layer_stack.PushOverlay(m_imgui_layer);
 
-		//!! Test triangle
-		glGenVertexArrays(1, &m_vao);
-		glBindVertexArray(m_vao);
 
-		glGenBuffers(1, &m_vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-
-		float vertices[3 * 3] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.0f,  0.7f, 0.0f
+		// TEST TRIANGLE
+		float vertices[ (3 + 4) * 4 ] = {
+			// xyz,               rgba
+			-0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f, 1.0f,
+			 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f, 1.0f,
+			 0.5f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 1.0f, 1.0f,
 		};
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), nullptr);
 
-		glGenBuffers(1, &m_ib);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ib);
-		unsigned int indices[] = { 0, 1, 2 };
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+		// vertex buffer
+		std::shared_ptr<VertexBuffer> m_vbo;
+		m_vbo.reset( VertexBuffer::Create(vertices, sizeof(vertices)) );
+		m_vbo->Bind();
+		m_vbo->SetLayout({
+			{ ShaderDataType::Float3, "a_pos" },
+			{ ShaderDataType::Float4, "a_color" },
+		});
+		
+		// index buffer
+		unsigned int indices[] = { 0, 1, 2, 2, 3, 0 };
+		std::shared_ptr<IndexBuffer> m_ibo;
+		m_ibo.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(unsigned int) ));
 
-		// SHADER
+		// vertex array
+		m_vao.reset(VertexArray::Create());
+		m_vao->Bind();
+		m_vao->SetIndexBuffer( m_ibo );
+		m_vao->AddVertexBuffer(m_vbo);
+
+		// shader
 		m_shader.reset( new Shader("../resources/shaders/basic.vert.glsl", "../resources/shaders/basic.frag.glsl") );
 	}
+
+	void GameApp::Run() {
+		while (m_running) {
+			RenderCommand::SetClearColor(1.0f, 0.0f, 1.0f, 1.0f);
+			RenderCommand::Clear();
+
+			Renderer::BeginScene();
+			m_shader->Bind();
+			Renderer::Submit(m_vao);
+			Renderer::EndScene();
+
+			// update layers forward
+			for (Layer* layer : m_layer_stack) layer->OnUpdate();
+
+			m_imgui_layer->Begin();
+			for (Layer* layer : m_layer_stack) layer->OnImGuiRender();
+			m_imgui_layer->End();
+
+			m_window->Update();
+		}
+	}
+
 
 	GameApp::~GameApp() {
 		glfwSetErrorCallback(nullptr); // otherwise, glfwTerminate throws an error
 		m_window->Destroy();
 	}
 
-	void GameApp::OnEvent(Event& e) {		
+	void GameApp::OnEvent(Event& e) {
 		//std::cout << e.GetDebugName() << std::endl;
 
 		EventDispatcher dp(e);
@@ -66,28 +101,6 @@ namespace Clove {
 		for (auto it = m_layer_stack.end(); it != m_layer_stack.begin(); ) {
 			(*(--it))->OnEvent(e);
 			if (e.Handled()) break;
-		}
-	}
-
-	void GameApp::Run() {
-		//while (!m_window->ShouldClose()) {
-		while (m_running) {
-			glClearColor(25.0f / 255.0f, 11.0f / 255.0f, 102.0f / 255.0f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
-
-			//!! Test Triangle
-			m_shader->Bind();
-			glBindVertexArray(m_vao);
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
-
-			// update layers forward
-			for (Layer* layer : m_layer_stack) layer->OnUpdate();
-
-			m_imgui_layer->Begin();
-			for (Layer* layer : m_layer_stack) layer->OnImGuiRender();
-			m_imgui_layer->End();
-
-			m_window->Update();
 		}
 	}
 
