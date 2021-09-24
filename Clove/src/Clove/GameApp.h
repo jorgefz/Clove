@@ -9,6 +9,7 @@
 #include "Shader.h"
 #include "Renderer/Buffer.h"
 #include "Renderer/VertexArray.h"
+#include "Renderer/Camera.h"
 
 namespace Clove {
 
@@ -33,9 +34,6 @@ namespace Clove {
 		ImGuiLayer* m_imgui_layer = nullptr;
 		bool m_running = true;
 		LayerStack m_layer_stack;
-		
-		std::shared_ptr<Shader> m_shader;
-		std::shared_ptr<VertexArray> m_vao;
 
 	private:
 		static GameApp* m_instance;

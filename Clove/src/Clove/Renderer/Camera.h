@@ -1,36 +1,38 @@
 #pragma once
-#include "clovepch.h"
-
+#include "Clove/Core.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "Window.h"
+#include "Clove/Window.h"
 
 namespace Clove {
 
 	class Camera {
-	private:
-		glm::mat4 m_proj;
-		glm::mat4 m_view;
-		glm::vec3 m_position;
-		float m_rotation = 0.0f;
-		float m_scale = 1.0f;
 	public:
 		Camera(float left, float right, float bottom, float top);
 		~Camera();
 
-		const glm::vec3& GetPosition() const;
 		void SetPosition(glm::vec3& position);
+		const glm::vec3& GetPosition() const;
 
-		float GetRotation();
 		void SetRotation(float rotation);
+		float GetRotation();
 
-		float GetScale();
 		void SetScale(float scale);
+		float GetScale();
 
 		const glm::mat4& GetProjectionMatrix() const;
 		const glm::mat4& GetViewMatrix() const;
-		void UpdateMatrices(Clove::Window& window);
+		const glm::mat4& GetViewProjectionMatrix() const;
+		void Update();
+	
+	private:
+		glm::mat4 m_proj;
+		glm::mat4 m_view;
+		glm::mat4 m_view_proj;
+		glm::vec3 m_position;
+		float m_rotation = 0.0f;
+		float m_scale = 1.0f;
 	};
 }
 

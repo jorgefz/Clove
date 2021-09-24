@@ -29,49 +29,10 @@ namespace Clove {
 		m_imgui_layer = new ImGuiLayer();
 		m_layer_stack.PushOverlay(m_imgui_layer);
 
-
-		// TEST TRIANGLE
-		float vertices[ (3 + 4) * 4 ] = {
-			// xyz,               rgba
-			-0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f, 1.0f,
-			 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f, 1.0f,
-			 0.5f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f, 1.0f,
-			-0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 1.0f, 1.0f,
-		};
-
-		// vertex buffer
-		std::shared_ptr<VertexBuffer> m_vbo;
-		m_vbo.reset( VertexBuffer::Create(vertices, sizeof(vertices)) );
-		m_vbo->Bind();
-		m_vbo->SetLayout({
-			{ ShaderDataType::Float3, "a_pos" },
-			{ ShaderDataType::Float4, "a_color" },
-		});
-		
-		// index buffer
-		unsigned int indices[] = { 0, 1, 2, 2, 3, 0 };
-		std::shared_ptr<IndexBuffer> m_ibo;
-		m_ibo.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(unsigned int) ));
-
-		// vertex array
-		m_vao.reset(VertexArray::Create());
-		m_vao->Bind();
-		m_vao->SetIndexBuffer( m_ibo );
-		m_vao->AddVertexBuffer(m_vbo);
-
-		// shader
-		m_shader.reset( new Shader("../resources/shaders/basic.vert.glsl", "../resources/shaders/basic.frag.glsl") );
 	}
 
 	void GameApp::Run() {
 		while (m_running) {
-			RenderCommand::SetClearColor(1.0f, 0.0f, 1.0f, 1.0f);
-			RenderCommand::Clear();
-
-			Renderer::BeginScene();
-			m_shader->Bind();
-			Renderer::Submit(m_vao);
-			Renderer::EndScene();
 
 			// update layers forward
 			for (Layer* layer : m_layer_stack) layer->OnUpdate();
