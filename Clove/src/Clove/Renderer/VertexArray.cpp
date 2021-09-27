@@ -28,7 +28,7 @@ namespace Clove {
 		return new VertexArray();
 	}
 
-	void VertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vb) {
+	void VertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vb) {
 		
 		CLOVE_ASSERT(vb->GetLayout().GetElements().size(), " Error: vertex buffer has no layout!");
 		
@@ -53,7 +53,7 @@ namespace Clove {
 		m_vb_list.push_back(vb);
 	}
 
-	void VertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& ib) {
+	void VertexArray::SetIndexBuffer(const Ref<IndexBuffer>& ib) {
 		glBindVertexArray(m_renderer_id);
 		ib->Bind();
 		m_ib = ib;

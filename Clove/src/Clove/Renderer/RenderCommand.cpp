@@ -12,7 +12,7 @@ namespace Clove {
 		glClearColor(r, g, b, a);
 	}
 
-	void RenderCommand::DrawIndexed(const std::shared_ptr<VertexArray>& va) {
+	void RenderCommand::DrawIndexed(const Ref<VertexArray>& va) {
 		glDrawElements(GL_TRIANGLES, va->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 

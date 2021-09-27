@@ -8,6 +8,6 @@ namespace Clove {
 	public:
 		static void SetClearColor(float r, float g, float b, float a = 1.0f);
 		static void Clear();
-		static void DrawIndexed(const std::shared_ptr<VertexArray>& va);
+		static void DrawIndexed(const Ref<VertexArray>& va);
 	};
 }

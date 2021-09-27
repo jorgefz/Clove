@@ -12,15 +12,15 @@ namespace Clove {
 		static void Unbind();
 
 		static VertexArray* Create();
-		void AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vb);
-		void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& ib);
+		void AddVertexBuffer(const Ref<VertexBuffer>& vb);
+		void SetIndexBuffer(const Ref<IndexBuffer>& ib);
 
-		const std::vector<std::shared_ptr<VertexBuffer>>& GetVertexBuffers() const { return m_vb_list; }
-		const std::shared_ptr<IndexBuffer>& GetIndexBuffer() const { return m_ib; }
+		const std::vector<Ref<VertexBuffer>>& GetVertexBuffers() const { return m_vb_list; }
+		const Ref<IndexBuffer>& GetIndexBuffer() const { return m_ib; }
 
 	private:
-		std::vector<std::shared_ptr<VertexBuffer>> m_vb_list;
-		std::shared_ptr<IndexBuffer> m_ib;
+		std::vector<Ref<VertexBuffer>> m_vb_list;
+		Ref<IndexBuffer> m_ib;
 		unsigned int m_renderer_id;
 	};
 	

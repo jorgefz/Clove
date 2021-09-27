@@ -103,11 +103,12 @@ project "Game"
 
 	includedirs {
 		"Clove/src",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.ImGui}"
 	}
 
 	links {
-		"Clove"
+		"Clove", "ImGui"
 	}
 
 	libdirs {

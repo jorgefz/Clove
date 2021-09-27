@@ -23,25 +23,28 @@ namespace Clove {
 		m_window = std::unique_ptr<Clove::Window>( new Clove::Window );
 		m_window->Create(1280, 720);
 		// When event occurs, OnEvent is called and the event is passed to it.
-		// placeholder::1 is the Event& e
-		m_window->SetEventCallback( std::bind(&GameApp::OnEvent, this, std::placeholders::_1) );
-		
+		m_window->SetEventCallback(CLOVE_BIND_METHOD_1(GameApp::OnEvent));
+
 		m_imgui_layer = new ImGuiLayer();
 		m_layer_stack.PushOverlay(m_imgui_layer);
-
 	}
 
 	void GameApp::Run() {
 		while (m_running) {
 
+			float time = (float)glfwGetTime();
+			float dt = time - m_frame_time;
+
 			// update layers forward
-			for (Layer* layer : m_layer_stack) layer->OnUpdate();
+			for (Layer* layer : m_layer_stack) layer->OnUpdate(dt);
 
 			m_imgui_layer->Begin();
 			for (Layer* layer : m_layer_stack) layer->OnImGuiRender();
 			m_imgui_layer->End();
 
 			m_window->Update();
+			
+			m_frame_time = time;
 		}
 	}
 

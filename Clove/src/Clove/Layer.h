@@ -14,7 +14,7 @@ namespace Clove {
 
 		virtual void OnAttach() {  } // when layer is pushed to layer stack
 		virtual void OnDetach() {  } // when layer is popped from layer stack
-		virtual void OnUpdate() {  }
+		virtual void OnUpdate(float dt) {  }
 		virtual void OnEvent(Event& e) {  }
 
 		virtual void OnImGuiRender() {  }

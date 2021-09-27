@@ -34,6 +34,7 @@ namespace Clove {
 		ImGuiLayer* m_imgui_layer = nullptr;
 		bool m_running = true;
 		LayerStack m_layer_stack;
+		float m_frame_time = 0.0f;
 
 	private:
 		static GameApp* m_instance;

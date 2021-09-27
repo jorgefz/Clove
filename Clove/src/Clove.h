@@ -14,6 +14,7 @@ and use the namespace "Clove::" to access classes and functions
 
 */
 
+#include "Clove/Core.h"
 
 #include "Clove/Window.h"
 #include "Clove/Renderer/Camera.h"

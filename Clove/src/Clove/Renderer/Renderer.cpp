@@ -16,10 +16,18 @@ namespace Clove {
 
 	}
 	
-	void Renderer::Submit(const std::shared_ptr<VertexArray>& va, const std::shared_ptr<Shader>& shader) {
+	void Renderer::Submit(
+		const Ref<VertexArray>& va,
+		const Ref<Shader>& shader,
+		glm::mat4& transform)
+	{
 		shader->Bind();
 		shader->SetUniformMat4f("u_view_proj", m_scene_data->vp);
-		va->Bind();
+		shader->SetUniformMat4f("u_transform", transform);
+		//va->Bind();
 		RenderCommand::DrawIndexed(va);
 	}
+
 }
+
+
