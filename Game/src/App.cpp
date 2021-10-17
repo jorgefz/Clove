@@ -7,13 +7,13 @@ public:
 	TestLayer() 
 		: Layer(), m_camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
-		// TEST TRIANGLE
-		float vertices[(3 + 4) * 4] = {
-			// xyz,               rgba
-			-0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f, 1.0f,
-			 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f, 1.0f,
-			 0.5f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f, 1.0f,
-			-0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 1.0f, 1.0f,
+		// TEST SQUARE
+		float vertices[(3 + 2) * 4] = {
+			// xyz,               tex coords
+			-0.5f, -0.5f, 0.0f,   0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f,   0.0f, 1.0f,
+			 0.5f,  0.5f, 0.0f,   1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f,   1.0f, 0.0f
 		};
 
 		// vertex buffer
@@ -22,7 +22,7 @@ public:
 		m_vbo->Bind();
 		m_vbo->SetLayout({
 			{ Clove::ShaderDataType::Float3, "a_pos" },
-			{ Clove::ShaderDataType::Float4, "a_color" },
+			{ Clove::ShaderDataType::Float2, "a_tex_coord" },
 			});
 
 		// index buffer
@@ -38,10 +38,16 @@ public:
 
 		// shader
 		m_shader.reset( Clove::Shader::Create(
-			"../resources/shaders/color_mvp.vert.glsl",
-			"../resources/shaders/color_mvp.frag.glsl")
-		);
+			"../resources/shaders/texture_mvp.vert.glsl",
+			"../resources/shaders/texture_mvp.frag.glsl"
+		));
 
+		// texture
+		m_texture = Clove::Texture2D::Create("../resources/checkerboard.png");
+		m_texture2 = Clove::Texture2D::Create("../resources/cursor.png");
+
+		m_shader->Bind();
+		m_shader->SetUniform1i("u_texture", 0); // slot to sample from
 	}
 
 	void OnUpdate(float dt) override {
@@ -71,36 +77,16 @@ public:
 		m_camera.Update();
 
 		Clove::Renderer::BeginScene(m_camera);
-		
-		for (unsigned int i = 0; i != 15; ++i) {
-			for (unsigned int j = 0; j != 15; ++j) {
-				if (i % 2) m_shader->SetUniform4f("u_color", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f) );
-				else       m_shader->SetUniform4f("u_color", glm::vec4(0.0f, 0.0f, 1.0f, 1.0f) );
-				if (j % 2 && i % 2) m_shader->SetUniform4f("u_color", glm::vec4(1.0f, 0.7f, 0.0f, 1.0f) );
-				else if (j % 2) m_shader->SetUniform4f("u_color", glm::vec4(0.69f, 0.26f, 0.96f, 1.0f) );
-				glm::mat4 transform(1.0f);
-				glm::vec3 translate((float)i * 0.2f, (float)j * 0.2f, 0.0f);
-				glm::vec3 scale(0.15f, 0.15f, 1.0f);
-				transform = glm::scale(glm::translate(transform, translate), scale);
-				Clove::Renderer::Submit(m_vao, m_shader, transform);
-			}
-		}
-
-		m_shader->SetUniform4f("u_color", square_color);
+		m_shader->Bind();
+		m_texture->Bind();
 		Clove::Renderer::Submit(m_vao, m_shader);
-
+		m_texture2->Bind();
+		Clove::Renderer::Submit(m_vao, m_shader, glm::translate(glm::mat4(1.0f), glm::vec3(0.1f)));
 		Clove::Renderer::EndScene();
 	}
 
 	void OnImGuiRender() override {
-		
-		float color[3] = { square_color.x, square_color.y, square_color.z };
-		
-		ImGui::Begin("Testing", 0, ImGuiWindowFlags_AlwaysAutoResize);
-		ImGui::ColorEdit3("Color Edit", color);
-		ImGui::End();
 
-		square_color = glm::vec4(color[0], color[1], color[2], 1.0f);
 	}
 
 	void OnEvent(Clove::Event& e) override {
@@ -115,8 +101,6 @@ public:
 				std::cout << (char)key;
 			}
 		}
-
-
 	}
 
 	bool OnKeyPressedEvent(Clove::KeyPressEvent& event) {
@@ -127,8 +111,8 @@ private:
 	Clove::Ref<Clove::Shader> m_shader;
 	Clove::Ref<Clove::VertexArray> m_vao;
 	Clove::Camera m_camera;
-	
-	glm::vec4 square_color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+	Clove::Ref<Clove::Texture2D> m_texture, m_texture2;
 };
 
 class GameTest : public Clove::GameApp {

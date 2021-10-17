@@ -23,7 +23,7 @@ and use the namespace "Clove::" to access classes and functions
 #include "Clove/Renderer/VertexArray.h"
 #include "Clove/Renderer/Buffer.h"
 #include "Clove/Shader.h"
-#include "Clove/Texture.h"
+#include "Clove/Renderer/Texture.h"
 
 //#include "Clove/Tilemap.h"
 

@@ -14,7 +14,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Clove/vendor/GLFW/include"
 IncludeDir["GLAD"] = "Clove/vendor/GLAD/include"
 IncludeDir["ImGui"] = "Clove/vendor/ImGui"
-IncludeDir["stb"] = "Clove/vendor/stb/include"
+IncludeDir["stb"] = "Clove/vendor/stb"
 IncludeDir["glm"] = "Clove/vendor/glm"
 
 include "Clove/vendor/GLFW"
@@ -41,6 +41,9 @@ project "Clove"
 	files {
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+
+		"Clove/vendor/stb/**.cpp",
+		"Clove/vendor/src/**.h"
 	}
 
 	includedirs {
