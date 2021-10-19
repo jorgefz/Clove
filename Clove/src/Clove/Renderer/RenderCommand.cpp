@@ -3,7 +3,13 @@
 #include "RenderCommand.h"
 
 namespace Clove {
-	
+
+	void RenderCommand::Init() {
+		// Adds up alpha channels
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+
 	void RenderCommand::Clear() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}

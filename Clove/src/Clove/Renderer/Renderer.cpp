@@ -8,6 +8,10 @@ namespace Clove {
 	
 	Renderer::SceneData* Renderer::m_scene_data = new Renderer::SceneData;
 
+	void Renderer::Init() {
+		RenderCommand::Init();
+	}
+
 	void Renderer::BeginScene(Camera& camera) {
 		m_scene_data->vp = camera.GetViewProjectionMatrix();
 	}

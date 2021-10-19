@@ -17,18 +17,11 @@ namespace Clove {
 		throw std::runtime_error(" ");
 	}
 
-	Window::Window()
+	Window::Window(unsigned int width, unsigned int height)
 		: m_window_ptr(nullptr),
 		m_initialised(false),
-		m_context(nullptr) {  }
-
-	Window::~Window() { 
-		Window::Destroy();
-	}
-
-
-	void Window::Create(unsigned int width, unsigned int height) {
-
+		m_context(nullptr)
+	{
 		m_data.width = width;
 		m_data.height = height;
 		m_data.title = "Clove Game";
@@ -48,7 +41,7 @@ namespace Clove {
 
 		glfwSwapInterval(1); // activate VSYNC, problems with NVIDIA cards
 		glViewport(0, 0, width, height);
-		
+
 		#ifdef CLOVE_DEBUG
 		int glfw_major, glfw_minor, glfw_rev;
 		glfwGetVersion(&glfw_major, &glfw_minor, &glfw_rev);
@@ -59,11 +52,16 @@ namespace Clove {
 		m_initialised = true;
 		glfwSetWindowUserPointer((GLFWwindow*)m_window_ptr, &m_data);
 
-		// Adds up alpha channels
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 		Clove::SetGLFWCallbacks((GLFWwindow*)m_window_ptr);
+	}
+
+	Window::~Window() { 
+		Window::Destroy();
+	}
+
+
+	Window* Window::Create(unsigned int width, unsigned int height) {
+		return new Window(width, height);
 	}
 
 	void* Window::GetHandle() {

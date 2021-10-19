@@ -23,10 +23,10 @@ namespace Clove{
 		using EventCallbackFn = std::function<void(Event&)>;
 
 	public:
-		Window();
+		Window(unsigned int width = 1920, unsigned int height = 1080);
 		~Window();
 
-		void Create(unsigned int width = 1920, unsigned int height = 1080);
+		static Window* Create(unsigned int width = 1920, unsigned int height = 1080);
 		void Update();
 		void Destroy();
 		bool ShouldClose();

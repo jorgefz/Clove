@@ -53,7 +53,7 @@ namespace Clove {
 			0,			// yoffset
 			m_width,	// width
 			m_height,	// height
-			input_format,	// format
+			input_format,		// format
 			GL_UNSIGNED_BYTE,	// type
 			data		// pixels
 		);

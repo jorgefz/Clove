@@ -38,13 +38,13 @@ public:
 
 		// shader
 		m_shader.reset( Clove::Shader::Create(
-			"../resources/shaders/texture_mvp.vert.glsl",
-			"../resources/shaders/texture_mvp.frag.glsl"
+			"../assets/shaders/texture_mvp.vert.glsl",
+			"../assets/shaders/texture_mvp.frag.glsl"
 		));
 
 		// texture
-		m_texture = Clove::Texture2D::Create("../resources/checkerboard.png");
-		m_texture2 = Clove::Texture2D::Create("../resources/cursor.png");
+		m_texture = Clove::Texture2D::Create("../assets/checkerboard.png");
+		m_texture2 = Clove::Texture2D::Create("../assets/cursor.png");
 
 		m_shader->Bind();
 		m_shader->SetUniform1i("u_texture", 0); // slot to sample from
@@ -81,7 +81,8 @@ public:
 		m_texture->Bind();
 		Clove::Renderer::Submit(m_vao, m_shader);
 		m_texture2->Bind();
-		Clove::Renderer::Submit(m_vao, m_shader, glm::translate(glm::mat4(1.0f), glm::vec3(0.1f)));
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), cam_pos);
+		Clove::Renderer::Submit(m_vao, m_shader, transform);
 		Clove::Renderer::EndScene();
 	}
 
