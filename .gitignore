@@ -4,8 +4,3 @@ bin-int/
 !/Clove/vendor/premake/bin
 *.sln
 *.vcxproj*
-/Clove/vendor/ImGui/*
-!/Clove/vendor/ImGui/**.h
-!/Clove/vendor/ImGui/**.cpp
-!/Clove/vendor/ImGui/LICENSE.txt
-!/Clove/vendor/ImGui/premake5.lua
