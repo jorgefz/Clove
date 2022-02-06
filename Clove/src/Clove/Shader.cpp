@@ -18,15 +18,24 @@ namespace Clove {
 		return 0;
 	}
 
+	static std::string ShaderNameFromPath(const std::string& filepath) {
+		auto begin = filepath.find_last_of("/\\");
+		begin = (begin == std::string::npos) ? 0 : begin + 1;
+		auto end = filepath.rfind('.');
+		if (end == std::string::npos) end = filepath.size() - 1;
+		return filepath.substr(begin, end - begin);
+	}
+
 
 	Shader::Shader(const std::string& filepath) {
+		m_name = ShaderNameFromPath(filepath);
 		std::string source = Shader::ReadSource(filepath);
 		auto shader_sources = Shader::Parse(source);
 		Shader::Compile(shader_sources);
 	}
 
 	Shader::Shader(const std::string& vshader, const std::string& fshader)
-		: m_vshader_path(vshader), m_fshader_path(fshader), m_renderer_id(0) {
+		: m_renderer_id(0) {
 
 		std::string vertex_source, fragment_source;
 
@@ -52,12 +61,12 @@ namespace Clove {
 		glDeleteProgram(m_renderer_id);
 	}
 
-	Shader* Shader::Create(const std::string& vshader, const std::string& fshader) {
-		return new Shader(vshader, fshader);
+	Ref<Shader> Shader::Create(const std::string& vshader, const std::string& fshader) {
+		return std::make_shared<Shader>(vshader, fshader);
 	}
 
-	Shader* Shader::Create(const std::string& path) {
-		return new Shader(path);
+	Ref<Shader> Shader::Create(const std::string& path) {
+		return std::make_shared<Shader>(path);
 	}
 
 	void Shader::Bind() const {
@@ -66,6 +75,11 @@ namespace Clove {
 	void Shader::Unbind() {
 		glUseProgram(0);
 	}
+
+	const std::string& Shader::GetName() {
+		return m_name;
+	}
+
 	void Shader::SetUniform1i(const std::string& name, int value) {
 		glUniform1i(GetUniformLocation(name), value);
 	}
@@ -100,7 +114,7 @@ namespace Clove {
 
 	std::string Shader::ReadSource(const std::string& filepath) {
 
-		std::ifstream in(filepath, std::ios::in, std::ios::binary);
+		std::ifstream in(filepath, std::ios::in | std::ios::binary);
 		std::string result;
 		if (!in) {
 			std::cout << "Error opening shader '" << filepath << "'" << std::endl;
@@ -156,9 +170,11 @@ namespace Clove {
 	}
 
 	void Shader::Compile(const std::unordered_map<GLenum, std::string>& sources) {
-		std::vector<GLuint> shader_ids;
 		unsigned int prog = glCreateProgram();
+		CLOVE_ASSERT(sources.size() == 2, "Only fragment and vertex shaders supported");
+		std::array<GLuint, 2> shader_ids;
 
+		int count = 0;
 		for (auto& kv : sources) {
 			GLenum type = kv.first;
 			const std::string& source = kv.second;
@@ -184,7 +200,7 @@ namespace Clove {
 			}
 
 			glAttachShader(prog, shader);
-			shader_ids.push_back(shader);
+			shader_ids[count++] = shader;
 		}
 		glLinkProgram(prog);
 		glValidateProgram(prog);
@@ -217,4 +233,41 @@ namespace Clove {
 		CLOVE_ASSERT(false, "");
 		return 0;
 	}
+
+
+	/* --- Shader Library --- */
+
+	
+	void ShaderLibrary::Add(const Ref<Shader>& shader) {
+		auto& name = shader->GetName();
+		CLOVE_ASSERT(!Contains(name), "Shader already in library");
+		m_shaders[name] = shader;
+	}
+
+
+	void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader) {
+		m_shaders[name] = shader;
+	}
+
+	Ref<Shader> ShaderLibrary::Load(const std::string& filepath) {
+		auto shader = Shader::Create(filepath);
+		Add(shader);
+		return shader;
+	}
+
+	Ref<Shader> ShaderLibrary::Load(const std::string& name, const std::string& filepath) {
+		auto shader = Shader::Create(filepath);
+		Add(name, shader);
+		return shader;
+	}
+
+	Ref<Shader> ShaderLibrary::Get(const std::string& name) {
+		CLOVE_ASSERT(Contains(name), "Shader not found");
+		return m_shaders[name];
+	}
+
+	bool ShaderLibrary::Contains(const std::string& name) {
+		return (m_shaders.find(name) != m_shaders.end());
+	}
+
 }

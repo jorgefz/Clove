@@ -12,7 +12,7 @@
 
 // Macros
 
-#define CLOVE_ASSERT(condition, msg) if(!condition) { throw std::runtime_error(msg); }
+#define CLOVE_ASSERT(condition, msg) if(!(condition)) { throw std::runtime_error(msg); }
 
 #define CLOVE_BIND_METHOD_1(fn) std::bind(&fn, this, std::placeholders::_1)
 

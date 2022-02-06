@@ -37,20 +37,14 @@ public:
 		m_vao->AddVertexBuffer(m_vbo);
 
 		// shader
-		/*
-		m_shader.reset( Clove::Shader::Create(
-			"../assets/shaders/texture_mvp.vert.glsl",
-			"../assets/shaders/texture_mvp.frag.glsl"
-		));
-		*/
-		m_shader.reset(Clove::Shader::Create("../assets/shaders/texture_mvp.glsl"));
+		m_shaderlib.Load("TextureShader", "../assets/shaders/texture_mvp.glsl");
 
 		// texture
 		m_texture = Clove::Texture2D::Create("../assets/checkerboard.png");
 		m_texture2 = Clove::Texture2D::Create("../assets/cursor.png");
 
-		m_shader->Bind();
-		m_shader->SetUniform1i("u_texture", 0); // slot to sample from
+		m_shaderlib.Get("TextureShader")->Bind();
+		m_shaderlib.Get("TextureShader")->SetUniform1i("u_texture", 0); // slot to sample from
 	}
 
 	void OnUpdate(float dt) override {
@@ -80,12 +74,12 @@ public:
 		m_camera.Update();
 
 		Clove::Renderer::BeginScene(m_camera);
-		m_shader->Bind();
+		m_shaderlib.Get("TextureShader")->Bind();
 		m_texture->Bind();
-		Clove::Renderer::Submit(m_vao, m_shader);
+		Clove::Renderer::Submit(m_vao, m_shaderlib.Get("TextureShader"));
 		m_texture2->Bind();
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), cam_pos);
-		Clove::Renderer::Submit(m_vao, m_shader, transform);
+		Clove::Renderer::Submit(m_vao, m_shaderlib.Get("TextureShader"), transform);
 		Clove::Renderer::EndScene();
 	}
 
@@ -112,7 +106,7 @@ public:
 	}
 
 private:
-	Clove::Ref<Clove::Shader> m_shader;
+	Clove::ShaderLibrary m_shaderlib;
 	Clove::Ref<Clove::VertexArray> m_vao;
 	Clove::Camera m_camera;
 
