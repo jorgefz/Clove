@@ -8,9 +8,26 @@
 
 
 namespace Clove {
+
+	static GLenum ShaderTypeFromString(std::string& type) {
+		if (type == "vertex") return GL_VERTEX_SHADER;
+		else if (type == "fragment" || type == "pixel")
+			return GL_FRAGMENT_SHADER;
+		std::cout << "Unknown shader type '" << type << "'" << std::endl;
+		CLOVE_ASSERT(false, "");
+		return 0;
+	}
+
+
+	Shader::Shader(const std::string& filepath) {
+		std::string source = Shader::ReadSource(filepath);
+		auto shader_sources = Shader::Parse(source);
+		Shader::Compile(shader_sources);
+	}
+
 	Shader::Shader(const std::string& vshader, const std::string& fshader)
 		: m_vshader_path(vshader), m_fshader_path(fshader), m_renderer_id(0) {
-		
+
 		std::string vertex_source, fragment_source;
 
 		//Read shader scripts
@@ -37,6 +54,10 @@ namespace Clove {
 
 	Shader* Shader::Create(const std::string& vshader, const std::string& fshader) {
 		return new Shader(vshader, fshader);
+	}
+
+	Shader* Shader::Create(const std::string& path) {
+		return new Shader(path);
 	}
 
 	void Shader::Bind() const {
@@ -77,6 +98,24 @@ namespace Clove {
 		return location;
 	}
 
+	std::string Shader::ReadSource(const std::string& filepath) {
+
+		std::ifstream in(filepath, std::ios::in, std::ios::binary);
+		std::string result;
+		if (!in) {
+			std::cout << "Error opening shader '" << filepath << "'" << std::endl;
+			CLOVE_ASSERT(false, " ");
+		}
+		in.seekg(0, std::ios::end);
+		result.resize(in.tellg());
+		in.seekg(0, std::ios::beg);
+		in.read(&result[0], result.size());
+		in.close();
+
+		return result;
+	}
+
+
 	void Shader::ReadSource(const std::string& filepath, std::string& source) {
 		std::ifstream stream(filepath);
 		std::string line;
@@ -89,6 +128,73 @@ namespace Clove {
 		source = ss.str();
 	}
 
+
+	std::unordered_map<GLenum, std::string> Shader::Parse(const std::string& source) {
+		
+		std::unordered_map<GLenum, std::string> sources;
+		const char* type_token = "#type";
+		size_t token_len = strlen(type_token);
+		size_t pos = source.find(type_token, 0);
+
+		while (pos != std::string::npos) {
+			size_t eol = source.find_first_of("\r\n", pos);
+			bool condition = eol != std::string::npos;
+
+			CLOVE_ASSERT(condition, "Syntax error");
+			size_t begin = pos + token_len + 1;
+			std::string type = source.substr(begin, eol - begin);
+			GLenum gl_type = ShaderTypeFromString(type);
+			CLOVE_ASSERT(gl_type, "Unknown shader type");
+			
+			size_t next_line = source.find_first_not_of("\r\n", eol);
+			pos = source.find(type_token, next_line);
+			size_t offset = next_line == std::string::npos ? source.size() - 1 : next_line;
+			sources[gl_type] = source.substr(next_line, pos - offset);
+		}
+
+		return sources;
+	}
+
+	void Shader::Compile(const std::unordered_map<GLenum, std::string>& sources) {
+		std::vector<GLuint> shader_ids;
+		unsigned int prog = glCreateProgram();
+
+		for (auto& kv : sources) {
+			GLenum type = kv.first;
+			const std::string& source = kv.second;
+			
+			GLuint shader = glCreateShader(type);
+			const char* src = source.c_str();
+			glShaderSource(shader, 1, &src, nullptr);
+			glCompileShader(shader);
+
+			// Was compilation sucessful?
+			int result;
+			glGetShaderiv(shader, GL_COMPILE_STATUS, &result);
+			if (result != GL_TRUE) {
+				// Retrieve compiler error message
+				int length = 0;
+				glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
+				std::vector<GLchar> msg(length);
+				glGetShaderInfoLog(shader, length, &length, &msg[0]);
+				glDeleteShader(shader);
+				std::cerr << "Failed to compile shader" << std::endl;
+				std::cerr << msg.data() << std::endl;
+				CLOVE_ASSERT(false, "");
+			}
+
+			glAttachShader(prog, shader);
+			shader_ids.push_back(shader);
+		}
+		glLinkProgram(prog);
+		glValidateProgram(prog);
+
+		//Shader data has been copied to program and is no longer necessary.
+		for (auto id : shader_ids) glDetachShader(prog, id);
+
+		m_renderer_id = prog;
+	}
+
 	unsigned int Shader::Compile(unsigned int type, const std::string& source) {
 		GLuint id = glCreateShader(type);
 		const char* src = source.c_str();
@@ -99,19 +205,16 @@ namespace Clove {
 		int result;
 		glGetShaderiv(id, GL_COMPILE_STATUS, &result);
 		if (result == GL_TRUE) return id;
-		
+
 		// Retrieve compiler error message
-		int length;
+		int length = 0;
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-		char* message = new char[length + 1];
-		glGetShaderInfoLog(id, length, &length, message);
-		message[length] = '\0';
-		
-		std::cerr << "[GL] Error: failed to compile shader!" << std::endl;
-		std::cerr << message << std::endl;
-		
+		std::vector<GLchar> msg(length);
+		glGetShaderInfoLog(id, length, &length, &msg[0]);
 		glDeleteShader(id);
-		delete[] message;
-		exit(-1);
+		std::cerr << "Failed to compile shader" << std::endl;
+		std::cerr << msg.data() << std::endl;
+		CLOVE_ASSERT(false, "");
+		return 0;
 	}
 }

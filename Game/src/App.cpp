@@ -37,10 +37,13 @@ public:
 		m_vao->AddVertexBuffer(m_vbo);
 
 		// shader
+		/*
 		m_shader.reset( Clove::Shader::Create(
 			"../assets/shaders/texture_mvp.vert.glsl",
 			"../assets/shaders/texture_mvp.frag.glsl"
 		));
+		*/
+		m_shader.reset(Clove::Shader::Create("../assets/shaders/texture_mvp.glsl"));
 
 		// texture
 		m_texture = Clove::Texture2D::Create("../assets/checkerboard.png");

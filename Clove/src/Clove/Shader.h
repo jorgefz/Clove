@@ -6,11 +6,17 @@
 
 namespace Clove {
 
+	typedef unsigned int GLenum; // forward decl
+
 	class Shader {
 	public:
+		// create shader from single file
+		Shader(const std::string& filepath);
+		// create shader from separate vertex and fragment files
 		Shader(const std::string& vshader, const std::string& fshader);
 		~Shader();
 		static Shader* Create(const std::string& vshader, const std::string& fshader);
+		static Shader* Shader::Create(const std::string& path);
 		
 		void Bind() const;
 		static void Unbind();
@@ -25,9 +31,20 @@ namespace Clove {
 
 	private:
 		int GetUniformLocation(const std::string& name);
+
+		std::unordered_map<GLenum, std::string> Parse(const std::string& source);
+		
+		// binary mode
+		static std::string ReadSource(const std::string& filepath);
+		// char mode
 		static void ReadSource(const std::string& filepath, std::string& source);
+
+		// compiles list of shaders
+		void Compile(const std::unordered_map<GLenum, std::string>& sources);
+		// compiles single shader of given type
 		static unsigned int Compile(unsigned int type, const std::string& source);
 		
+
 	private:
 		std::string m_vshader_path, m_fshader_path;
 		unsigned int m_renderer_id;
