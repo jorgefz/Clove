@@ -5,13 +5,17 @@ namespace Clove {
 
 	Camera::Camera(float left, float right, float bottom, float top) 
 		: m_proj( glm::ortho(left, right, bottom, top, -1.0f, 1.0f) ),
-		  m_view(glm::mat4(1.0f)),
+		  m_view(1.0f),
 		  m_view_proj( m_proj * m_view ),
-		  m_position(glm::vec3(0.0f,0.0f,1.0f))
-	{
-	}
+		  m_position(0.0f,0.0f,1.0f)
+	{  }
 
 	Camera::~Camera() {  }
+
+	void Camera::SetProjection(float left, float right, float bottom, float top) {
+		m_proj = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
+		m_view_proj = m_proj * m_view;
+	}
 
 	const glm::vec3& Camera::GetPosition() const {
 		return m_position;

@@ -12,6 +12,7 @@ namespace Clove {
 		Camera(float left, float right, float bottom, float top);
 		~Camera();
 
+		void SetProjection(float left, float right, float bottom, float top);
 		void SetPosition(glm::vec3& position);
 		const glm::vec3& GetPosition() const;
 
