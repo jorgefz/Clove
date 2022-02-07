@@ -12,6 +12,10 @@ namespace Clove {
 		RenderCommand::Init();
 	}
 
+	void Renderer::OnWindowResize(unsigned int width, unsigned int height) {
+		RenderCommand::SetViewport(0, 0, width, height);
+	}
+
 	void Renderer::BeginScene(Camera& camera) {
 		m_scene_data->vp = camera.GetViewProjectionMatrix();
 	}
@@ -28,7 +32,6 @@ namespace Clove {
 		shader->Bind();
 		shader->SetUniformMat4f("u_view_proj", m_scene_data->vp);
 		shader->SetUniformMat4f("u_transform", transform);
-		//va->Bind();
 		RenderCommand::DrawIndexed(va);
 	}
 

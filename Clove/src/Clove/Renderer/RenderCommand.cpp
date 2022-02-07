@@ -22,4 +22,9 @@ namespace Clove {
 		glDrawElements(GL_TRIANGLES, va->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
+
+	void RenderCommand::SetViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height) {
+		glViewport(x, y, width, height);
+	}
+
 }

@@ -47,7 +47,7 @@ namespace Clove {
 		);
 		return false;
 	}
-
+	
 	bool CameraController::OnWindowResized(WindowResizeEvent& e){
 		m_aspect_ratio = static_cast<float>(e.GetWidth()) / static_cast<float>(e.GetHeight());
 		m_cam.SetProjection(

@@ -10,5 +10,6 @@ namespace Clove {
 		static void SetClearColor(float r, float g, float b, float a = 1.0f);
 		static void Clear();
 		static void DrawIndexed(const Ref<VertexArray>& va);
+		static void SetViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height);
 	};
 }

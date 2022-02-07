@@ -9,6 +9,7 @@ namespace Clove {
 	
 	public:
 		static void Init();
+		static void OnWindowResize(unsigned int width, unsigned int height);
 		static void BeginScene(Camera& camera);
 		static void EndScene();
 		static void Submit(

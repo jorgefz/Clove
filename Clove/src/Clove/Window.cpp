@@ -90,7 +90,6 @@ namespace Clove {
 	//===== GLFW Callback Functions =====//
 
 	static void WindowResizeCallback(GLFWwindow* w, int width, int height) {
-		glViewport(0, 0, width, height);
 		Clove::WindowData* data = static_cast<Clove::WindowData*>(glfwGetWindowUserPointer(w));
 		data->width = static_cast<unsigned int>(width);
 		data->height = static_cast<unsigned int>(height);

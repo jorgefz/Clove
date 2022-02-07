@@ -27,12 +27,13 @@ namespace Clove {
 		static GameApp& GetInstance() { return *m_instance; }
 
 	private: // Event methods
-		bool OnWindowClose();
+		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
 
 	private:
 		std::unique_ptr<Window> m_window = nullptr;
 		ImGuiLayer* m_imgui_layer = nullptr;
-		bool m_running = true;
+		bool m_running = true, m_minimised = false;
 		LayerStack m_layer_stack;
 		float m_frame_time = 0.0f;
 

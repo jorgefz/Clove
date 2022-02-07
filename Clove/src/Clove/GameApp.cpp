@@ -38,7 +38,9 @@ namespace Clove {
 			float dt = time - m_frame_time;
 
 			// update layers forward
-			for (Layer* layer : m_layer_stack) layer->OnUpdate(dt);
+			if (!m_minimised) {
+				for (Layer* layer : m_layer_stack) layer->OnUpdate(dt);
+			}
 
 			m_imgui_layer->Begin();
 			for (Layer* layer : m_layer_stack) layer->OnImGuiRender();
@@ -60,8 +62,8 @@ namespace Clove {
 		//std::cout << e.GetDebugName() << std::endl;
 
 		EventDispatcher dp(e);
-		auto f = std::bind(&GameApp::OnWindowClose, this);
-		dp.Dispatch<WindowCloseEvent>(f);
+		dp.Dispatch<WindowCloseEvent>(CLOVE_BIND_METHOD_1(GameApp::OnWindowClose));
+		dp.Dispatch<WindowResizeEvent>(CLOVE_BIND_METHOD_1(GameApp::OnWindowResize));
 
 		// dispatch events to layers in reverse order (front layers receive it first)
 		for (auto it = m_layer_stack.end(); it != m_layer_stack.begin(); ) {
@@ -71,9 +73,19 @@ namespace Clove {
 	}
 
 	// Event methods
-	bool GameApp::OnWindowClose() {
+	bool GameApp::OnWindowClose(WindowCloseEvent& e) {
 		m_running = false;
 		return true; // event handled
+	}
+
+	bool GameApp::OnWindowResize(WindowResizeEvent& e) {
+		if (e.GetWidth() == 0 || e.GetHeight() == 0) {
+			m_minimised = true;
+			return false;
+		}
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+		m_minimised = false;
+		return false;
 	}
 
 }

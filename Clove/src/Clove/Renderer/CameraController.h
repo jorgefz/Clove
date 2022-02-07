@@ -14,6 +14,8 @@ namespace Clove {
 		void OnEvent(Event& e);
 		Camera& GetCamera() { return m_cam; };
 		const Camera& GetCamera() const { return m_cam; };
+		void SetZoomLevel(float zoom) { m_zoom_level = zoom; }
+		float GetZoomLevel() { return m_zoom_level; }
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& e);
 		bool OnWindowResized(WindowResizeEvent& e);

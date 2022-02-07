@@ -56,12 +56,15 @@ public:
 		Clove::RenderCommand::Clear();
 
 		Clove::Renderer::BeginScene(m_camera_control.GetCamera());
-		m_shaderlib.Get("TextureShader")->Bind();
+		
 		m_texture->Bind();
-		Clove::Renderer::Submit(m_vao, m_shaderlib.Get("TextureShader"));
-		m_texture2->Bind();
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_camera_control.GetCamera().GetPosition());
+		glm::mat4 transform = glm::scale(glm::mat4(1.0f), glm::vec3(5.0f,5.0f,1.0f));
 		Clove::Renderer::Submit(m_vao, m_shaderlib.Get("TextureShader"), transform);
+		
+		m_texture2->Bind();
+		glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), m_camera_control.GetCamera().GetPosition());
+		Clove::Renderer::Submit(m_vao, m_shaderlib.Get("TextureShader"), transform2);
+		
 		Clove::Renderer::EndScene();
 	}
 
@@ -71,17 +74,21 @@ public:
 
 	void OnEvent(Clove::Event& e) override {
 
+		m_camera_control.OnEvent(e);
+
+		if (e.GetEventType() == Clove::EventType::WindowResize) {
+			auto& wr = (Clove::WindowResizeEvent&)e;
+		}
+
+		// Event dispatch example
 		Clove::EventDispatcher dp(e);
 		dp.Dispatch<Clove::KeyPressEvent>(CLOVE_BIND_METHOD_1(TestLayer::OnKeyPressedEvent));
-		
 		if (e.GetEventType() == Clove::EventType::KeyPressed) {
 			int key = dynamic_cast<Clove::KeyPressEvent&>(e).GetKeyCode();
 			if (key > 0 && key < CHAR_MAX) {
 				std::cout << (char)key;
 			}
 		}
-
-		m_camera_control.OnEvent(e);
 	}
 
 	bool OnKeyPressedEvent(Clove::KeyPressEvent& event) {
