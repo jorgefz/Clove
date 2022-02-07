@@ -1,16 +1,16 @@
 #include "clovepch.h"
-#include "Clove/Core.h"
+#include "Clove/Core/Core.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "imgui.h"
-#include "ImGuiLayer.h"
+#include "Clove/ImGui/ImGuiLayer.h"
 
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
-#include "Clove/GameApp.h"
+#include "Clove/Core/GameApp.h"
 
 namespace Clove {
 

@@ -1,9 +1,9 @@
 #pragma once
-#include "Clove/Core.h"
+#include "Clove/Core/Core.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "Clove/Window.h"
+#include "Clove/Core/Window.h"
 
 namespace Clove {
 

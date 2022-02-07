@@ -1,11 +1,11 @@
 #include "clovepch.h"
-#include "Core.h"
+#include "Clove/Core/Core.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "Input.h"
-#include "GameApp.h"
+#include "Clove/Core/GameApp.h"
 
 namespace Clove {
 

@@ -1,5 +1,5 @@
 #include "clovepch.h"
-#include "Core.h"
+#include "Clove/Core/Core.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -32,7 +32,7 @@ namespace Clove {
 			input_format = GL_RGBA;
 			break;
 		default:
-			CLOVE_ASSERT(false, "Unsupported image format (wrong number of channels)")
+			CLOVE_ASSERT(false, "Unsupported image format (wrong number of channels)");
 		}
 
 		// Initialize OpenGL texture

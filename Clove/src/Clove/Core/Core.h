@@ -11,13 +11,16 @@
 
 
 // Macros
-
-#define CLOVE_ASSERT(condition, msg) if(!(condition)) { throw std::runtime_error(msg); }
+#ifdef CLOVE_DEBUG
+#	define CLOVE_ASSERT(condition, msg) if(!(condition)) { throw std::runtime_error(msg); }
+#else
+#	define CLOVE_ASSERT(condition, msg) condition; 
+#endif
 
 #define CLOVE_BIND_METHOD_1(fn) std::bind(&fn, this, std::placeholders::_1)
 
-// Reference Counting System
 
+// Reference Counting System
 namespace Clove {
 	
 	template<typename T>

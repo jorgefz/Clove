@@ -32,7 +32,7 @@ project "Clove"
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}") 
 
 	pchheader "clovepch.h"
-	pchsource "%{prj.name}/src/Clove/clovepch.cpp"
+	pchsource "%{prj.name}/src/clovepch.cpp"
 
 	defines {
 		"GLFW_INCLUDE_NONE"

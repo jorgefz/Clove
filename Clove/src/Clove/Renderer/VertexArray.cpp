@@ -1,10 +1,10 @@
 #include "clovepch.h"
-#include "Core.h"
+#include "Clove/Core/Core.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "VertexArray.h"
+#include "Clove/Renderer/VertexArray.h"
 
 namespace Clove {
 

@@ -1,8 +1,8 @@
 #include "clovepch.h"
-#include "Core.h"
+#include "Clove/Core/Core.h"
 #include <glad/glad.h>
-#include "Renderer/Renderer.h"
-#include "Renderer/RenderCommand.h"
+#include "Clove/Renderer/Renderer.h"
+#include "Clove/Renderer/RenderCommand.h"
 
 namespace Clove {
 	

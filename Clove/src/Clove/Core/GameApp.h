@@ -1,15 +1,15 @@
 #pragma once
 #include "clovepch.h"
 
-#include "Events/Event.h"
-#include "Layer.h"
+#include "Clove/Events/Event.h"
+#include "Clove/Core/Layer.h"
 #include "Clove/ImGui/ImGuiLayer.h"
-#include "Window.h"
+#include "Clove/Core/Window.h"
 
-#include "Shader.h"
-#include "Renderer/Buffer.h"
-#include "Renderer/VertexArray.h"
-#include "Renderer/Camera.h"
+#include "Clove/Renderer/Shader.h"
+#include "Clove/Renderer/Buffer.h"
+#include "Clove/Renderer/VertexArray.h"
+#include "Clove/Renderer/Camera.h"
 
 namespace Clove {
 

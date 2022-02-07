@@ -1,7 +1,7 @@
 #include <clovepch.h>
 #include "Clove/Renderer/CameraController.h"
-#include "Clove/Input.h"
-#include "Clove/KeyCodes.h"
+#include "Clove/Core/Input.h"
+#include "Clove/Core/KeyCodes.h"
 
 namespace Clove {
 	CameraController::CameraController(float aspect_ratio, bool rotation)

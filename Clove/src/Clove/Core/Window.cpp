@@ -1,11 +1,11 @@
 #include "clovepch.h"
-#include "Core.h"
+#include "Clove/Core/Core.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "Window.h"
-#include "Renderer/OpenGLContext.h"
+#include "Clove/Core/Window.h"
+#include "Clove/Renderer/OpenGLContext.h"
 
 namespace Clove {
 
@@ -14,7 +14,7 @@ namespace Clove {
 
 	void GLFWErrorCallback(int error, const char* description) {
 		std::cout << "GLFW Error " << error << ": " << description << std::endl;
-		throw std::runtime_error(" ");
+		CLOVE_ASSERT(false, "Fatal Error");
 	}
 
 	Window::Window(unsigned int width, unsigned int height)

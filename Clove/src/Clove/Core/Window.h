@@ -2,12 +2,12 @@
 
 #include "clovepch.h"
 
-#include "Events/Event.h"
-#include "Events/WindowEvent.h"
-#include "Events/KeyEvent.h"
-#include "Events/MouseEvent.h"
+#include "Clove/Events/Event.h"
+#include "Clove/Events/WindowEvent.h"
+#include "Clove/Events/KeyEvent.h"
+#include "Clove/Events/MouseEvent.h"
 
-#include "Renderer/GraphicsContext.h"
+#include "Clove/Renderer/GraphicsContext.h"
 
 namespace Clove{
 

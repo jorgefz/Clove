@@ -1,14 +1,14 @@
 #include "clovepch.h"
-#include "Core.h"
+#include "Clove/Core/Core.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "GameApp.h"
-#include "Renderer/Buffer.h"
-#include "Renderer/VertexArray.h"
-#include "Renderer/Renderer.h"
-#include "Renderer/RenderCommand.h"
+#include "CLove/Renderer/Buffer.h"
+#include "CLove/Renderer/VertexArray.h"
+#include "CLove/Renderer/Renderer.h"
+#include "CLove/Renderer/RenderCommand.h"
 
 namespace Clove {
 

@@ -2,7 +2,7 @@
 #include "Clove/Renderer/Buffer.h"
 #include "Clove/Renderer/VertexArray.h"
 #include "Clove/Renderer/Camera.h"
-#include "Clove/Shader.h"
+#include "Clove/Renderer/Shader.h"
 
 namespace Clove {
 	class Renderer {

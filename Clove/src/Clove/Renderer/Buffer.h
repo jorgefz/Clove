@@ -1,5 +1,5 @@
 #pragma once
-#include "Clove/Core.h"
+#include "Clove/Core/Core.h"
 
 namespace Clove {
 
