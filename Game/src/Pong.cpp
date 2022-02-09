@@ -38,14 +38,28 @@ void MovePaddle(GameObject& paddle, float dt, float top, float bottom) {
 	}
 }
 
+void MovePaddleAI(GameObject& paddle, GameObject& ball, float dt, float top, float bottom) {
+	paddle.moving = false;
+	if (paddle.pos.y < ball.pos.y) { // move up
+		paddle.moving = true;
+		if (!(paddle.pos.y + paddle.scale.y / 2.0f >= top))
+			paddle.pos.y += paddle.vel.y * dt;
+	}
+	if (paddle.pos.y > ball.pos.y) { // move down
+		paddle.moving = true;
+		if (!(paddle.pos.y - paddle.scale.y / 2.0f <= bottom))
+			paddle.pos.y -= paddle.vel.y * dt;
+	}
+}
+
 void CollidePaddle(GameObject& ball, GameObject& paddle) {
 
 	// same y-axis range
-	if (ball.pos.y <= paddle.pos.y + paddle.scale.y / 2.0f &&
-		ball.pos.y >= paddle.pos.y - paddle.scale.y / 2.0f) {
+	if (ball.pos.y - ball.scale.y/2.0f <= paddle.pos.y + paddle.scale.y / 2.0f &&
+		ball.pos.y + ball.scale.y/2.0f >= paddle.pos.y - paddle.scale.y / 2.0f) {
 
-		if (ball.pos.x - ball.scale.x / 2.0f <= paddle.pos.x + paddle.scale.x / 2.0f &&
-			ball.pos.x + ball.scale.x / 2.0f >= paddle.pos.x - paddle.scale.x / 2.0f)
+		if (ball.pos.x - ball.scale.x / 2.0f <= paddle.pos.x + 1.05f*paddle.scale.x / 2.0f &&
+			ball.pos.x + ball.scale.x / 2.0f >= paddle.pos.x - 1.05f*paddle.scale.x / 2.0f)
 		{
 			if (IsPaddleMovingUp(paddle)) ball.vel.y *= (ball.vel.y < 0.0f ? 0.8f : 1.2f);
 			else if (IsPaddleMovingDown(paddle)) ball.vel.y *= (ball.vel.y > 0.0f ? 0.8f : 1.2f);
@@ -104,9 +118,15 @@ void Pong::OnUpdate(float dt) {
 	float wall_right = 1.25f;
 	float wall_left = -1.25f;
 
+	
+
 	// Paddle movement
-	MovePaddle(m_lpaddle, dt, wall_top, wall_bottom);
-	MovePaddle(m_rpaddle, dt, wall_top, wall_bottom);
+	if (m_lpaddle.ai) MovePaddleAI(m_lpaddle, m_ball, dt, wall_top, wall_bottom);
+	else MovePaddle(m_lpaddle, dt, wall_top, wall_bottom);
+	
+	if (m_rpaddle.ai) MovePaddleAI(m_rpaddle, m_ball, dt, wall_top, wall_bottom);
+	else MovePaddle(m_rpaddle, dt, wall_top, wall_bottom);
+
 
 	// Ball movement
 	if (Clove::Input::IsKeyPressed(Clove::Key::KEY_SPACE) && m_ball.moving == false) {
@@ -127,19 +147,19 @@ void Pong::OnUpdate(float dt) {
 		m_ball.pos.y = wall_bottom * 0.95f;
 	}
 
-	// Player 1 scoring
+	// Player 2 scoring
 	if (m_ball.pos.x - m_ball.scale.y/2.0f <= m_lpaddle.pos.x) {
 		m_ball.pos = glm::vec2(0.0f, 0.0f);
 		m_ball.vel = glm::vec2(0.0f, 0.0f);
 		m_ball.moving = false;
-		scores.first += 1;
+		scores.second += 1;
 	}
-	// Player 2 scoring
+	// Player 1 scoring
 	else if (m_ball.pos.x + m_ball.scale.y / 2.0f >= m_rpaddle.pos.x) {
 		m_ball.pos = glm::vec2(0.0f, 0.0f);
 		m_ball.vel = glm::vec2(0.0f, 0.0f);
 		m_ball.moving = false;
-		scores.second += 1;
+		scores.first += 1;
 	}
 
 	// Collision with paddles
@@ -158,8 +178,8 @@ void Pong::OnUpdate(float dt) {
 	Clove::Renderer2D::DrawQuad({ 0.0f,0.0f,-0.1f }, { 2.45f,1.95f }, { 0.2f,0.2f,0.2f,1.0f }); //inner
 
 	// draw paddles
-	Clove::Renderer2D::DrawQuad(m_lpaddle.pos, m_lpaddle.scale, m_paddle_color);
-	Clove::Renderer2D::DrawQuad(m_rpaddle.pos, m_rpaddle.scale, m_paddle_color);
+	Clove::Renderer2D::DrawQuad(m_lpaddle.pos, m_lpaddle.scale, m_lpaddle_color);
+	Clove::Renderer2D::DrawQuad(m_rpaddle.pos, m_rpaddle.scale, m_rpaddle_color);
 	
 	// draw ball
 	Clove::Renderer2D::DrawQuad(m_ball.pos, m_ball.scale, m_TextureBall);
@@ -172,6 +192,19 @@ void Pong::OnImGuiRender() {
 	ImGui::Begin("Debug");
 	ImGui::Text("Player 1 Score: %d", scores.first);
 	ImGui::Text("Player 2 Score: %d", scores.second);
+	ImGui::Checkbox("Player 1 AI", &m_lpaddle.ai);
+	ImGui::Checkbox("Player 2 AI", &m_rpaddle.ai);
+
+	bool reset = false;
+	ImGui::Checkbox("Reset", &reset);
+	if (reset) {
+		m_ball.vel = glm::vec2(0.0f);
+		m_ball.pos = glm::vec2(0.0f);
+		m_ball.moving = false;
+		reset = false;
+		scores = std::pair<int, int>(0, 0);
+	}
+
 	ImGui::Text("Ball speed: %.2f %.2f", m_ball.vel.x, m_ball.vel.y);
 	ImGui::Text("Ball collisions: %d ", m_ball.collisions);
 	ImGui::End();

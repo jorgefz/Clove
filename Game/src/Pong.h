@@ -5,7 +5,9 @@
 struct GameObject {
 	glm::vec2 pos, vel, scale;
 	Clove::Key up, down;
-	int collisions = 0, moving = false;
+	int collisions = 0;
+	bool moving = false;
+	bool ai = false;
 };
 
 
@@ -32,6 +34,7 @@ private:
 	GameObject m_ball, m_lpaddle, m_rpaddle;
 	std::pair<int,int> scores = {0,0};
 
-	glm::vec4 m_paddle_color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glm::vec4 m_lpaddle_color = { 0.7f, 0.2f, 0.2f, 1.0f };
+	glm::vec4 m_rpaddle_color = { 0.2f, 0.2f, 0.7f, 1.0f };
 };
 
