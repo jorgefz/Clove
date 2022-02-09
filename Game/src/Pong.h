@@ -5,7 +5,7 @@
 struct GameObject {
 	glm::vec2 pos, vel, scale;
 	Clove::Key up, down;
-	bool colliding = false, moving = false;
+	int collisions = 0, moving = false;
 };
 
 

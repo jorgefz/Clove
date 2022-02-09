@@ -7,40 +7,14 @@
 #include "imgui.h"
 
 
-Pong::Pong()
-	: Layer("Pong"), m_camera_control(16.0f / 9.0f)
-{  }
 
-
-void Pong::OnAttach() {
-
-	srand(time(NULL));
-
-	m_TextureBall = Clove::Texture2D::Create("assets/cursor.png");
-
-	m_ball.pos = glm::vec2(0.0f);
-	m_ball.vel = glm::vec2(0.0f);
-	m_ball.scale = glm::vec2(0.1f, 0.1f);
-
-	m_lpaddle.pos = glm::vec2(-1.0f, 0.0f);
-	m_lpaddle.vel = glm::vec2(0.0f, 1.7f);
-	m_lpaddle.scale = glm::vec2(0.1f, 0.5f);
-	m_lpaddle.up = Clove::Key::KEY_W;
-	m_lpaddle.down = Clove::Key::KEY_S;
-
-	m_rpaddle.pos = glm::vec2(1.0f, 0.0f);
-	m_rpaddle.vel = glm::vec2(0.0f, 1.7f);
-	m_rpaddle.scale = glm::vec2(0.1f, 0.5f);
-	m_rpaddle.up = Clove::Key::KEY_O;
-	m_rpaddle.down = Clove::Key::KEY_L;
-
+float RandomFloat(float min, float max) {
+	return (min + 1) + (((float)rand()) / (float)RAND_MAX) * (max - (min + 1));
 }
 
-
-void Pong::OnDetach() {
-	Clove::Renderer2D::Shutdown();
+bool RandomBool() {
+	return (rand() > RAND_MAX / 2);
 }
-
 
 bool IsPaddleMovingUp(GameObject& paddle) {
 	return (Clove::Input::IsKeyPressed(paddle.up));
@@ -76,19 +50,49 @@ void CollidePaddle(GameObject& ball, GameObject& paddle) {
 			if (IsPaddleMovingUp(paddle)) ball.vel.y *= (ball.vel.y < 0.0f ? 0.8f : 1.2f);
 			else if (IsPaddleMovingDown(paddle)) ball.vel.y *= (ball.vel.y > 0.0f ? 0.8f : 1.2f);
 			ball.vel.x *= -1.0f;
-			ball.colliding = true;
+			ball.collisions += 1;
 		}
 	}
 }
 
 
-float RandomFloat(float min, float max) {
-	return (min + 1) + (((float)rand()) / (float)RAND_MAX) * (max - (min + 1));
+
+
+
+Pong::Pong()
+	: Layer("Pong"), m_camera_control(16.0f / 9.0f)
+{  }
+
+
+void Pong::OnAttach() {
+
+	srand(time(NULL));
+
+	m_TextureBall = Clove::Texture2D::Create("assets/cursor.png");
+
+	m_ball.pos = glm::vec2(0.0f);
+	m_ball.vel = glm::vec2(0.0f);
+	m_ball.scale = glm::vec2(0.1f, 0.1f);
+
+	m_lpaddle.pos = glm::vec2(-1.0f, 0.0f);
+	m_lpaddle.vel = glm::vec2(0.0f, 1.7f);
+	m_lpaddle.scale = glm::vec2(0.1f, 0.5f);
+	m_lpaddle.up = Clove::Key::KEY_W;
+	m_lpaddle.down = Clove::Key::KEY_S;
+
+	m_rpaddle.pos = glm::vec2(1.0f, 0.0f);
+	m_rpaddle.vel = glm::vec2(0.0f, 1.7f);
+	m_rpaddle.scale = glm::vec2(0.1f, 0.5f);
+	m_rpaddle.up = Clove::Key::KEY_O;
+	m_rpaddle.down = Clove::Key::KEY_L;
+
 }
 
-bool RandomBool() {
-	return ( rand() > RAND_MAX/2);
+
+void Pong::OnDetach() {
+	Clove::Renderer2D::Shutdown();
 }
+
 
 void Pong::OnUpdate(float dt) {
 
@@ -139,7 +143,6 @@ void Pong::OnUpdate(float dt) {
 	}
 
 	// Collision with paddles
-	m_ball.colliding = false;
 	CollidePaddle(m_ball, m_lpaddle);
 	CollidePaddle(m_ball, m_rpaddle);
 	
@@ -170,10 +173,10 @@ void Pong::OnImGuiRender() {
 	ImGui::Text("Player 1 Score: %d", scores.first);
 	ImGui::Text("Player 2 Score: %d", scores.second);
 	ImGui::Text("Ball speed: %.2f %.2f", m_ball.vel.x, m_ball.vel.y);
-	ImGui::Text("Ball colliding: %d ", m_ball.colliding);
+	ImGui::Text("Ball collisions: %d ", m_ball.collisions);
 	ImGui::End();
 }
 
 void Pong::OnEvent(Clove::Event& e) {
-	m_camera_control.OnEvent(e);
+	//m_camera_control.OnEvent(e);
 }
