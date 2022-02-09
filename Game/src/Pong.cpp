@@ -24,6 +24,7 @@ bool IsPaddleMovingDown(GameObject& paddle) {
 	return (Clove::Input::IsKeyPressed(paddle.down));
 }
 
+
 void MovePaddle(GameObject& paddle, float dt, float top, float bottom) {
 	paddle.moving = false;
 	if (Clove::Input::IsKeyPressed(paddle.up)) {
@@ -80,7 +81,7 @@ Pong::Pong()
 
 void Pong::OnAttach() {
 
-	srand(time(NULL));
+	srand(static_cast<unsigned int>(time(NULL)));
 
 	m_TextureBall = Clove::Texture2D::Create("assets/cursor.png");
 

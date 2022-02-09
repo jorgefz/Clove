@@ -13,8 +13,7 @@ namespace Clove {
 		if (type == "vertex") return GL_VERTEX_SHADER;
 		else if (type == "fragment" || type == "pixel")
 			return GL_FRAGMENT_SHADER;
-		std::cout << "Unknown shader type '" << type << "'" << std::endl;
-		CLOVE_ASSERT(false, "");
+		CLOVE_ASSERT(false, "Unknown shader type '%s'\n", type.c_str());
 		return 0;
 	}
 
@@ -118,7 +117,7 @@ namespace Clove {
 		std::string result;
 		if (!in) {
 			std::cout << "Error opening shader '" << filepath << "'" << std::endl;
-			CLOVE_ASSERT(false, " ");
+			CLOVE_ASSERT(false, "Failed to open shader '%s'\n", filepath.c_str());
 		}
 		in.seekg(0, std::ios::end);
 		result.resize(static_cast<unsigned int>(in.tellg()));
@@ -153,8 +152,8 @@ namespace Clove {
 		while (pos != std::string::npos) {
 			size_t eol = source.find_first_of("\r\n", pos);
 			bool condition = eol != std::string::npos;
-
 			CLOVE_ASSERT(condition, "Syntax error");
+
 			size_t begin = pos + token_len + 1;
 			std::string type = source.substr(begin, eol - begin);
 			GLenum gl_type = ShaderTypeFromString(type);
@@ -194,9 +193,7 @@ namespace Clove {
 				std::vector<GLchar> msg(length);
 				glGetShaderInfoLog(shader, length, &length, &msg[0]);
 				glDeleteShader(shader);
-				std::cerr << "Failed to compile shader" << std::endl;
-				std::cerr << msg.data() << std::endl;
-				CLOVE_ASSERT(false, "");
+				CLOVE_ASSERT(false, "Failed to compile shader!\n%s\n", msg.data());
 			}
 
 			glAttachShader(prog, shader);
@@ -228,9 +225,7 @@ namespace Clove {
 		std::vector<GLchar> msg(length);
 		glGetShaderInfoLog(id, length, &length, &msg[0]);
 		glDeleteShader(id);
-		std::cerr << "Failed to compile shader" << std::endl;
-		std::cerr << msg.data() << std::endl;
-		CLOVE_ASSERT(false, "");
+		CLOVE_ASSERT(false, "Failed to compile shader\n%s\n", msg.data());
 		return 0;
 	}
 
@@ -240,7 +235,7 @@ namespace Clove {
 	
 	void ShaderLibrary::Add(const Ref<Shader>& shader) {
 		auto& name = shader->GetName();
-		CLOVE_ASSERT(!Contains(name), "Shader already in library");
+		CLOVE_ASSERT(!Contains(name), "Shader '%s' already in library", name.c_str());
 		m_shaders[name] = shader;
 	}
 
@@ -262,7 +257,7 @@ namespace Clove {
 	}
 
 	Ref<Shader> ShaderLibrary::Get(const std::string& name) {
-		CLOVE_ASSERT(Contains(name), "Shader not found");
+		CLOVE_ASSERT(Contains(name), "Shader '%s' not found", name.c_str());
 		return m_shaders[name];
 	}
 

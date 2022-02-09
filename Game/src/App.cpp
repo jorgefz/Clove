@@ -9,13 +9,14 @@
 #include "Pong.h"
 
 
+#include "Clove/Core/Core.h"
 
 class GameTest : public Clove::GameApp {
 public:
 	GameTest() {
 		//GameApp::PushLayer( new TestLayer() );
-		//GameApp::PushLayer( new Game2D() );
-		GameApp::PushLayer( new Pong() );
+		GameApp::PushLayer( new Game2D() );
+		//GameApp::PushLayer( new Pong() );
 	}
 
 	~GameTest() {

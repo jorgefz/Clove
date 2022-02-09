@@ -57,7 +57,7 @@ namespace Clove {
 				case ShaderDataType::Float4: return 4;
 				case ShaderDataType::Mat3:   return 3 * 3;
 				case ShaderDataType::Mat4:   return 4 * 4;
-				default: CLOVE_ASSERT(false, "Unknown ShaderdataType!");
+				default: CLOVE_ASSERT(false, "Unknown ShaderdataType"); return UINT_MAX;
 			}
 		}
 

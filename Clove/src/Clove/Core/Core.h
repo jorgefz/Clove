@@ -10,17 +10,20 @@
 #endif
 
 
-// Macros
+// Debug message macros: MESSAGE(condition, c-style string format, varargs)
+// e.g. CLOVE_ASSERT(false, "The value is too large (%f)", 10.0f); 
 #ifdef CLOVE_DEBUG
-#	define CLOVE_ASSERT(condition, msg) if(!(condition)) { throw std::runtime_error(msg); }
-#	define CLOVE_WARN(condition, msg) if(!(condition)) { std::cerr << msg << std::endl; }
-#	define CLOVE_INFO(msg) std::cerr << msg << std::endl;
+#	define CLOVE_ASSERT(condition, msg, ...) if (!(condition)) { printf(" [ERROR] " msg " \n", ##__VA_ARGS__); __debugbreak(); }
+#	define CLOVE_WARN(condition, msg, ...) if(!(condition)) { printf(" [WARNING] " msg " \n", ##__VA_ARGS__); }
+#	define CLOVE_INFO(msg, ...) printf(" [INFO] " msg "\n", ##__VA_ARGS__);
 #else
-#	define CLOVE_ASSERT(condition, msg) condition;
-#	define CLOVE_WARN(condition, msg) condition;
-#	define CLOVE_INFO(msg)
+#	define CLOVE_ASSERT(condition, msg, ...) condition;
+#	define CLOVE_WARN(condition, msg, ...) condition;
+#	define CLOVE_INFO(msg, ...)
 #endif
 
+
+// Mostly used to use class methods as event callbacks, e.g. this->EventCallback(Event& e) 
 #define CLOVE_BIND_METHOD_1(fn) std::bind(&fn, this, std::placeholders::_1)
 
 
