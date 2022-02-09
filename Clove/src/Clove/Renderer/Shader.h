@@ -37,9 +37,9 @@ namespace Clove {
 	public:
 		void SetUniform1i(const std::string& name, int value);
 		void SetUniform1f(const std::string& name, float value);
-		void SetUniform2f(const std::string& name, glm::vec2& v);
-		void SetUniform3f(const std::string& name, glm::vec3& v);
-		void SetUniform4f(const std::string& name, glm::vec4& v);
+		void SetUniform2f(const std::string& name, const glm::vec2& v);
+		void SetUniform3f(const std::string& name, const glm::vec3& v);
+		void SetUniform4f(const std::string& name, const glm::vec4& v);
 		void SetUniformMat3f(const std::string& name, const glm::mat3& matrix);
 		void SetUniformMat4f(const std::string& name, const glm::mat4& matrix);
 		

@@ -24,8 +24,8 @@ namespace Clove {
 		glBindVertexArray(0);
 	}
 
-	VertexArray* VertexArray::Create() {
-		return new VertexArray();
+	Ref<VertexArray> VertexArray::Create() {
+		return std::make_shared<VertexArray>();
 	}
 
 	void VertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vb) {

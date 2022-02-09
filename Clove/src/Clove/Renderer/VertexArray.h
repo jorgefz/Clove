@@ -11,7 +11,7 @@ namespace Clove {
 		void Bind() const;
 		static void Unbind();
 
-		static VertexArray* Create();
+		static Ref<VertexArray> Create();
 		void AddVertexBuffer(const Ref<VertexBuffer>& vb);
 		void SetIndexBuffer(const Ref<IndexBuffer>& ib);
 

@@ -1,5 +1,6 @@
 #pragma once
-#include "clovepch.h"
+#include "Clove/Core/GameApp.h"
+//#include "clovepch.h"
 
 extern Clove::GameApp* Clove::CreateApp();
 

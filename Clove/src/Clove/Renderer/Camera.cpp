@@ -7,7 +7,7 @@ namespace Clove {
 		: m_proj( glm::ortho(left, right, bottom, top, -1.0f, 1.0f) ),
 		  m_view(1.0f),
 		  m_view_proj( m_proj * m_view ),
-		  m_position(0.0f,0.0f,1.0f)
+		  m_position(0.0f,0.0f,0.0f)
 	{  }
 
 	Camera::~Camera() {  }

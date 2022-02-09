@@ -86,13 +86,13 @@ namespace Clove {
 	void Shader::SetUniform1f(const std::string& name, float value) {
 		glUniform1f(GetUniformLocation(name), value);
 	}
-	void Shader::SetUniform2f(const std::string& name, glm::vec2& v) {
+	void Shader::SetUniform2f(const std::string& name, const glm::vec2& v) {
 		glUniform2f(GetUniformLocation(name), v.x, v.y);
 	}
-	void Shader::SetUniform3f(const std::string& name, glm::vec3& v) {
+	void Shader::SetUniform3f(const std::string& name, const glm::vec3& v) {
 		glUniform3f(GetUniformLocation(name), v.x, v.y, v.z);
 	}
-	void Shader::SetUniform4f(const std::string& name, glm::vec4& v) {
+	void Shader::SetUniform4f(const std::string& name, const glm::vec4& v) {
 		glUniform4f(GetUniformLocation(name), v.x, v.y, v.z, v.w);
 	}
 	void Shader::SetUniformMat3f(const std::string& name, const glm::mat3& matrix) {
@@ -121,7 +121,7 @@ namespace Clove {
 			CLOVE_ASSERT(false, " ");
 		}
 		in.seekg(0, std::ios::end);
-		result.resize(in.tellg());
+		result.resize(static_cast<unsigned int>(in.tellg()));
 		in.seekg(0, std::ios::beg);
 		in.read(&result[0], result.size());
 		in.close();

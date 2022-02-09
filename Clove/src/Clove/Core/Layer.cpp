@@ -3,7 +3,7 @@
 
 namespace Clove {
 
-	Layer::Layer() {  }
+	Layer::Layer(std::string name) : m_name(name) {  }
 	Layer::~Layer() {  }
 
 	LayerStack::LayerStack() {
@@ -20,10 +20,11 @@ namespace Clove {
 	}
 	void LayerStack::PopLayer(Layer* layer) {
 		auto it = std::find(m_layers.begin(), m_layers.end(), layer);
-		if (it != m_layers.end()) {
-			m_layers.erase(it);
-			m_insert_index--;
-		}
+		if (it == m_layers.end()) return;
+		layer->OnDetach();
+		m_layers.erase(it);
+		m_insert_index--;
+	
 	}
 
 	void LayerStack::PushOverlay(Layer* overlay) {
@@ -32,7 +33,9 @@ namespace Clove {
 	}
 	void LayerStack::PopOverlay(Layer* overlay) {
 		auto it = std::find(m_layers.begin(), m_layers.end(), overlay);
-		if (it != m_layers.end()) m_layers.erase(it);
+		if (it == m_layers.end()) return;
+		overlay->OnDetach();
+		m_layers.erase(it);
 	}
 
 }

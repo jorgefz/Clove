@@ -104,7 +104,7 @@ namespace Clove {
 		const BufferLayout& GetLayout();
 		void Bind();
 		static void Unbind();
-		static VertexBuffer* Create(float* data, unsigned int size);
+		static Ref<VertexBuffer> Create(float* data, unsigned int size);
 	private:
 		unsigned int m_id;
 		BufferLayout m_layout;
@@ -116,7 +116,7 @@ namespace Clove {
 		~IndexBuffer();
 		void Bind();
 		static void Unbind();
-		static IndexBuffer* Create(unsigned int* data, unsigned int count);
+		static Ref<IndexBuffer> Create(unsigned int* data, unsigned int count);
 		unsigned int GetCount() { return m_count; }
 	private:
 		unsigned int m_id;

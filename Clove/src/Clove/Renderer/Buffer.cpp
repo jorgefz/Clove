@@ -28,8 +28,8 @@ namespace Clove {
 		glBindBuffer(GL_ARRAY_BUFFER, m_id);
 		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 	}
-	VertexBuffer* VertexBuffer::Create(float* data, unsigned int size) {
-		return new VertexBuffer(data, size);
+	Ref<VertexBuffer>  VertexBuffer::Create(float* data, unsigned int size) {
+		return std::make_shared<VertexBuffer>(data, size);
 	}
 	void VertexBuffer::Bind() {
 		glBindBuffer(GL_ARRAY_BUFFER, m_id);
@@ -54,8 +54,8 @@ namespace Clove {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW);
 	}
-	IndexBuffer* IndexBuffer::Create(unsigned int* data, unsigned int count) {
-		return new IndexBuffer(data, count);
+	Ref<IndexBuffer> IndexBuffer::Create(unsigned int* data, unsigned int count) {
+		return std::make_shared<IndexBuffer>(data, count);
 	}
 	void IndexBuffer::Bind() {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id);

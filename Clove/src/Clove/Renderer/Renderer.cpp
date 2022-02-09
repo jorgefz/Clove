@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #include "Clove/Renderer/Renderer.h"
 #include "Clove/Renderer/RenderCommand.h"
+#include "Clove/Renderer/Renderer2D.h"
 
 namespace Clove {
 	
@@ -10,6 +11,7 @@ namespace Clove {
 
 	void Renderer::Init() {
 		RenderCommand::Init();
+		Renderer2D::Init();
 	}
 
 	void Renderer::OnWindowResize(unsigned int width, unsigned int height) {

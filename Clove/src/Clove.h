@@ -22,12 +22,12 @@ and use the namespace "Clove::" to access classes and functions
 #include "Clove/Core/Input.h"
 #include "Clove/Core/KeyCodes.h"
 #include "Clove/Core/MouseCodes.h"
-#include "Clove/Core/EntryPoint.h"
 #include "Clove/Core/Layer.h"
 
 
 // Renderer
 #include "Clove/Renderer/Renderer.h"
+#include "Clove/Renderer/Renderer2D.h"
 #include "Clove/Renderer/RenderCommand.h"
 #include "Clove/Renderer/VertexArray.h"
 #include "Clove/Renderer/Buffer.h"

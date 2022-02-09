@@ -17,12 +17,9 @@ namespace Clove {
 
 	GameApp::GameApp() {
 
-		if (m_instance) throw std::runtime_error("Application already exists!\n");
+		CLOVE_ASSERT(!m_instance, "Application already exists");
 		m_instance = this;
-		
 		m_window = std::unique_ptr<Window>( Window::Create(1280, 720) );
-
-		// When event occurs, OnEvent is called and the event is passed to it.
 		m_window->SetEventCallback(CLOVE_BIND_METHOD_1(GameApp::OnEvent));
 
 		Renderer::Init();
@@ -50,6 +47,7 @@ namespace Clove {
 			
 			m_frame_time = time;
 		}
+		for (Layer* layer : m_layer_stack) layer->OnDetach();
 	}
 
 

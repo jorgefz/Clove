@@ -9,6 +9,22 @@
 
 namespace Clove {
 
+	Texture2D::Texture2D(uint32_t width, uint32_t height)
+		: m_width(width), m_height(height)
+	{
+		m_internal_format = GL_RGBA8;
+		m_data_format = GL_RGBA;
+
+		// Initialize OpenGL texture
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_renderer_id);
+		glTextureStorage2D(m_renderer_id, 1, m_internal_format, m_width, m_height);
+
+		glTextureParameteri(m_renderer_id, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTextureParameteri(m_renderer_id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTextureParameteri(m_renderer_id, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(m_renderer_id, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	}
+
 	Texture2D::Texture2D(const std::string& path) 
 		: m_path(path), m_renderer_id(0), m_width(0), m_height(0)
 	{
@@ -35,29 +51,19 @@ namespace Clove {
 			CLOVE_ASSERT(false, "Unsupported image format (wrong number of channels)");
 		}
 
+		m_internal_format = internal_format;
+		m_data_format = input_format;
+
 		// Initialize OpenGL texture
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_renderer_id);
-		glBindTexture(GL_TEXTURE_2D, m_renderer_id);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
 		glTextureStorage2D(m_renderer_id, 1, internal_format, m_width, m_height);
+		
+		glTextureParameteri(m_renderer_id, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTextureParameteri(m_renderer_id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTextureParameteri(m_renderer_id, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(m_renderer_id, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-		glTextureSubImage2D(
-			m_renderer_id,
-			0,			// level
-			0,			// xoffset
-			0,			// yoffset
-			m_width,	// width
-			m_height,	// height
-			input_format,		// format
-			GL_UNSIGNED_BYTE,	// type
-			data		// pixels
-		);
-
+		Texture2D::SetData(data);
 		stbi_image_free(data);
 	}
 
@@ -65,8 +71,16 @@ namespace Clove {
 		glDeleteTextures(1, &m_renderer_id);
 	}
 
+	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height) {
+		return CreateRef<Texture2D>(width, height);
+	}
+
 	Ref<Texture2D> Texture2D::Create(const std::string& path) {
 		return std::make_shared<Texture2D>(path);
+	}
+
+	void Texture2D::SetData(void* data) {
+		glTextureSubImage2D(m_renderer_id, 0, 0, 0, m_width, m_height, m_data_format, GL_UNSIGNED_BYTE, data);
 	}
 
 	void Texture2D::Bind(unsigned int slot) const {

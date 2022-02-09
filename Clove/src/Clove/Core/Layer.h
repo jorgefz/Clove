@@ -9,7 +9,7 @@ namespace Clove {
 	*/
 	class Layer {
 	public:
-		Layer();
+		Layer(std::string name = "Layer");
 		virtual ~Layer();
 
 		virtual void OnAttach() {  } // when layer is pushed to layer stack
@@ -18,6 +18,10 @@ namespace Clove {
 		virtual void OnEvent(Event& e) {  }
 
 		virtual void OnImGuiRender() {  }
+	
+		const std::string& GetName() { return m_name; }
+	private:
+		std::string m_name;
 	};
 
 	/*
