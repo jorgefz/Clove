@@ -32,8 +32,8 @@ in vec2 vTexCoord;
 uniform sampler2D uTexture;
 uniform vec4 uColor = vec4(1.0, 1.0, 1.0, 1.0);
 
-uniform float uTextureScale = 1.0;
+uniform float uTilingFactor = 1.0;
 
 void main() {
-	color = texture(uTexture, vTexCoord * uTextureScale) * uColor;
+	color = texture(uTexture, vTexCoord * uTilingFactor) * uColor;
 }

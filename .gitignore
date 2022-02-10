@@ -4,3 +4,6 @@ bin-int/
 !/Clove/vendor/premake/bin
 *.sln
 *.vcxproj*
+Game/CloveProfileRuntime.json
+Game/CloveProfileShutdown.json
+Game/CloveProfileStartup.json

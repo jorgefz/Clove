@@ -40,7 +40,7 @@ namespace Clove {
 		vbo->SetLayout({
 			{ ShaderDataType::Float3, "aPos" },
 			{ ShaderDataType::Float2, "aTexCoords" },
-			});
+		});
 
 		// index buffer
 		unsigned int indices[] = { 0, 1, 2, 2, 3, 0 };
@@ -100,15 +100,16 @@ namespace Clove {
 	}
 
 
-	void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size, const Ref<Texture2D>& texture) {
-		DrawQuad({ pos.x, pos.y, 0.0f }, size, texture);
+	void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size, const Ref<Texture2D>& texture, float tiling_factor) {
+		DrawQuad({ pos.x, pos.y, 0.0f }, size, texture, tiling_factor);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size, const Ref<Texture2D>& texture) {
+	void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size, const Ref<Texture2D>& texture, float tiling_factor) {
 		CLOVE_PROFILE_FUNCTION();
 		//Data->TextureShader->Bind();
 
 		Data->TextureShader->SetUniform4f("uColor", glm::vec4(1.0f)); // reset color
+		Data->TextureShader->SetUniform1f("uTilingFactor", tiling_factor);
 		texture->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos);
@@ -118,4 +119,25 @@ namespace Clove {
 		Data->QuadVertexArray->Bind();
 		RenderCommand::DrawIndexed(Data->QuadVertexArray);
 	}
+
+	void Renderer2D::DrawQuad(const QuadProperties& props) {
+		CLOVE_PROFILE_FUNCTION();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), props.position);
+		transform *= glm::scale(glm::mat4(1.0f), { props.size.x, props.size.y , 1.0f });
+		transform *= glm::rotate(glm::mat4(1.0f), props.rotation, { 0.0f,0.0f,1.0f });
+
+		Data->TextureShader->SetUniformMat4f("uTransform", transform);
+		Data->TextureShader->SetUniform4f("uColor", props.color);
+		Data->TextureShader->SetUniform1f("uTilingFactor", props.tiling_factor);
+
+		if (props.texture) props.texture->Bind();
+		else Data->WhiteTexture->Bind();
+
+		Data->QuadVertexArray->Bind();
+		RenderCommand::DrawIndexed(Data->QuadVertexArray);
+
+	}
+
+
 }

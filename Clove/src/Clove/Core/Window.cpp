@@ -38,6 +38,7 @@ namespace Clove {
 			CLOVE_PROFILE_SCOPE("glfwCreateWindow");
 			m_window_ptr = glfwCreateWindow(width, height, m_data.title.c_str(), nullptr, nullptr);
 		}
+
 		if (!m_window_ptr) {
 			glfwTerminate();
 			CLOVE_ASSERT(false, "Failed to create GLFW window!");
