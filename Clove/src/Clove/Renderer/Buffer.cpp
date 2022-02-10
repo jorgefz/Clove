@@ -24,46 +24,55 @@ namespace Clove {
 	}
 
 	VertexBuffer::VertexBuffer(float* data, unsigned int size) {
+		CLOVE_PROFILE_FUNCTION();
 		glGenBuffers(1, &m_id);
 		glBindBuffer(GL_ARRAY_BUFFER, m_id);
 		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 	}
 	Ref<VertexBuffer>  VertexBuffer::Create(float* data, unsigned int size) {
-		return std::make_shared<VertexBuffer>(data, size);
+		return CreateRef<VertexBuffer>(data, size);
 	}
 	void VertexBuffer::Bind() {
+		CLOVE_PROFILE_FUNCTION();
 		glBindBuffer(GL_ARRAY_BUFFER, m_id);
 	}
 	void VertexBuffer::Unbind() {
+		CLOVE_PROFILE_FUNCTION();
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	void VertexBuffer::SetLayout(const BufferLayout& layout) {
+		CLOVE_PROFILE_FUNCTION();
 		m_layout = layout;
 	}
 	const BufferLayout& VertexBuffer::GetLayout() {
 		return m_layout;
 	}
 	VertexBuffer::~VertexBuffer() {
+		CLOVE_PROFILE_FUNCTION();
 		glDeleteBuffers(1, &m_id);
 	}
 
 
 	IndexBuffer::IndexBuffer(unsigned int* data, unsigned int count) {
+		CLOVE_PROFILE_FUNCTION();
 		m_count = count;
 		glGenBuffers(1, &m_id);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW);
 	}
 	Ref<IndexBuffer> IndexBuffer::Create(unsigned int* data, unsigned int count) {
-		return std::make_shared<IndexBuffer>(data, count);
+		return CreateRef<IndexBuffer>(data, count);
 	}
 	void IndexBuffer::Bind() {
+		CLOVE_PROFILE_FUNCTION();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id);
 	}
 	void IndexBuffer::Unbind() {
+		CLOVE_PROFILE_FUNCTION();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 	IndexBuffer::~IndexBuffer() {
+		CLOVE_PROFILE_FUNCTION();
 		glDeleteBuffers(1, &m_id);
 	}
 

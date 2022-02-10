@@ -12,6 +12,7 @@ namespace Clove {
 	Texture2D::Texture2D(uint32_t width, uint32_t height)
 		: m_width(width), m_height(height)
 	{
+		CLOVE_PROFILE_FUNCTION();
 		m_internal_format = GL_RGBA8;
 		m_data_format = GL_RGBA;
 
@@ -28,12 +29,18 @@ namespace Clove {
 	Texture2D::Texture2D(const std::string& path) 
 		: m_path(path), m_renderer_id(0), m_width(0), m_height(0)
 	{
+		CLOVE_PROFILE_FUNCTION();
 		// Retrieve image data from file
 		// TO-DO: use own image loader rather than STB
 		int width = 0, height = 0, channels = 0;
 		stbi_set_flip_vertically_on_load(1);
-		unsigned char* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+		unsigned char* data = nullptr;
+		{
+			CLOVE_PROFILE_SCOPE("stbi_load - Texture2D::Texture2D(const std::string& path)");
+			data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+		}
 		CLOVE_ASSERT(data, "Failed to load image!");
+		CLOVE_INFO("Loaded %dx%d texture '%s'", width, height, path.c_str());
 		m_width = static_cast<unsigned int>(width);
 		m_height = static_cast<unsigned int>(height);
 
@@ -68,6 +75,7 @@ namespace Clove {
 	}
 
 	Texture2D::~Texture2D() {
+		CLOVE_PROFILE_FUNCTION();
 		glDeleteTextures(1, &m_renderer_id);
 	}
 
@@ -80,10 +88,12 @@ namespace Clove {
 	}
 
 	void Texture2D::SetData(void* data) {
+		CLOVE_PROFILE_FUNCTION();
 		glTextureSubImage2D(m_renderer_id, 0, 0, 0, m_width, m_height, m_data_format, GL_UNSIGNED_BYTE, data);
 	}
 
 	void Texture2D::Bind(unsigned int slot) const {
+		CLOVE_PROFILE_FUNCTION();
 		glBindTextureUnit(slot, m_renderer_id);
 	}
 

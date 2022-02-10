@@ -17,6 +17,7 @@ namespace Clove{
 		std::string title;
 		unsigned int width, height;
 		EventCallbackFn event_callback;
+		bool fullscreen = false;
 	};
 
 	class Window {
@@ -26,7 +27,7 @@ namespace Clove{
 		Window(unsigned int width = 1920, unsigned int height = 1080);
 		~Window();
 
-		static Window* Create(unsigned int width = 1920, unsigned int height = 1080);
+		static Scope<Window> Create(unsigned int width = 1920, unsigned int height = 1080);
 		void Update();
 		void Destroy();
 		bool ShouldClose();
@@ -34,6 +35,7 @@ namespace Clove{
 		void* GetHandle();
 		unsigned int GetHeight() { return m_data.height; }
 		unsigned int GetWidth() { return m_data.width; }
+		static void SetVSync(bool enabled);
 
 		float AspectRatio() {
 			return static_cast<float>(m_data.width) / static_cast<float>(m_data.height);

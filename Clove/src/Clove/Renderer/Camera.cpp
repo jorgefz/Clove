@@ -6,13 +6,16 @@ namespace Clove {
 	Camera::Camera(float left, float right, float bottom, float top) 
 		: m_proj( glm::ortho(left, right, bottom, top, -1.0f, 1.0f) ),
 		  m_view(1.0f),
-		  m_view_proj( m_proj * m_view ),
 		  m_position(0.0f,0.0f,0.0f)
-	{  }
+	{
+		CLOVE_PROFILE_FUNCTION();
+		m_view_proj = m_proj * m_view;
+	}
 
 	Camera::~Camera() {  }
 
 	void Camera::SetProjection(float left, float right, float bottom, float top) {
+		CLOVE_PROFILE_FUNCTION();
 		m_proj = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
 		m_view_proj = m_proj * m_view;
 	}
@@ -49,6 +52,7 @@ namespace Clove {
 	}
 
 	void Camera::Update() {
+		CLOVE_PROFILE_FUNCTION();
 		const glm::mat4 identity = glm::mat4(1.0f);
 		glm::mat4 scaled = glm::scale(identity, glm::vec3(m_scale, m_scale, 1.0f)); // zoom
 		glm::mat4 translated = glm::translate(identity, m_position);

@@ -9,6 +9,7 @@
 #include <memory>
 #include <chrono>
 
+#include <thread>
 
 #include <array>
 #include <vector>

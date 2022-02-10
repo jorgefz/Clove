@@ -5,6 +5,7 @@
 namespace Clove {
 
 	void RenderCommand::Init() {
+		CLOVE_PROFILE_FUNCTION();
 		// Adds up alpha channels
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

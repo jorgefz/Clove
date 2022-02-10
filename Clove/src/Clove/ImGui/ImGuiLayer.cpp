@@ -24,6 +24,7 @@ namespace Clove {
 	}
 
 	void ImGuiLayer::OnAttach() {
+        CLOVE_PROFILE_FUNCTION();
 
         /*
         * COPIED FROM "examples/example_glfw_opengl3/main.cpp -> main()"
@@ -44,8 +45,7 @@ namespace Clove {
 
         // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
         ImGuiStyle& style = ImGui::GetStyle();
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-        {
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
             style.WindowRounding = 0.0f;
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
@@ -56,18 +56,21 @@ namespace Clove {
 	}
 
     void ImGuiLayer::OnDetach() {
+        CLOVE_PROFILE_FUNCTION();
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
     }
 
     void ImGuiLayer::Begin() {
+        CLOVE_PROFILE_FUNCTION();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
     }
 
     void ImGuiLayer::End() {
+        CLOVE_PROFILE_FUNCTION();
         ImGuiIO& io = ImGui::GetIO();
         GameApp& app = GameApp::GetInstance();
         io.DisplaySize = ImVec2(
@@ -88,7 +91,7 @@ namespace Clove {
     }
 
     void ImGuiLayer::OnImGuiRender() {
-        static bool show = true;
+        //static bool show = true;
         //ImGui::ShowDemoWindow(&show);
 
     }

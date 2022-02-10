@@ -27,6 +27,7 @@ namespace Clove {
 
 
 	Shader::Shader(const std::string& filepath) {
+		CLOVE_PROFILE_FUNCTION();
 		m_name = ShaderNameFromPath(filepath);
 		std::string source = Shader::ReadSource(filepath);
 		auto shader_sources = Shader::Parse(source);
@@ -36,6 +37,7 @@ namespace Clove {
 	Shader::Shader(const std::string& vshader, const std::string& fshader)
 		: m_renderer_id(0) {
 
+		CLOVE_PROFILE_FUNCTION();
 		std::string vertex_source, fragment_source;
 
 		//Read shader scripts
@@ -56,6 +58,7 @@ namespace Clove {
 	}
 
 	Shader::~Shader() {
+		CLOVE_PROFILE_FUNCTION();
 		Shader::Unbind();
 		glDeleteProgram(m_renderer_id);
 	}
@@ -69,9 +72,11 @@ namespace Clove {
 	}
 
 	void Shader::Bind() const {
+		CLOVE_PROFILE_FUNCTION();
 		glUseProgram(m_renderer_id);
 	}
 	void Shader::Unbind() {
+		CLOVE_PROFILE_FUNCTION();
 		glUseProgram(0);
 	}
 
@@ -80,6 +85,7 @@ namespace Clove {
 	}
 
 	void Shader::SetUniform1i(const std::string& name, int value) {
+		CLOVE_PROFILE_FUNCTION(); // profiling smallest data type to compare with largest one (mat4x4)
 		glUniform1i(GetUniformLocation(name), value);
 	}
 	void Shader::SetUniform1f(const std::string& name, float value) {
@@ -98,12 +104,14 @@ namespace Clove {
 		glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
 	}
 	void Shader::SetUniformMat4f(const std::string& name, const glm::mat4& matrix) {
+		CLOVE_PROFILE_FUNCTION(); // profiling because its largest data type (mat 4x4)
 		glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
 	}
 
 	/* Private methods */
 
 	int Shader::GetUniformLocation(const std::string& name) {
+		CLOVE_PROFILE_FUNCTION();
 		if (m_location_cache.find(name) != m_location_cache.end()) return m_location_cache[name];
 		int location = glGetUniformLocation(m_renderer_id, name.c_str());
 		if (location == -1) std::cout << "Warning: uniform '" << name << "' doesn't exist!" << std::endl;
@@ -112,7 +120,7 @@ namespace Clove {
 	}
 
 	std::string Shader::ReadSource(const std::string& filepath) {
-
+		CLOVE_PROFILE_FUNCTION();
 		std::ifstream in(filepath, std::ios::in | std::ios::binary);
 		std::string result;
 		if (!in) {
@@ -130,6 +138,7 @@ namespace Clove {
 
 
 	void Shader::ReadSource(const std::string& filepath, std::string& source) {
+		CLOVE_PROFILE_FUNCTION();
 		std::ifstream stream(filepath);
 		std::string line;
 		std::stringstream ss;
@@ -143,7 +152,7 @@ namespace Clove {
 
 
 	std::unordered_map<GLenum, std::string> Shader::Parse(const std::string& source) {
-		
+		CLOVE_PROFILE_FUNCTION();
 		std::unordered_map<GLenum, std::string> sources;
 		const char* type_token = "#type";
 		size_t token_len = strlen(type_token);
@@ -169,6 +178,7 @@ namespace Clove {
 	}
 
 	void Shader::Compile(const std::unordered_map<GLenum, std::string>& sources) {
+		CLOVE_PROFILE_FUNCTION();
 		unsigned int prog = glCreateProgram();
 		CLOVE_ASSERT(sources.size() == 2, "Only fragment and vertex shaders supported");
 		std::array<GLuint, 2> shader_ids;
@@ -209,6 +219,7 @@ namespace Clove {
 	}
 
 	unsigned int Shader::Compile(unsigned int type, const std::string& source) {
+		CLOVE_PROFILE_FUNCTION();
 		GLuint id = glCreateShader(type);
 		const char* src = source.c_str();
 		glShaderSource(id, 1, &src, nullptr);

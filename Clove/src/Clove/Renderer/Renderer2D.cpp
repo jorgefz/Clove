@@ -17,6 +17,7 @@ namespace Clove {
 
 
 	void Renderer2D::Init() {
+		CLOVE_PROFILE_FUNCTION();
 
 		if (Data) {
 			CLOVE_WARN(false, "Warning: Renderer2D already initialized");
@@ -64,17 +65,19 @@ namespace Clove {
 	}
 
 	void Renderer2D::Shutdown() {
+		CLOVE_PROFILE_FUNCTION();
 		delete Data;
 		Data = nullptr;
 	}
 	
 	void Renderer2D::BeginScene(const Camera& cam) {
+		CLOVE_PROFILE_FUNCTION();
 		Data->TextureShader->Bind();
 		Data->TextureShader->SetUniformMat4f("uViewProjection", cam.GetViewProjectionMatrix());
 	}
 
 	void Renderer2D::EndScene() {
-
+		CLOVE_PROFILE_FUNCTION();
 	}
 
 	// primitives
@@ -83,6 +86,7 @@ namespace Clove {
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size, const glm::vec4& color) {
+		CLOVE_PROFILE_FUNCTION();
 		//Data->TextureShader->Bind();
 		Data->TextureShader->SetUniform4f("uColor", color);
 		Data->WhiteTexture->Bind();
@@ -101,6 +105,7 @@ namespace Clove {
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size, const Ref<Texture2D>& texture) {
+		CLOVE_PROFILE_FUNCTION();
 		//Data->TextureShader->Bind();
 
 		Data->TextureShader->SetUniform4f("uColor", glm::vec4(1.0f)); // reset color

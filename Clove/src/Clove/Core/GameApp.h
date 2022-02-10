@@ -20,8 +20,8 @@ namespace Clove {
 		void Run();
 		void OnEvent(Event& e);
 
-		void PushLayer(Layer* layer) { m_layer_stack.PushLayer(layer); }
-		void PushOverlay(Layer* overlay) { m_layer_stack.PushOverlay(overlay); }
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* overlay);
 
 		Window& GetWindow() { return *m_window; }
 		static GameApp& GetInstance() { return *m_instance; }
@@ -31,7 +31,7 @@ namespace Clove {
 		bool OnWindowResize(WindowResizeEvent& e);
 
 	private:
-		std::unique_ptr<Window> m_window = nullptr;
+		Scope<Window> m_window = nullptr;
 		ImGuiLayer* m_imgui_layer = nullptr;
 		bool m_running = true, m_minimised = false;
 		LayerStack m_layer_stack;

@@ -17,30 +17,54 @@ namespace Clove {
 
 	GameApp::GameApp() {
 
+		CLOVE_PROFILE_FUNCTION();
+
 		CLOVE_ASSERT(!m_instance, "Application already exists");
 		m_instance = this;
-		m_window = std::unique_ptr<Window>( Window::Create(1280, 720) );
+		m_window = Window::Create(1280, 720);
 		m_window->SetEventCallback(CLOVE_BIND_METHOD_1(GameApp::OnEvent));
 
 		Renderer::Init();
 
 		m_imgui_layer = new ImGuiLayer();
 		m_layer_stack.PushOverlay(m_imgui_layer);
+		m_imgui_layer->OnAttach();
+	}
+
+	void GameApp::PushLayer(Layer* layer) {
+		CLOVE_PROFILE_FUNCTION();
+		m_layer_stack.PushLayer(layer);
+		layer->OnAttach();
+	}
+
+	void GameApp::PushOverlay(Layer* overlay) {
+		CLOVE_PROFILE_FUNCTION();
+		m_layer_stack.PushOverlay(overlay);
+		overlay->OnAttach();
 	}
 
 	void GameApp::Run() {
+		CLOVE_PROFILE_FUNCTION();
+
 		while (m_running) {
+			CLOVE_PROFILE_SCOPE("Main Game Loop");
 
 			float time = (float)glfwGetTime();
 			float dt = time - m_frame_time;
 
 			// update layers forward
 			if (!m_minimised) {
-				for (Layer* layer : m_layer_stack) layer->OnUpdate(dt);
+				{
+					CLOVE_PROFILE_SCOPE("LayerStack OnUpdate");
+					for (Layer* layer : m_layer_stack) layer->OnUpdate(dt);
+				}
 			}
 
 			m_imgui_layer->Begin();
-			for (Layer* layer : m_layer_stack) layer->OnImGuiRender();
+			{
+				CLOVE_PROFILE_SCOPE("LayerStack OnImGuiRender");
+				for (Layer* layer : m_layer_stack) layer->OnImGuiRender();
+			}
 			m_imgui_layer->End();
 
 			m_window->Update();
@@ -52,11 +76,13 @@ namespace Clove {
 
 
 	GameApp::~GameApp() {
+		CLOVE_PROFILE_FUNCTION();
 		glfwSetErrorCallback(nullptr); // otherwise, glfwTerminate throws an error
 		m_window->Destroy();
 	}
 
 	void GameApp::OnEvent(Event& e) {
+		CLOVE_PROFILE_FUNCTION();
 		//std::cout << e.GetDebugName() << std::endl;
 
 		EventDispatcher dp(e);
@@ -77,6 +103,7 @@ namespace Clove {
 	}
 
 	bool GameApp::OnWindowResize(WindowResizeEvent& e) {
+		CLOVE_PROFILE_FUNCTION();
 		if (e.GetWidth() == 0 || e.GetHeight() == 0) {
 			m_minimised = true;
 			return false;

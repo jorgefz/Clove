@@ -10,12 +10,17 @@
 #endif
 
 
+// Where to output debug information, default is stderr
+#ifndef CLOVE_DEBUG_OUT
+#define CLOVE_DEBUG_OUT stderr
+#endif
+
 // Debug message macros: MESSAGE(condition, c-style string format, varargs)
-// e.g. CLOVE_ASSERT(false, "The value is too large (%f)", 10.0f); 
+// e.g. CLOVE_ASSERT(false, "The value is too large (%f)", 10.0f);
 #ifdef CLOVE_DEBUG
-#	define CLOVE_ASSERT(condition, msg, ...) if (!(condition)) { printf(" [ERROR] " msg " \n", ##__VA_ARGS__); __debugbreak(); }
-#	define CLOVE_WARN(condition, msg, ...) if(!(condition)) { printf(" [WARNING] " msg " \n", ##__VA_ARGS__); }
-#	define CLOVE_INFO(msg, ...) printf(" [INFO] " msg "\n", ##__VA_ARGS__);
+#	define CLOVE_ASSERT(condition, msg, ...) if (!(condition)) { fprintf(CLOVE_DEBUG_OUT, " [ERROR] " msg " \n", ##__VA_ARGS__); __debugbreak(); }
+#	define CLOVE_WARN(condition, msg, ...) if(!(condition)) { fprintf(CLOVE_DEBUG_OUT, " [WARNING] " msg " \n", ##__VA_ARGS__); }
+#	define CLOVE_INFO(msg, ...) fprintf(CLOVE_DEBUG_OUT, " [INFO] " msg "\n", ##__VA_ARGS__);
 #else
 #	define CLOVE_ASSERT(condition, msg, ...) condition;
 #	define CLOVE_WARN(condition, msg, ...) condition;

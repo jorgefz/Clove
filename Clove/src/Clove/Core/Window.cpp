@@ -13,8 +13,7 @@ namespace Clove {
 	void SetGLFWCallbacks(GLFWwindow* window);
 
 	void GLFWErrorCallback(int error, const char* description) {
-		std::cout << "GLFW Error " << error << ": " << description << std::endl;
-		CLOVE_ASSERT(false, "Fatal Error");
+		CLOVE_ASSERT(false, "GLFW Error %d: %s", error, description);
 	}
 
 	Window::Window(unsigned int width, unsigned int height)
@@ -22,32 +21,37 @@ namespace Clove {
 		m_initialised(false),
 		m_context(nullptr)
 	{
+		CLOVE_PROFILE_FUNCTION();
+
 		m_data.width = width;
 		m_data.height = height;
 		m_data.title = "Clove Game";
 		m_data.event_callback = nullptr;
 
-		CLOVE_ASSERT(glfwInit(), "[GLFW] Fatal error: failed to load!");
+		{
+			CLOVE_PROFILE_SCOPE("glfwInit");
+			CLOVE_ASSERT(glfwInit(), "Failed to load GLFW!");
+		}
 		glfwSetErrorCallback(GLFWErrorCallback);
 
-		m_window_ptr = glfwCreateWindow(width, height, m_data.title.c_str(), nullptr, nullptr);
+		{
+			CLOVE_PROFILE_SCOPE("glfwCreateWindow");
+			m_window_ptr = glfwCreateWindow(width, height, m_data.title.c_str(), nullptr, nullptr);
+		}
 		if (!m_window_ptr) {
 			glfwTerminate();
-			throw std::runtime_error("[GLFW] Fatal error: failed to create window");
+			CLOVE_ASSERT(false, "Failed to create GLFW window!");
 		}
 
 		m_context = new OpenGLContext((GLFWwindow*)m_window_ptr);
 		m_context->Init();
 
-		glfwSwapInterval(1); // activate VSYNC, problems with NVIDIA cards
+		Window::SetVSync(true); // activate VSYNC, problems with NVIDIA cards
 		glViewport(0, 0, width, height);
 
-		#ifdef CLOVE_DEBUG
 		int glfw_major, glfw_minor, glfw_rev;
 		glfwGetVersion(&glfw_major, &glfw_minor, &glfw_rev);
-		std::cout << "[GLAD] Version " << GL_VERSION << std::endl;
-		std::cout << "[GLFW] Version " << glfw_major << '.' << glfw_minor << '.' << glfw_rev << std::endl;
-		#endif
+		CLOVE_INFO("GLFW Version %d.%d.%d", glfw_major, glfw_minor, glfw_rev);
 
 		m_initialised = true;
 		glfwSetWindowUserPointer((GLFWwindow*)m_window_ptr, &m_data);
@@ -55,13 +59,14 @@ namespace Clove {
 		Clove::SetGLFWCallbacks((GLFWwindow*)m_window_ptr);
 	}
 
-	Window::~Window() { 
+	Window::~Window() {
+		CLOVE_PROFILE_FUNCTION();
 		Window::Destroy();
 	}
 
 
-	Window* Window::Create(unsigned int width, unsigned int height) {
-		return new Window(width, height);
+	Scope<Window> Window::Create(unsigned int width, unsigned int height) {
+		return CreateScope<Window>(width, height);
 	}
 
 	void* Window::GetHandle() {
@@ -69,11 +74,13 @@ namespace Clove {
 	}
 
 	void Window::Update() {
-		glfwSwapBuffers((GLFWwindow*)m_window_ptr);
+		CLOVE_PROFILE_FUNCTION();
+		m_context->SwapBuffers();
 		glfwPollEvents();
 	}
 
 	void Window::Destroy() {
+		CLOVE_PROFILE_FUNCTION();
 		if (m_initialised) glfwTerminate();
 		if (m_window_ptr) glfwDestroyWindow((GLFWwindow*)m_window_ptr);
 		m_initialised = false;
@@ -83,6 +90,12 @@ namespace Clove {
 
 	bool Window::ShouldClose() {
 		return glfwWindowShouldClose((GLFWwindow*)m_window_ptr);
+	}
+
+	void Window::SetVSync(bool enabled) {
+		CLOVE_PROFILE_FUNCTION();
+		if (enabled) glfwSwapInterval(1);
+		else glfwSwapInterval(0);
 	}
 
 

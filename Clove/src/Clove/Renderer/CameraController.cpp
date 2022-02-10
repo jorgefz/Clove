@@ -7,11 +7,10 @@ namespace Clove {
 	CameraController::CameraController(float aspect_ratio, bool rotation)
 		: m_rotation(rotation), m_aspect_ratio(aspect_ratio),
 		  m_cam(-m_aspect_ratio * m_zoom_level, m_aspect_ratio * m_zoom_level, -m_zoom_level, m_zoom_level)
-	{
-
-	}
+	{  }
 
 	void CameraController::OnUpdate(float dt){
+		CLOVE_PROFILE_FUNCTION();
 
 		glm::vec3 cam_pos = m_cam.GetPosition();
 		if      (Input::IsKeyPressed(Key::KEY_W)) cam_pos.y += m_cam_speed * dt * m_zoom_level;
@@ -32,12 +31,14 @@ namespace Clove {
 	}
 
 	void CameraController::OnEvent(Event& e){
+		CLOVE_PROFILE_FUNCTION();
 		EventDispatcher dp(e);
 		dp.Dispatch<MouseScrolledEvent>(CLOVE_BIND_METHOD_1(CameraController::OnMouseScrolled));
 		dp.Dispatch<WindowResizeEvent>(CLOVE_BIND_METHOD_1(CameraController::OnWindowResized));
 	}
 
 	bool CameraController::OnMouseScrolled(MouseScrolledEvent& e){
+		CLOVE_PROFILE_FUNCTION();
 		m_zoom_level -= e.GetYOffset() * 0.5f;
 		m_zoom_level = std::max(m_zoom_level, 0.25f);
 		m_cam.SetProjection(
@@ -49,6 +50,7 @@ namespace Clove {
 	}
 	
 	bool CameraController::OnWindowResized(WindowResizeEvent& e){
+		CLOVE_PROFILE_FUNCTION();
 		m_aspect_ratio = static_cast<float>(e.GetWidth()) / static_cast<float>(e.GetHeight());
 		m_cam.SetProjection(
 			-m_aspect_ratio * m_zoom_level,

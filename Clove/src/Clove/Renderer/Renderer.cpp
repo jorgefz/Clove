@@ -10,6 +10,7 @@ namespace Clove {
 	Renderer::SceneData* Renderer::m_scene_data = new Renderer::SceneData;
 
 	void Renderer::Init() {
+		CLOVE_PROFILE_FUNCTION();
 		RenderCommand::Init();
 		Renderer2D::Init();
 	}

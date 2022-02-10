@@ -9,26 +9,31 @@
 namespace Clove {
 
 	VertexArray::VertexArray() {
+		CLOVE_PROFILE_FUNCTION();
 		glCreateVertexArrays(1, &m_renderer_id);
 	}
 
 	VertexArray::~VertexArray() {
+		CLOVE_PROFILE_FUNCTION();
 		glDeleteVertexArrays(1, &m_renderer_id);
 	}
 
 	void VertexArray::Bind() const {
+		CLOVE_PROFILE_FUNCTION();
 		glBindVertexArray(m_renderer_id);
 	}
 
 	void VertexArray::Unbind() {
+		CLOVE_PROFILE_FUNCTION();
 		glBindVertexArray(0);
 	}
 
 	Ref<VertexArray> VertexArray::Create() {
-		return std::make_shared<VertexArray>();
+		return CreateRef<VertexArray>();
 	}
 
 	void VertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vb) {
+		CLOVE_PROFILE_FUNCTION();
 		
 		CLOVE_ASSERT(vb->GetLayout().GetElements().size(), " Error: vertex buffer has no layout!");
 		
@@ -54,6 +59,7 @@ namespace Clove {
 	}
 
 	void VertexArray::SetIndexBuffer(const Ref<IndexBuffer>& ib) {
+		CLOVE_PROFILE_FUNCTION();
 		glBindVertexArray(m_renderer_id);
 		ib->Bind();
 		m_ib = ib;

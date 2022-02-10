@@ -13,15 +13,17 @@ namespace Clove {
 	}
 	
 	void OpenGLContext::Init(){
+		CLOVE_PROFILE_FUNCTION();
 		glfwMakeContextCurrent(m_window_handle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		CLOVE_ASSERT(status, "[GLAD] failed to load!");
-		std::cout << "GPU: " << glGetString(GL_RENDERER) << std::endl;
-		std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
-		std::cout << "[OpenGL] Version " << glGetString(GL_VERSION) << std::endl;
+		CLOVE_ASSERT(status, "Failed to load GLAD!");
+		CLOVE_INFO("GPU: %s", glGetString(GL_RENDERER));
+		CLOVE_INFO("Vendor: %s", glGetString(GL_VENDOR));
+		CLOVE_INFO("OpenGL Version %s", glGetString(GL_VERSION));
 	}
 
 	void OpenGLContext::SwapBuffers() {
+		CLOVE_PROFILE_FUNCTION();
 		glfwSwapBuffers(m_window_handle);
 	}
 }
