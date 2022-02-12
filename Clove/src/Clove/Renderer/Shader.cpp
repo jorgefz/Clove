@@ -107,6 +107,10 @@ namespace Clove {
 		CLOVE_PROFILE_FUNCTION(); // profiling because its largest data type (mat 4x4)
 		glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
 	}
+	void Shader::SetUniformIntArray(const std::string& name, int* values, uint32_t count) {
+		glUniform1iv(GetUniformLocation(name), count, values);
+	}
+
 
 	/* Private methods */
 

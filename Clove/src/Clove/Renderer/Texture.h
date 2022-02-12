@@ -9,10 +9,9 @@ namespace Clove {
 		virtual ~Texture() = default;
 		virtual unsigned int GetWidth() = 0;
 		virtual unsigned int GetHeight() = 0;
-
 		virtual void SetData(void* data) = 0;
-
 		virtual void Bind(unsigned int slot = 0) const = 0;
+		virtual bool operator==(const Texture& other) const = 0;
 	};
 
 	class Texture2D : public Texture {
@@ -30,6 +29,8 @@ namespace Clove {
 		virtual void SetData(void* data) override;
 
 		virtual void Bind(unsigned int slot = 0) const override;
+
+		virtual bool operator==(const Texture& other) const override { return m_renderer_id == ((Texture2D&)other).m_renderer_id; }
 
 	private:
 		unsigned int m_width, m_height;

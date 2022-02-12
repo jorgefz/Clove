@@ -12,7 +12,7 @@ namespace Clove {
 		float			rotation		= 0.0f;				/* right-hand rotation in radians */
 		glm::vec4		color			= glm::vec4{1.0f};	/* rgba color */
 		Ref<Texture2D>	texture			= nullptr;			/* texture */
-		float			tiling_factor	= 1.0f;				/* size of texture sampler wrt quad vertices */
+		float			tiling_factor	= 1.0f;				/* shrinks texture and repeats it to fill gaps */
 	};
 
 	class Renderer2D {
@@ -22,6 +22,7 @@ namespace Clove {
 
 		static void BeginScene(const Camera& cam);
 		static void EndScene();
+		static void Flush();
 
 		// primitives
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
@@ -31,5 +32,8 @@ namespace Clove {
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Clove::Texture2D>& texture, float tiling_factor = 1.0f);
 	
 		static void DrawQuad(const QuadProperties& props);
+
+	private:
+		static void Renderer2D::SubmitQuad(const QuadProperties& props);
 	};
 }

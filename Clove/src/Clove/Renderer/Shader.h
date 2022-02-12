@@ -43,6 +43,8 @@ namespace Clove {
 		void SetUniformMat3f(const std::string& name, const glm::mat3& matrix);
 		void SetUniformMat4f(const std::string& name, const glm::mat4& matrix);
 		
+		void SetUniformIntArray(const std::string& name, int* values, uint32_t count);
+
 	private:
 		std::string m_vshader_path, m_fshader_path, m_name;
 		unsigned int m_renderer_id;

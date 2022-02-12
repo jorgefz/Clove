@@ -98,12 +98,15 @@ namespace Clove {
 
 	class VertexBuffer {
 	public:
+		VertexBuffer(unsigned int size);
 		VertexBuffer(float* data, unsigned int size);
 		~VertexBuffer();
 		void SetLayout(const BufferLayout& layout);
 		const BufferLayout& GetLayout();
+		void SetData(const void* data, uint32_t size);
 		void Bind();
 		static void Unbind();
+		static Ref<VertexBuffer> Create(unsigned int size);
 		static Ref<VertexBuffer> Create(float* data, unsigned int size);
 	private:
 		unsigned int m_id;

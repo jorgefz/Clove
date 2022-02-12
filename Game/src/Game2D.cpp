@@ -39,17 +39,18 @@ void Game2D::OnUpdate(float dt) {
 	Clove::Renderer2D::BeginScene(m_camera_control.GetCamera());
 	Clove::Renderer2D::DrawQuad({0.0f,0.0f}, {0.5f,0.5f}, {0.9f, 0.0f, 0.5f, 1.0f});
 	Clove::Renderer2D::DrawQuad({-1.0f,1.0f}, {2.0f,1.0f},{0.9f, 0.7f, 0.1f, 1.0f});
-	Clove::Renderer2D::DrawQuad({ 0.0f,0.0f,-0.1f}, { 21.0f,21.0f }, m_TextureChess, 10.0);
+	Clove::Renderer2D::DrawQuad({ -5.0f,-5.0f,-0.1f}, { 21.0f,21.0f }, m_TextureChess, 5.0f);
 
 	Clove::QuadProperties props{};
-	props.position = glm::vec3(2.0f, -1.0f, 0.0f);
+	props.position = glm::vec3(2.0f, -1.0f, 0.9f);
 	props.color = glm::vec4{ 0.0f,0.8f,0.5f,1.0f };
 	props.texture = m_TextureChess;
 	props.rotation = glm::radians(45.0f);
+	props.tiling_factor = 1.5f;
 	Clove::Renderer2D::DrawQuad(props);
 
-	// This would be valid C++20
-	//Clove::Renderer2D::DrawQuad({ .color = glm::vec4{0.0f,1.0f,1.0f,1.0f} });
+	// This would be valid C++20, but switching version breaks other stuff:
+	//Clove::Renderer2D::DrawQuad({ .color = glm::vec4{0.5f} });
 
 	Clove::Renderer2D::EndScene();
 

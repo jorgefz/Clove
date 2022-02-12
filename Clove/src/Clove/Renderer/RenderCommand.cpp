@@ -21,11 +21,11 @@ namespace Clove {
 		glClearColor(r, g, b, a);
 	}
 
-	void RenderCommand::DrawIndexed(const Ref<VertexArray>& va) {
-		glDrawElements(GL_TRIANGLES, va->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+	void RenderCommand::DrawIndexed(const Ref<VertexArray>& va, uint32_t index_count) {
+		uint32_t count = (index_count > 0) ? index_count : va->GetIndexBuffer()->GetCount();
+		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-
 
 	void RenderCommand::SetViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height) {
 		glViewport(x, y, width, height);
