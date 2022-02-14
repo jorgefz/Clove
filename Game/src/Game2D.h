@@ -2,6 +2,8 @@
 
 #include <Clove.h>
 
+#include "ParticleSystem.h"
+
 
 class Game2D : public Clove::Layer {
 public:
@@ -22,6 +24,10 @@ private:
 	Clove::Ref<Clove::VertexArray> m_vao;
 	Clove::Ref<Clove::Texture2D> m_TextureChess;
 	Clove::Ref<Clove::Texture2D> m_TextureRing;
+
+	ParticleProps m_particle;
+	ParticleSystem m_particle_system;
+
 	glm::vec4 m_color = { 0.2f, 0.3f, 0.8f, 1.0f };
 	float m_fps = 0.0f;
 };

@@ -7,6 +7,9 @@ class TestLayer : public Clove::Layer {
 
 public:
 	TestLayer();
+	~TestLayer() = default;
+	void OnAttach() override;
+	void OnDetach() override;
 	void OnUpdate(float dt) override;
 	void OnImGuiRender() override;
 	void OnEvent(Clove::Event& e) override;
@@ -14,8 +17,7 @@ public:
 
 private:
 	Clove::ShaderLibrary m_shaderlib;
-	Clove::Ref<Clove::VertexArray> m_vao;
 	Clove::CameraController m_camera_control;
 
-	Clove::Ref<Clove::Texture2D> m_texture, m_texture2;
+	Clove::Ref<Clove::Texture2D> m_GrassTexture, m_RockTexture, m_PlayerTexture;
 };
