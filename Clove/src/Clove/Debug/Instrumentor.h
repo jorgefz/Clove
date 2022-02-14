@@ -4,7 +4,9 @@
 
 namespace Clove {
 
-#define CLOVE_PROFILE 1
+#ifdef CLOVE_DEBUG
+#	define CLOVE_PROFILE 1
+#endif
 
 #ifdef CLOVE_PROFILE
 #	define CLOVE_PROFILE_BEGIN_SESSION(name, filepath) ::Clove::Instrumentor::Get().BeginSession(name, filepath)
@@ -17,7 +19,6 @@ namespace Clove {
 #	define CLOVE_PROFILE_SCOPE(name)
 #	define CLOVE_PROFILE_FUNCTION()
 #endif
-
 
 	struct ProfileResult {
 		const char* name;

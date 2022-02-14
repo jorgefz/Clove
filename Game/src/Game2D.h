@@ -21,7 +21,9 @@ private:
 	Clove::Ref<Clove::Shader> m_shader;
 	Clove::Ref<Clove::VertexArray> m_vao;
 	Clove::Ref<Clove::Texture2D> m_TextureChess;
+	Clove::Ref<Clove::Texture2D> m_TextureRing;
 	glm::vec4 m_color = { 0.2f, 0.3f, 0.8f, 1.0f };
+	float m_fps = 0.0f;
 };
 
 

@@ -8,8 +8,6 @@
 
 namespace Clove {
 
-	const uint32_t QuadIndices = 6; // number of indices in one quad
-	const uint32_t QuadVertices = 4; // number of vertices in one quad
 
 	struct QuadVertex {
 		glm::vec3 position;
@@ -21,28 +19,26 @@ namespace Clove {
 
 	struct Renderer2DState {
 		
-		const uint32_t max_quads = 1000; // quads to draw in one batch
-		const uint32_t max_vertices = max_quads * QuadVertices;
-		const uint32_t max_indices = max_quads * QuadIndices;
+		static const uint32_t max_quads = 20000; // quads to draw in one batch
+		static const uint32_t max_vertices = max_quads * QuadVertices;
+		static const uint32_t max_indices = max_quads * QuadIndices;
 		static const uint32_t max_texture_slots = 32;
-		glm::vec4 QuadVertexPositions[4];
 
 		uint32_t quad_count = 0;
-		QuadVertex* quad_vb_base = nullptr;
-		QuadVertex* quad_vb_ptr = nullptr;
-
+		std::vector<QuadVertex> vertex_batch;
+		std::array<uint32_t, max_indices> index_batch;
+		std::vector<Ref<Texture2D>> texture_slots;
+		
+		glm::vec4 QuadVertexPositions[4];
 		Ref<VertexArray> QuadVertexArray;
 		Ref<VertexBuffer> QuadVertexBuffer;
 		Ref<Shader> TextureShader;
 		Ref<Texture2D> WhiteTexture;
 
-		std::array<Ref<Texture2D>, max_texture_slots> texture_slots;
-		uint32_t texture_slot_index = 1; //  0 -> white texture
-
+		Renderer2D::Statistics stats;
 	};
 
 	static Renderer2DState Data;
-
 
 
 	void Renderer2D::Init() {
@@ -60,22 +56,18 @@ namespace Clove {
 
 
 		// Index buffer
-		uint32_t* quad_indices = new uint32_t[Data.max_indices];
 		uint32_t offset = 0;
-		for (uint32_t i = 0; i != Data.max_indices; i+=QuadIndices) {
-			quad_indices[i + 0] = offset + 0;
-			quad_indices[i + 1] = offset + 1;
-			quad_indices[i + 2] = offset + 2;
-			quad_indices[i + 3] = offset + 2;
-			quad_indices[i + 4] = offset + 3;
-			quad_indices[i + 5] = offset + 0;
+		uint32_t quad_indices[] = { 0,1,2, 2,3,0 };
+		for (uint32_t i = 0; i != Data.max_indices; i += QuadIndices) {
+			for (uint32_t j = 0; j != QuadIndices; ++j) {
+				Data.index_batch[i + j] = offset + quad_indices[j];
+			}
 			offset += QuadVertices;
 		}
-		Ref<IndexBuffer> quad_ib = IndexBuffer::Create(quad_indices, Data.max_indices);
-		delete[] quad_indices;
+		Ref<IndexBuffer> quad_ib = IndexBuffer::Create(Data.index_batch.data(), Data.max_indices);
 
 		// Vertex array
-		Data.quad_vb_base = new QuadVertex[Data.max_vertices];
+		Data.vertex_batch.reserve(Data.max_vertices);
 		Data.QuadVertexArray = VertexArray::Create();
 		Data.QuadVertexArray->Bind();
 		Data.QuadVertexArray->SetIndexBuffer(quad_ib);
@@ -86,16 +78,15 @@ namespace Clove {
 		uint32_t white_pixel = 0xFFFFFFFF; // (1.0, 1.0, 1.0, 1.0)
 		Data.WhiteTexture->SetData(&white_pixel);
 
-		int samplers[Data.max_texture_slots];
-		for (int i = 0; i != Data.max_texture_slots; ++i) samplers[i] = i;
-
 		// shader
 		Data.TextureShader = Shader::Create("assets/shaders/Texture.glsl");
 		Data.TextureShader->Bind();
+		int samplers[Data.max_texture_slots] = { 0 };
+		for (int i = 0; i != Data.max_texture_slots; ++i) samplers[i] = i;
 		Data.TextureShader->SetUniformIntArray("uTextures", samplers, Data.max_texture_slots);
+		//Data.texture_slots[0] = Data.WhiteTexture;
 
-		// Reset texture slots to zero
-		Data.texture_slots[0] = Data.WhiteTexture;
+		Data.texture_slots.reserve(Data.max_texture_slots);
 
 		// Default "quad" vertex positions
 		Data.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
@@ -107,71 +98,98 @@ namespace Clove {
 
 	void Renderer2D::Shutdown() {
 		CLOVE_PROFILE_FUNCTION();
-		if(Data.quad_vb_base) delete[] Data.quad_vb_base;
-		Data.quad_vb_base = nullptr;
-		Data.quad_vb_ptr = nullptr;
 	}
 	
 	void Renderer2D::BeginScene(const Camera& cam) {
 		CLOVE_PROFILE_FUNCTION();
 		Data.TextureShader->Bind();
 		Data.TextureShader->SetUniformMat4f("uViewProjection", cam.GetViewProjectionMatrix());
-		Data.quad_vb_ptr = Data.quad_vb_base;
+		
+		Data.vertex_batch.clear();
+		Data.texture_slots.clear();
+		Data.texture_slots.push_back(Data.WhiteTexture);
 		Data.quad_count = 0;
-		Data.texture_slot_index = 1;
+		
+		Renderer2D::ResetStats();
+		
 	}
 
 	void Renderer2D::EndScene() {
 		CLOVE_PROFILE_FUNCTION();
-		uint32_t data_size = (uint8_t*)(Data.quad_vb_ptr) - (uint8_t*)(Data.quad_vb_base);
-		Data.QuadVertexBuffer->SetData(Data.quad_vb_base, data_size);
+
+		uint32_t size = Data.vertex_batch.size() * sizeof(QuadVertex);
+		Data.QuadVertexBuffer->SetData(Data.vertex_batch.data(), size);
+
 		Renderer2D::Flush();
 	}
 
 	void Renderer2D::Flush() {
-		for (uint32_t i = 0; i != Data.texture_slot_index; ++i) Data.texture_slots[i]->Bind(i);
+		CLOVE_PROFILE_FUNCTION();
+		for (uint32_t i = 0; i != Data.texture_slots.size(); ++i) Data.texture_slots[i]->Bind(i);
 		RenderCommand::DrawIndexed(Data.QuadVertexArray, Data.quad_count * QuadIndices);
+		Data.stats.draw_calls++;
+	}
+
+	void Renderer2D::StartNewBatch() {
+		CLOVE_PROFILE_FUNCTION();
+
+		Renderer2D::EndScene();
+		Data.vertex_batch.clear();
+		Data.texture_slots.clear();
+		Data.texture_slots.push_back(Data.WhiteTexture);
+
+		Data.quad_count = 0;
 	}
 
 
 	void Renderer2D::SubmitQuad(const QuadProperties& props) {
-		float texture_index = 0.0f;
+		CLOVE_PROFILE_FUNCTION();
+
+		// bound checks
+		if (Data.quad_count >= Data.max_quads ||
+			Data.texture_slots.size() >= Data.max_texture_slots) {
+			Renderer2D::StartNewBatch();
+		}
+			
+		uint32_t texture_index = 0;
 		if (props.texture) {
-			for (uint32_t i = 1; i != Data.texture_slot_index; ++i) {
-				if (*Data.texture_slots[i].get() == *props.texture.get()) {
-					texture_index = (float)i;
+			for (uint32_t i = 1; i != Data.texture_slots.size(); ++i) {
+				if(*Data.texture_slots[i].get() == *props.texture.get()){
+					texture_index = i;
 					break;
 				}
 			}
-			if (texture_index == 0.0f) {
-				texture_index = (float)Data.texture_slot_index;
-				Data.texture_slots[Data.texture_slot_index] = props.texture;
-				Data.texture_slot_index++;
+			if (texture_index == 0) {
+				Data.texture_slots.push_back(props.texture);
+				texture_index = Data.texture_slots.size() - 1;
 			}
 		}
 
 		const glm::vec3& pos = props.position;
 		const glm::vec2& size = props.size;
+		const float rotation = glm::radians(props.rotation);
 		glm::vec3 QuadPos[4] = {
-			{pos.x, pos.y, pos.z},					{pos.x + size.x, pos.y, pos.z},
+			{pos.x, pos.y, pos.z},					 {pos.x + size.x, pos.y, pos.z},
 			{pos.x + size.x, pos.y + size.y, pos.z}, {pos.x, pos.y + size.y, pos.z},
 		};
 		glm::vec2 QuadTexPos[4] = { {0.0f,0.0f},{1.0f,0.0f},{1.0f,1.0f},{0.0f,1.0f} };
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), props.position);
-		transform = glm::rotate(transform, props.rotation, { 0.0f,0.0f,1.0f });
+		if (std::abs(rotation) > 1e-3) transform = glm::rotate(transform, rotation, {0.0f,0.0f,1.0f});
 		transform = glm::scale(transform, { props.size.x, props.size.y, 1.0f });
 
-		for (uint32_t i = 0; i != 4; ++i) {
-			Data.quad_vb_ptr->position = transform * Data.QuadVertexPositions[i]; //QuadPos[i];
-			Data.quad_vb_ptr->texcoord = QuadTexPos[i];
-			Data.quad_vb_ptr->color = props.color;
-			Data.quad_vb_ptr->texid = texture_index;
-			Data.quad_vb_ptr->tilingf = props.tiling_factor;
-			Data.quad_vb_ptr++;
+		for (uint32_t i = 0; i != QuadVertices; ++i) {
+			QuadVertex vertex{};
+			vertex.position = transform * Data.QuadVertexPositions[i];
+			vertex.texcoord = QuadTexPos[i];
+			vertex.color = props.color;
+			vertex.texid = static_cast<float>(texture_index);
+			vertex.tilingf = props.tiling_factor;
+			Data.vertex_batch.push_back(vertex);
 		}
 
 		Data.quad_count++;
+		Data.stats.quad_count++;
 	}
 
 
@@ -214,6 +232,16 @@ namespace Clove {
 		CLOVE_PROFILE_FUNCTION();
 		Renderer2D::SubmitQuad(props);
 	}
+
+
+	Renderer2D::Statistics& Renderer2D::GetStats() {
+		return Data.stats;
+	}
+
+	void Renderer2D::ResetStats() {
+		Data.stats = Statistics{};
+	}
+
 
 
 }

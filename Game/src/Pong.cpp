@@ -29,26 +29,26 @@ void MovePaddle(GameObject& paddle, float dt, float top, float bottom) {
 	paddle.moving = false;
 	if (Clove::Input::IsKeyPressed(paddle.up)) {
 		paddle.moving = true;
-		if (!(paddle.pos.y + paddle.scale.y >= top))
+		if (!(paddle.pos.y + paddle.scale.y/2.0f >= top))
 			paddle.pos.y += paddle.vel.y * dt;
 	}
 	if (Clove::Input::IsKeyPressed(paddle.down)) {
 		paddle.moving = true;
-		if (!(paddle.pos.y <= bottom))
+		if (!(paddle.pos.y - paddle.scale.y/2.0f <= bottom))
 			paddle.pos.y -= paddle.vel.y * dt;
 	}
 }
 
 void MovePaddleAI(GameObject& paddle, GameObject& ball, float dt, float top, float bottom) {
 	paddle.moving = false;
-	if (paddle.pos.y + paddle.scale.y/2.0f < ball.pos.y + ball.scale.y / 2.0f) { // move up
+	if (paddle.pos.y < ball.pos.y) { // move up
 		paddle.moving = true;
-		if (!(paddle.pos.y + paddle.scale.y >= top))
+		if (!(paddle.pos.y + paddle.scale.y/2.0f >= top))
 			paddle.pos.y += paddle.vel.y * dt;
 	}
-	if (paddle.pos.y + paddle.scale.y / 2.0f > ball.pos.y + ball.scale.y / 2.0f) { // move down
+	if (paddle.pos.y > ball.pos.y) { // move down
 		paddle.moving = true;
-		if (!(paddle.pos.y <= bottom))
+		if (!(paddle.pos.y - paddle.scale.y/2.0f <= bottom))
 			paddle.pos.y -= paddle.vel.y * dt;
 	}
 }
@@ -59,11 +59,12 @@ bool CollidePaddle(GameObject& ball, GameObject& paddle, float dt) {
 	and the velocity is reversed accordingly.
 	*/
 	glm::vec2 newpos{ ball.pos.x + ball.vel.x * dt, ball.pos.y + ball.vel.y * dt };
-	if (newpos.y <= paddle.pos.y + paddle.scale.y &&
-		newpos.y + ball.scale.y >= paddle.pos.y) {
 
-		if (newpos.x <= paddle.pos.x + paddle.scale.x &&
-			newpos.x + ball.scale.x >= paddle.pos.x) {
+	if (newpos.y <= paddle.pos.y + paddle.scale.y/2.0f &&
+		newpos.y >= paddle.pos.y - paddle.scale.y/2.0f) {
+
+		if (newpos.x - ball.scale.x/2.0f <= paddle.pos.x + paddle.scale.x/2.0f &&
+			newpos.x + ball.scale.x/2.0f >= paddle.pos.x - paddle.scale.x/2.0f) {
 
 			if (IsPaddleMovingUp(paddle)) ball.vel.y *= (ball.vel.y < 0.0f ? 0.8f : 1.2f);
 			else if (IsPaddleMovingDown(paddle)) ball.vel.y *= (ball.vel.y > 0.0f ? 0.8f : 1.2f);
@@ -147,13 +148,6 @@ void Pong::OnUpdate(float dt) {
 	m_ball.pos.x += m_ball.vel.x * dt;
 	m_ball.pos.y += m_ball.vel.y * dt;
 
-	/*
-	if (CollidePaddle(m_ball, m_lpaddle, dt) || CollidePaddle(m_ball, m_rpaddle, dt)) {
-		m_ball.pos.x += m_ball.vel.x * dt;
-		m_ball.pos.y += m_ball.vel.y * dt;
-	}
-	*/
-
 	// Ball collision with tom/bottom walls
 	if (m_ball.pos.y + m_ball.scale.y / 2.0f >= wall_top ) {
 		m_ball.vel.y *= -1.0f;
@@ -179,16 +173,15 @@ void Pong::OnUpdate(float dt) {
 		scores.first += 1;
 	}
 
-
 	// Rendering
 	Clove::RenderCommand::SetClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	Clove::RenderCommand::Clear();
 
 	Clove::Renderer2D::BeginScene(m_camera_control.GetCamera());
 
-	// draw frame (game area)
-	Clove::Renderer2D::DrawQuad({ -1.25,-1.0f,-0.2f }, { 2.5f,2.0f }, { 1.0f,1.0f,1.0f,1.0f }); //outer
-	Clove::Renderer2D::DrawQuad({ -1.225f,-1.95f/2.0f,-0.1f }, { 2.45f,1.95f }, { 0.2f,0.2f,0.2f,1.0f }); //inner
+	// draw walls (game area)
+	Clove::Renderer2D::DrawQuad({ 0.0f,0.0f,-0.2f }, { 2.5f,2.0f }, { 1.0f,1.0f,1.0f,1.0f }); //outer
+	Clove::Renderer2D::DrawQuad({ 0.0f,0.0f,-0.1f }, { 2.45f,1.95f }, { 0.2f,0.2f,0.2f,1.0f }); //inner
 
 	// draw paddles
 	Clove::Renderer2D::DrawQuad(m_lpaddle.pos, m_lpaddle.scale, m_lpaddle_color);
