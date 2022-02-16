@@ -2,6 +2,7 @@
 
 #include "Clove/Renderer/Camera.h"
 #include "Clove/Renderer/Texture.h"
+#include "Clove/Renderer/SubTexture2D.h"
 
 namespace Clove {
 
@@ -15,7 +16,10 @@ namespace Clove {
 		float			rotation		= 0.0f;				/* clock-wise rotation in DEGREES */
 		glm::vec4		color			= glm::vec4{1.0f};	/* rgba color */
 		Ref<Texture2D>	texture			= nullptr;			/* texture */
-		float			tiling_factor	= 1.0f;				/* shrinks texture and repeats it to fill gaps */
+		Ref<SubTexture2D> subtexture	= nullptr;
+		float			tiling_factor = 1.0f;				/* shrinks/expands texture and repeats it to fill gaps */
+		std::array<uint32_t,2>	tile_coords = { 0,0 };		/* tile coordinates if using a sprite sheet (origin @ lower-left) */
+		std::array<uint32_t,2>	tile_size = { 0,0 };		/* tile width and height in pixels*/
 	};
 
 	class Renderer2D {
@@ -33,7 +37,8 @@ namespace Clove {
 
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Clove::Texture2D>& texture, float tiling_factor = 1.0f);
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Clove::Texture2D>& texture, float tiling_factor = 1.0f);
-	
+		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Clove::SubTexture2D>& subtexture, float tiling_factor = 1.0f);
+
 		static void DrawQuad(const QuadProperties& props);
 
 		struct Statistics {

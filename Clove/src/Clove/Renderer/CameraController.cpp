@@ -38,20 +38,23 @@ namespace Clove {
 		dp.Dispatch<WindowResizeEvent>(CLOVE_BIND_METHOD_1(CameraController::OnWindowResized));
 	}
 
+	void CameraController::CalculateView() {
+		m_bounds = { -m_aspect_ratio * m_zoom_level, m_aspect_ratio * m_zoom_level, -m_zoom_level, m_zoom_level };
+		m_cam.SetProjection(m_bounds.left, m_bounds.right, m_bounds.bottom, m_bounds.top);
+	}
+
 	bool CameraController::OnMouseScrolled(MouseScrolledEvent& e){
 		CLOVE_PROFILE_FUNCTION();
 		m_zoom_level -= e.GetYOffset() * 0.5f;
 		m_zoom_level = std::max(m_zoom_level, 0.25f);
-		m_bounds = { -m_aspect_ratio * m_zoom_level, m_aspect_ratio * m_zoom_level, -m_zoom_level, m_zoom_level };
-		m_cam.SetProjection(m_bounds.left, m_bounds.right, m_bounds.bottom, m_bounds.top);
+		CameraController::CalculateView();
 		return false;
 	}
 	
 	bool CameraController::OnWindowResized(WindowResizeEvent& e){
 		CLOVE_PROFILE_FUNCTION();
 		m_aspect_ratio = static_cast<float>(e.GetWidth()) / static_cast<float>(e.GetHeight());
-		m_bounds = { -m_aspect_ratio * m_zoom_level, m_aspect_ratio * m_zoom_level, -m_zoom_level, m_zoom_level };
-		m_cam.SetProjection(m_bounds.left, m_bounds.right, m_bounds.bottom, m_bounds.top);
+		CameraController::CalculateView();
 		return false;
 	}
 }

@@ -33,6 +33,7 @@ and use the namespace "Clove::" to access classes and functions
 #include "Clove/Renderer/Buffer.h"
 #include "Clove/Renderer/Shader.h"
 #include "Clove/Renderer/Texture.h"
+#include "Clove/Renderer/SubTexture2D.h"
 
 #include "Clove/Renderer/Camera.h"
 #include "Clove/Renderer/CameraController.h"

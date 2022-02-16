@@ -110,7 +110,7 @@ namespace Clove {
 		Data.texture_slots.push_back(Data.WhiteTexture);
 		Data.quad_count = 0;
 		
-		Renderer2D::ResetStats();
+		//Renderer2D::ResetStats();
 		
 	}
 
@@ -151,18 +151,50 @@ namespace Clove {
 			Renderer2D::StartNewBatch();
 		}
 			
+		Ref<Texture2D> texture = nullptr;
+		if (props.subtexture) texture = props.subtexture->GetTexture();
+		else if (props.texture) texture = props.texture;
+
 		uint32_t texture_index = 0;
-		if (props.texture) {
+		if (texture){
 			for (uint32_t i = 1; i != Data.texture_slots.size(); ++i) {
-				if(*Data.texture_slots[i].get() == *props.texture.get()){
+				if(*Data.texture_slots[i].get() == *(texture.get())){
 					texture_index = i;
 					break;
 				}
 			}
 			if (texture_index == 0) {
-				Data.texture_slots.push_back(props.texture);
+				Data.texture_slots.push_back(texture);
 				texture_index = Data.texture_slots.size() - 1;
 			}
+		}
+		
+		glm::vec2 QuadTexPos[4] = {
+			{0.0f, 0.0f},	{1.0f, 0.0f},
+			{1.0f, 1.0f},	{0.0f, 1.0f}
+		};
+		
+		if (props.subtexture) {
+			/*
+			glm::vec2 tc = { (float)props.tile_coords[0], (float)props.tile_coords[1] };
+			glm::vec2 ts = { (float)props.tile_size[0], (float)props.tile_size[1] };
+			float texw = (float)props.texture->GetWidth(), texh = (float)props.texture->GetHeight();
+			if (ts.x == 0.0f) ts.x = texw;
+			if (ts.y == 0.0f) ts.y = texh;
+
+			float x0 = (tc.x * ts.x) / texw;
+			float y0 = (tc.y * ts.y) / texh;
+			float x1 = x0 + ts.x / texw;
+			float y1 = y0 + ts.y / texh;
+
+			QuadTexPos[0] = { x0,y0 };
+			QuadTexPos[1] = { x1,y0 };
+			QuadTexPos[2] = { x1,y1 };
+			QuadTexPos[3] = { x0,y1 };
+			*/
+			const glm::vec2 *texcoords = props.subtexture->GetTexCoords();
+			//for (int i = 0; i != 4; ++i) QuadTexPos[i] = texcoords[i];
+			std::copy(texcoords, texcoords + 4, QuadTexPos);
 		}
 
 		const glm::vec3& pos = props.position;
@@ -172,7 +204,6 @@ namespace Clove {
 			{pos.x, pos.y, pos.z},					 {pos.x + size.x, pos.y, pos.z},
 			{pos.x + size.x, pos.y + size.y, pos.z}, {pos.x, pos.y + size.y, pos.z},
 		};
-		glm::vec2 QuadTexPos[4] = { {0.0f,0.0f},{1.0f,0.0f},{1.0f,1.0f},{0.0f,1.0f} };
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), props.position);
 		if (std::abs(rotation) > 1e-3) transform = glm::rotate(transform, rotation, {0.0f,0.0f,1.0f});
@@ -221,6 +252,19 @@ namespace Clove {
 		props.position = pos;
 		props.size = size;
 		props.texture = tex;
+		props.tiling_factor = tiling;
+
+		Renderer2D::SubmitQuad(props);
+		return;
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size, const Ref<Clove::SubTexture2D>& subtex, float tiling) {
+		CLOVE_PROFILE_FUNCTION();
+
+		QuadProperties props{};
+		props.position = pos;
+		props.size = size;
+		props.subtexture = subtex;
 		props.tiling_factor = tiling;
 
 		Renderer2D::SubmitQuad(props);

@@ -26,6 +26,7 @@ namespace Clove {
 		const CameraBounds& GetBounds() const { return m_bounds; }
 
 	private:
+		void CalculateView();
 		bool OnMouseScrolled(MouseScrolledEvent& e);
 		bool OnWindowResized(WindowResizeEvent& e);
 	

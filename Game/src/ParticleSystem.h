@@ -2,6 +2,7 @@
 
 #include <Clove.h>
 
+
 struct ParticleProps {
 	glm::vec2 pos, vel, acc;
 	glm::vec4 color_start, color_end;

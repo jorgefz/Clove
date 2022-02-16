@@ -24,9 +24,16 @@ private:
 	Clove::Ref<Clove::VertexArray> m_vao;
 	Clove::Ref<Clove::Texture2D> m_TextureChess;
 	Clove::Ref<Clove::Texture2D> m_TextureRing;
+	Clove::Ref<Clove::Texture2D> m_TilesetNature;
+	Clove::Ref<Clove::SubTexture2D> m_TileGrass, m_TileBush, m_TileSign, m_TileTree;
+
+	std::unordered_map<char, Clove::Ref<Clove::SubTexture2D>> m_TextureMap;
 
 	ParticleProps m_particle;
 	ParticleSystem m_particle_system;
+
+	bool m_mouse_dragging = false;
+	glm::vec2 m_mouse_pos_prev = {0.0f,0.0f};
 
 	glm::vec4 m_color = { 0.2f, 0.3f, 0.8f, 1.0f };
 	float m_fps = 0.0f;
