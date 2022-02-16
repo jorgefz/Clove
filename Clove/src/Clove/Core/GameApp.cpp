@@ -74,6 +74,10 @@ namespace Clove {
 		for (Layer* layer : m_layer_stack) layer->OnDetach();
 	}
 
+	void GameApp::Close() {
+		m_running = false;
+	}
+
 
 	GameApp::~GameApp() {
 		CLOVE_PROFILE_FUNCTION();
