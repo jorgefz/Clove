@@ -17,6 +17,7 @@ namespace Clove {
 		~Framebuffer();
 
 		void Revalidate();
+		void Resize(uint32_t width, uint32_t height);
 		void Bind();
 		void Unbind();
 
@@ -27,7 +28,7 @@ namespace Clove {
 		const FramebufferSpec& GetSpec();
 
 	private:
-		uint32_t m_rendererID;
+		uint32_t m_rendererID = 0;
 		uint32_t m_color_attachment, m_depth_attachment;
 		FramebufferSpec m_spec;
 	};

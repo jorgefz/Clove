@@ -17,13 +17,17 @@ namespace Clove {
 	class CameraController {
 	public:
 		CameraController(float aspect_ratio, bool rotation = false);
+
 		void OnUpdate(float dt);
 		void OnEvent(Event& e);
+		
+		void ResizeView(float width, float height);
+
 		Camera& GetCamera() { return m_cam; };
 		const Camera& GetCamera() const { return m_cam; };
-		void SetZoomLevel(float zoom) { m_zoom_level = zoom; }
 		float GetZoomLevel() { return m_zoom_level; }
 		const CameraBounds& GetBounds() const { return m_bounds; }
+		void SetZoomLevel(float zoom) { m_zoom_level = zoom; }
 
 	private:
 		void CalculateView();

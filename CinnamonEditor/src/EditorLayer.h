@@ -15,7 +15,7 @@ namespace Clove {
 		void OnEvent(Event& e) override;
 
 	private:
-		void EditorLayer::TestDockSpace();
+		void EditorLayer::DockSpace();
 
 	private:
 		CameraController m_camera_control;
@@ -35,7 +35,7 @@ namespace Clove {
 		glm::vec4 m_color = { 0.2f, 0.3f, 0.8f, 1.0f };
 		float m_fps = 0.0f;
 
-		bool m_enable_dockspace = false;
+		glm::vec2 m_viewport_size = {0.0f, 0.0f};
 	};
 
 }

@@ -62,6 +62,10 @@ namespace Clove {
         ImGui::DestroyContext();
     }
 
+    void ImGuiLayer::OnEvent(Event& e) {
+        
+    }
+
     void ImGuiLayer::Begin() {
         CLOVE_PROFILE_FUNCTION();
         ImGui_ImplOpenGL3_NewFrame();

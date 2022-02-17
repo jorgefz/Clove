@@ -12,9 +12,24 @@ namespace Clove {
 
 	Framebuffer::~Framebuffer() {
 		glDeleteFramebuffers(1, &m_rendererID);
+		glDeleteTextures(1, &m_color_attachment);
+		glDeleteTextures(1, &m_depth_attachment);
+	}
+
+	void Framebuffer::Resize(uint32_t width, uint32_t height) {
+		m_spec.width = width;
+		m_spec.height = height;
+		Framebuffer::Revalidate();
 	}
 
 	void Framebuffer::Revalidate() {
+
+		if (m_rendererID != 0) {
+			glDeleteFramebuffers(1, &m_rendererID);
+			glDeleteTextures(1, &m_color_attachment);
+			glDeleteTextures(1, &m_depth_attachment);
+		}
+
 		glCreateFramebuffers(1, &m_rendererID);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_rendererID);
 
@@ -48,6 +63,7 @@ namespace Clove {
 
 	void Framebuffer::Bind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, m_rendererID);
+		glViewport(0, 0, m_spec.width, m_spec.height);
 	}
 
 	void Framebuffer::Unbind() {

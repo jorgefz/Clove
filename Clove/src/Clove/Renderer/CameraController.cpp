@@ -38,6 +38,11 @@ namespace Clove {
 		dp.Dispatch<WindowResizeEvent>(CLOVE_BIND_METHOD_1(CameraController::OnWindowResized));
 	}
 
+	void CameraController::ResizeView(float width, float height) {
+		m_aspect_ratio = width / height;
+		CameraController::CalculateView();
+	}
+
 	void CameraController::CalculateView() {
 		m_bounds = { -m_aspect_ratio * m_zoom_level, m_aspect_ratio * m_zoom_level, -m_zoom_level, m_zoom_level };
 		m_cam.SetProjection(m_bounds.left, m_bounds.right, m_bounds.bottom, m_bounds.top);
@@ -53,8 +58,7 @@ namespace Clove {
 	
 	bool CameraController::OnWindowResized(WindowResizeEvent& e){
 		CLOVE_PROFILE_FUNCTION();
-		m_aspect_ratio = static_cast<float>(e.GetWidth()) / static_cast<float>(e.GetHeight());
-		CameraController::CalculateView();
+		CameraController::ResizeView((float)e.GetWidth(), (float)e.GetHeight());
 		return false;
 	}
 }

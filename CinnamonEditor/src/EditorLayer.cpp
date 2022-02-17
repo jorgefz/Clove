@@ -97,7 +97,7 @@ namespace Clove {
 		m_camera_control.OnUpdate(dt);
 		Renderer2D::ResetStats();
 
-		if (m_enable_dockspace) m_framebuffer->Bind();
+		m_framebuffer->Bind();
 
 		RenderCommand::SetClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		RenderCommand::Clear();
@@ -130,7 +130,7 @@ namespace Clove {
 			Renderer2D::DrawQuad(tiles);
 		}
 		Renderer2D::EndScene();
-		if(m_enable_dockspace) m_framebuffer->Unbind();
+		m_framebuffer->Unbind();
 
 	}
 
@@ -179,40 +179,13 @@ namespace Clove {
 
 
 	void EditorLayer::OnImGuiRender() {
-
-		if (m_enable_dockspace) {
-			EditorLayer::TestDockSpace();
-		}
-		else {
-			Renderer2D::Statistics& stats = Renderer2D::GetStats();
-			ImGui::Begin("Renderer Stats");
-			ImGui::Text("FPS: %.1f", m_fps);
-			ImGui::Text("Draw calls: %d", stats.draw_calls);
-			ImGui::Text("Quads: %d", stats.quad_count);
-			ImGui::Text("Vertices: %d", stats.GetVertexCount());
-			ImGui::Text("Indices: %d", stats.GetIndexCount());
-			ImGui::Text("Triangles: %d", stats.quad_count * 2);
-			Renderer2D::ResetStats();
-			ImGui::End();
-		}
+		EditorLayer::DockSpace();
 
 	}
 
 
 
-	void EditorLayer::TestDockSpace() {
-		// If you strip some features of, this demo is pretty much equivalent to calling DockSpaceOverViewport()!
-		// In most cases you should be able to just call DockSpaceOverViewport() and ignore all the code below!
-		// In this specific demo, we are not using DockSpaceOverViewport() because:
-		// - we allow the host window to be floating/moveable instead of filling the viewport (when opt_fullscreen == false)
-		// - we allow the host window to have padding (when opt_padding == true)
-		// - we have a local menu bar in the host window (vs. you could use BeginMainMenuBar() + DockSpaceOverViewport() in your code!)
-		// TL;DR; this demo is more complicated than what you would normally use.
-		// If we removed all the options we are showcasing, this demo would become:
-		//     void ShowExampleAppDockSpace()
-		//     {
-		//         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-		//     }
+	void EditorLayer::DockSpace() {
 
 		static bool DockspaceOpen = true;
 
@@ -240,16 +213,8 @@ namespace Clove {
 		if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
 			window_flags |= ImGuiWindowFlags_NoBackground;
 
-		// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
-		// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
-		// all active windows docked into it will lose their parent and become undocked.
-		// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
-		// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
-		if (!opt_padding) ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+		ImGui::Begin("DockSpace", &DockspaceOpen, window_flags);
 
-		ImGui::Begin("DockSpace Demo", &DockspaceOpen, window_flags);
-
-		if (!opt_padding) ImGui::PopStyleVar();
 		if (opt_fullscreen) ImGui::PopStyleVar(2);
 
 		// Submit the DockSpace
@@ -277,12 +242,30 @@ namespace Clove {
 		ImGui::Text("Indices: %d", stats.GetIndexCount());
 		ImGui::Text("Triangles: %d", stats.quad_count * 2);
 		Renderer2D::ResetStats();
+		ImGui::End();
 
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
+		ImGui::Begin("Viewport");
+		ImVec2 im_vp_size = ImGui::GetContentRegionAvail();
+		glm::vec2 vp_size = glm::vec2({ im_vp_size.x, im_vp_size.y });
+
+		if (m_viewport_size != vp_size) {
+			m_viewport_size = vp_size;
+			m_framebuffer->Resize((uint32_t)m_viewport_size.x, (uint32_t)m_viewport_size.y);
+			m_camera_control.ResizeView(m_viewport_size.x, m_viewport_size.y);
+		}
+		
 		uint32_t id = m_framebuffer->GetColorAttachmentID();
-		ImGui::Image((void*)id, ImVec2{ 1280.0f, 720.0f }, { 0,1 }, { 1,0 }); // last two arguments flips the texture upright
+		// the last two arguments flips the texture upright:
+		ImGui::Image((void*)id, im_vp_size, { 0,1 }, { 1,0 });
 		ImGui::End();
+		ImGui::PopStyleVar();
 
 		ImGui::End();
+
 	}
 
 }
+
+
+
