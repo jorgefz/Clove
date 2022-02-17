@@ -117,7 +117,7 @@ namespace Clove {
 	void Renderer2D::EndScene() {
 		CLOVE_PROFILE_FUNCTION();
 
-		uint32_t size = Data.vertex_batch.size() * sizeof(QuadVertex);
+		uint32_t size = (uint32_t)(Data.vertex_batch.size() * sizeof(QuadVertex));
 		Data.QuadVertexBuffer->SetData(Data.vertex_batch.data(), size);
 
 		Renderer2D::Flush();
@@ -165,7 +165,7 @@ namespace Clove {
 			}
 			if (texture_index == 0) {
 				Data.texture_slots.push_back(texture);
-				texture_index = Data.texture_slots.size() - 1;
+				texture_index = (uint32_t)Data.texture_slots.size() - 1;
 			}
 		}
 		

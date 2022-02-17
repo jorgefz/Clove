@@ -109,8 +109,8 @@ namespace Clove {
 		InstrumentationTimer(const char* name)
 			: m_name(name), m_stopped(false)
 		{
-			int cdecl_where = m_name.find("__cdecl ");
-			int thiscall_where = m_name.find("__thiscall ");
+			size_t cdecl_where = m_name.find("__cdecl ");
+			size_t thiscall_where = m_name.find("__thiscall ");
 			if (cdecl_where != std::string::npos) {
 				m_name.erase(cdecl_where, strlen("__cdecl ") - 1);
 			}
@@ -129,7 +129,7 @@ namespace Clove {
 			auto end_point = std::chrono::high_resolution_clock::now();
 			long long start = std::chrono::time_point_cast<std::chrono::microseconds>(m_start_point).time_since_epoch().count();
 			long long end = std::chrono::time_point_cast<std::chrono::microseconds>(end_point).time_since_epoch().count();
-			uint32_t threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
+			uint32_t threadID = (uint32_t)std::hash<std::thread::id>{}(std::this_thread::get_id());
 			Instrumentor::Get().WriteProfile({ m_name.c_str(), start, end, threadID});
 			m_stopped = true;
 		}
