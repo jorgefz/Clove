@@ -15,13 +15,18 @@ namespace Clove {
 	// singleton instance
 	GameApp* GameApp::m_instance = nullptr;
 
-	GameApp::GameApp() {
+	GameApp::GameApp(const std::string title) {
 
 		CLOVE_PROFILE_FUNCTION();
 
-		CLOVE_ASSERT(!m_instance, "Application already exists");
+		CLOVE_ASSERT(!m_instance, "Clove application already exists");
 		m_instance = this;
-		m_window = Window::Create(1280, 720);
+
+		WindowData data{};
+		data.width = 1280;
+		data.height = 720;
+		data.title = title;
+		m_window = Window::Create(data);
 		m_window->SetEventCallback(CLOVE_BIND_METHOD_1(GameApp::OnEvent));
 
 		Renderer::Init();

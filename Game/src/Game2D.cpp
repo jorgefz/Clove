@@ -327,7 +327,7 @@ void Game2D::TestDockSpace() {
 	Clove::Renderer2D::ResetStats();
 
 	uint32_t id = m_framebuffer->GetColorAttachmentID();
-	ImGui::Image((void*)id, ImVec2{ 1280.0f, 720.0f }, {0,1}, {1,0});
+	ImGui::Image((void*)id, ImVec2{ 1280.0f, 720.0f }, {0,1}, {1,0}); // last two arguments flips the texture upright
 	ImGui::End();
 
 	ImGui::End();

@@ -14,9 +14,9 @@ namespace Clove{
 	struct WindowData {
 		using EventCallbackFn = std::function<void(Event&)>;
 
-		std::string title;
-		unsigned int width, height;
-		EventCallbackFn event_callback;
+		std::string title = "Clove Window";
+		uint32_t width = 1280, height = 720;
+		EventCallbackFn event_callback = nullptr;
 		bool fullscreen = false;
 	};
 
@@ -24,10 +24,11 @@ namespace Clove{
 		using EventCallbackFn = std::function<void(Event&)>;
 
 	public:
-		Window(unsigned int width = 1920, unsigned int height = 1080);
+		Window(const WindowData& data);
 		~Window();
 
-		static Scope<Window> Create(unsigned int width = 1920, unsigned int height = 1080);
+		static Scope<Window> Create(uint32_t width = 1920, uint32_t height = 1080);
+		static Scope<Window> Create(const WindowData& data);
 		void Update();
 		void Destroy();
 		bool ShouldClose();

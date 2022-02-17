@@ -15,7 +15,7 @@ namespace Clove {
 
 	class GameApp {
 	public:
-		GameApp();
+		GameApp(const std::string title = "Clove Application");
 		virtual ~GameApp();
 		void Run();
 		void OnEvent(Event& e);

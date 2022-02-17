@@ -16,17 +16,14 @@ namespace Clove {
 		CLOVE_ASSERT(false, "GLFW Error %d: %s", error, description);
 	}
 
-	Window::Window(unsigned int width, unsigned int height)
+
+	Window::Window(const WindowData& data)
 		: m_window_ptr(nullptr),
 		m_initialised(false),
-		m_context(nullptr)
+		m_context(nullptr),
+		m_data(data)
 	{
 		CLOVE_PROFILE_FUNCTION();
-
-		m_data.width = width;
-		m_data.height = height;
-		m_data.title = "Clove Game";
-		m_data.event_callback = nullptr;
 
 		{
 			CLOVE_PROFILE_SCOPE("glfwInit");
@@ -36,7 +33,7 @@ namespace Clove {
 
 		{
 			CLOVE_PROFILE_SCOPE("glfwCreateWindow");
-			m_window_ptr = glfwCreateWindow(width, height, m_data.title.c_str(), nullptr, nullptr);
+			m_window_ptr = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
 		}
 
 		if (!m_window_ptr) {
@@ -48,7 +45,7 @@ namespace Clove {
 		m_context->Init();
 
 		Window::SetVSync(true); // activate VSYNC, problems with NVIDIA cards
-		glViewport(0, 0, width, height);
+		glViewport(0, 0, m_data.width, m_data.height);
 
 		int glfw_major, glfw_minor, glfw_rev;
 		glfwGetVersion(&glfw_major, &glfw_minor, &glfw_rev);
@@ -66,8 +63,15 @@ namespace Clove {
 	}
 
 
-	Scope<Window> Window::Create(unsigned int width, unsigned int height) {
-		return CreateScope<Window>(width, height);
+	Scope<Window> Window::Create(uint32_t width, uint32_t height) {
+		WindowData data{};
+		data.height = width;
+		data.height = height;
+		return CreateScope<Window>(data);
+	}
+
+	Scope<Window> Window::Create(const WindowData& data) {
+		return CreateScope<Window>(data);
 	}
 
 	void* Window::GetHandle() {
@@ -105,8 +109,8 @@ namespace Clove {
 
 	static void WindowResizeCallback(GLFWwindow* w, int width, int height) {
 		Clove::WindowData* data = static_cast<Clove::WindowData*>(glfwGetWindowUserPointer(w));
-		data->width = static_cast<unsigned int>(width);
-		data->height = static_cast<unsigned int>(height);
+		data->width = static_cast<uint32_t>(width);
+		data->height = static_cast<uint32_t>(height);
 
 		WindowResizeEvent e(width, height);
 		data->event_callback(e);
