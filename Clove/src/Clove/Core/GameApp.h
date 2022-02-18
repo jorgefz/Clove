@@ -25,7 +25,6 @@ namespace Clove {
 
 		Window& GetWindow() { return *m_window; }
 		static GameApp& Get() { return *m_instance; }
-		static GameApp& GetInstance() { return *m_instance; }
 
 		void Close();
 

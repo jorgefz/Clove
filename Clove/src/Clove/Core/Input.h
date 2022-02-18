@@ -9,8 +9,6 @@ namespace Clove {
 		static std::pair<float, float> GetMousePos();
 		static float GetMouseX();
 		static float GetMouseY();
-	private:
-		static Input* m_instance;
 	};
 
 }

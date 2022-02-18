@@ -38,6 +38,7 @@ namespace Clove {
 	protected:
 		bool m_handled = false;
 	public:
+		virtual ~Event() = default;
 		virtual EventType GetEventType() const = 0;
 		virtual int GetGroupFlags() const = 0;
 		virtual std::string GetName() const = 0;

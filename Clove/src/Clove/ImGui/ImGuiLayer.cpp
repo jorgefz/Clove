@@ -50,7 +50,7 @@ namespace Clove {
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
 
-		GLFWwindow* window = static_cast<GLFWwindow*>(GameApp::GetInstance().GetWindow().GetHandle());
+		GLFWwindow* window = static_cast<GLFWwindow*>(GameApp::Get().GetWindow().GetHandle());
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 410");
 	}
@@ -76,7 +76,7 @@ namespace Clove {
     void ImGuiLayer::End() {
         CLOVE_PROFILE_FUNCTION();
         ImGuiIO& io = ImGui::GetIO();
-        GameApp& app = GameApp::GetInstance();
+        GameApp& app = GameApp::Get();
         io.DisplaySize = ImVec2(
             static_cast<float>(app.GetWindow().GetWidth()), 
             static_cast<float>(app.GetWindow().GetHeight())

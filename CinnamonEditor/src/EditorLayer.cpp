@@ -40,8 +40,8 @@ namespace Clove {
 
 	static glm::vec2 ScreenToWorld(const glm::vec2& pos, const CameraController& camera_control) {
 
-		float width = (float)GameApp::GetInstance().GetWindow().GetWidth();
-		float height = (float)GameApp::GetInstance().GetWindow().GetHeight();
+		float width = (float)GameApp::Get().GetWindow().GetWidth();
+		float height = (float)GameApp::Get().GetWindow().GetHeight();
 
 		const CameraBounds& bounds = camera_control.GetBounds();
 
