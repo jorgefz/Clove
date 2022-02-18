@@ -71,9 +71,7 @@ namespace Clove {
 				for (Layer* layer : m_layer_stack) layer->OnImGuiRender();
 			}
 			m_imgui_layer->End();
-
 			m_window->Update();
-			
 			m_frame_time = time;
 		}
 		for (Layer* layer : m_layer_stack) layer->OnDetach();
@@ -92,16 +90,15 @@ namespace Clove {
 
 	void GameApp::OnEvent(Event& e) {
 		CLOVE_PROFILE_FUNCTION();
-		//std::cout << e.GetDebugName() << std::endl;
 
 		EventDispatcher dp(e);
 		dp.Dispatch<WindowCloseEvent>(CLOVE_BIND_METHOD_1(GameApp::OnWindowClose));
 		dp.Dispatch<WindowResizeEvent>(CLOVE_BIND_METHOD_1(GameApp::OnWindowResize));
 
 		// dispatch events to layers in reverse order (front layers receive it first)
-		for (auto it = m_layer_stack.end(); it != m_layer_stack.begin(); ) {
-			(*(--it))->OnEvent(e);
+		for (auto it = m_layer_stack.rbegin(); it != m_layer_stack.rend(); it++) {
 			if (e.Handled()) break;
+			(*it)->OnEvent(e);
 		}
 	}
 

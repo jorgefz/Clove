@@ -25,7 +25,7 @@ namespace Clove {
 
 		Window& GetWindow() { return *m_window; }
 		static GameApp& Get() { return *m_instance; }
-
+		ImGuiLayer* GetImGuiLayer() { return m_imgui_layer; }
 		void Close();
 
 	private: // Event methods

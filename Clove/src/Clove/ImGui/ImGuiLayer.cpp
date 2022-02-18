@@ -63,7 +63,12 @@ namespace Clove {
     }
 
     void ImGuiLayer::OnEvent(Event& e) {
-        
+        if (!m_block_events) return;
+
+        ImGuiIO& io = ImGui::GetIO();
+        e.handled |= e.IsInGroup(EventGroupMouse) & io.WantCaptureMouse;
+        e.handled |= e.IsInGroup(EventGroupKeyboard) & io.WantCaptureKeyboard;
+
     }
 
     void ImGuiLayer::Begin() {

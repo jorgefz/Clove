@@ -11,7 +11,10 @@ enum Tiles {
 	TILE_GRASS = '0',
 	TILE_WATER = '1',
 	TILE_DIRT  = '2',
-	TILE_STONE = '3'
+	TILE_STONE = '3',
+	TILE_TREE =  'T',
+	TILE_BUSH =  'B',
+	TILE_SIGN =  'S'
 };
 
 
@@ -19,17 +22,17 @@ const glm::vec2 MapSize = {24, 12};
 
 static const char* s_MapTiles = 
 "333333333333300000000000"
-"333333333330000000000000"
-"330003333300000000002222"
-"300000330000000022222200"
-"000000000022222220000000"
-"000000002222000000000000"
-"000000022000000000000000"
-"002222222000000000011111"
-"022000000000001111111111"
-"220000000001111111111111"
-"000000000001111111111111"
-"000000000111111111111111";
+"333333333330000T0000S000"
+"33000333330T000000002222"
+"300000330000B00022222200"
+"0000000B0022222220000000"
+"0000B000222200000T000000"
+"0000S00220000T0000000000"
+"00222222200T000000011111"
+"02200BB00000001111111111"
+"2200B0000001111111111111"
+"000000TT0001111111111111"
+"00B000000111111111111111";
 
 
 namespace Clove {
@@ -66,18 +69,14 @@ namespace Clove {
 		m_TextureChess = Texture2D::Create("assets/checkerboard.png");
 		m_TextureRing = Texture2D::Create("assets/cursor.png");
 		m_TilesetNature = Texture2D::Create("assets/tilesets/nature.png");
-
-		m_TileGrass = SubTexture2D::CreateFromCoords(m_TilesetNature, { 0,6 }, { 32,32 });
-
-		m_TileBush = SubTexture2D::CreateFromCoords(m_TilesetNature, { 1,7 }, { 32,32 });
-		m_TileSign = SubTexture2D::CreateFromCoords(m_TilesetNature, { 2,8 }, { 32,32 });
-		m_TileTree = SubTexture2D::CreateFromCoords(m_TilesetNature, { 0,7 }, { 32,32 }, { 1,2 });
-
+		
 		m_TextureMap[TILE_GRASS] = SubTexture2D::CreateFromCoords(m_TilesetNature, { 0,6 }, { 32,32 });
 		m_TextureMap[TILE_WATER] = SubTexture2D::CreateFromCoords(m_TilesetNature, { 1,6 }, { 32,32 });
 		m_TextureMap[TILE_DIRT] = SubTexture2D::CreateFromCoords(m_TilesetNature, { 2,6 }, { 32,32 });
 		m_TextureMap[TILE_STONE] = SubTexture2D::CreateFromCoords(m_TilesetNature, { 3,6 }, { 32,32 });
-
+		m_TextureMap[TILE_BUSH] = SubTexture2D::CreateFromCoords(m_TilesetNature, { 1,7 }, { 32,32 });
+		m_TextureMap[TILE_SIGN] = SubTexture2D::CreateFromCoords(m_TilesetNature, { 2,8 }, { 32,32 });
+		m_TextureMap[TILE_TREE] = SubTexture2D::CreateFromCoords(m_TilesetNature, { 0,7 }, { 32,32 }, { 1,2 });
 
 		FramebufferSpec fbspec{};
 		fbspec.width = GameApp::Get().GetWindow().GetWidth();
@@ -93,8 +92,13 @@ namespace Clove {
 
 	void EditorLayer::OnUpdate(float dt) {
 
+		// this disables camera movement when the main scene is not selected
+		if (m_viewport_focused) {
+			m_camera_control.OnUpdate(dt);
+		}
+
 		m_fps = 1.0f / dt;
-		m_camera_control.OnUpdate(dt);
+		
 		Renderer2D::ResetStats();
 
 		m_framebuffer->Bind();
@@ -104,31 +108,31 @@ namespace Clove {
 
 		Renderer2D::BeginScene(m_camera_control.GetCamera());
 
-		QuadProperties tilemap{};
 		for (uint32_t y = 0; y != (uint32_t)MapSize.y; y++) {
 			for (uint32_t x = 0; x != (uint32_t)MapSize.x; x++) {
+				
+				QuadProperties tilemap{};
 				char key = s_MapTiles[x + y * (uint32_t)MapSize.x];
-				tilemap.subtexture = m_TextureMap[key];
 				tilemap.position = { (float)(y)-MapSize.x / 2.0f, (float)(x)-MapSize.y / 2.0f, 0.0f };
+				
+				// draw grass below tiles with transparency
+				if (key == TILE_BUSH || key == TILE_SIGN) {
+					tilemap.subtexture = m_TextureMap[TILE_GRASS];
+					Renderer2D::DrawQuad(tilemap);
+					tilemap.position.z += 0.1f;
+				}
+				else if (key == TILE_TREE ){
+					tilemap.subtexture = m_TextureMap[TILE_GRASS];
+					tilemap.size = { 1,2 };
+					Renderer2D::DrawQuad(tilemap);
+					tilemap.position.z += 0.1f;
+				}
+				
+				tilemap.subtexture = m_TextureMap[key];
 				Renderer2D::DrawQuad(tilemap);
 			}
 		}
 
-		QuadProperties tiles{};
-		tiles.subtexture = m_TileBush;
-		tiles.position = { -1.0f, 0.0f, 0.1f };
-		Renderer2D::DrawQuad(tiles);
-
-		tiles.subtexture = m_TileSign;
-		tiles.position = { 0.0f, 1.0f, 0.1f };
-		Renderer2D::DrawQuad(tiles);
-
-		tiles.size = { 1,2 };
-		for (float x = -2.0f; x <= 2.0f; x += 1.0f) {
-			tiles.subtexture = m_TileTree;
-			tiles.position = { x, 3.0f, 0.1f };
-			Renderer2D::DrawQuad(tiles);
-		}
 		Renderer2D::EndScene();
 		m_framebuffer->Unbind();
 
@@ -147,14 +151,14 @@ namespace Clove {
 				m_mouse_dragging = true;
 			}
 			return false;
-			});
+		});
 
 		dp.Dispatch<MouseButtonReleasedEvent>([&, this](MouseButtonReleasedEvent& e) {
 			if (e.GetMouseButton() == MouseButton::MOUSE_BUTTON_LEFT) {
 				m_mouse_dragging = false;
 			}
 			return false;
-			});
+		});
 
 		dp.Dispatch<MouseMovedEvent>([&, this](MouseMovedEvent& e) {
 			if (!m_mouse_dragging) {
@@ -171,7 +175,7 @@ namespace Clove {
 
 			m_mouse_pos_prev = { e.GetX(), e.GetY() };
 			return false;
-			});
+		});
 	}
 
 
@@ -246,6 +250,11 @@ namespace Clove {
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 		ImGui::Begin("Viewport");
+
+		m_viewport_focused = ImGui::IsWindowFocused();
+		m_viewport_hovered = ImGui::IsWindowHovered();
+		GameApp::Get().GetImGuiLayer()->BlockEvents(!m_viewport_focused || !m_viewport_hovered);
+
 		ImVec2 im_vp_size = ImGui::GetContentRegionAvail();
 		glm::vec2 vp_size = glm::vec2({ im_vp_size.x, im_vp_size.y });
 

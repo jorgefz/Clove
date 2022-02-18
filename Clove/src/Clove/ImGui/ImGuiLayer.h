@@ -17,7 +17,10 @@ namespace Clove {
 		void Begin();
 		void End();
 
+		void BlockEvents(bool block) { m_block_events = block; }
+
 	private:
+		bool m_block_events = true;
 		float m_time = 0.0f;
 	};
 

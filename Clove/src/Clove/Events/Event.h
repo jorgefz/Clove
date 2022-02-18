@@ -35,16 +35,15 @@ namespace Clove {
 	class Event {
 	private:
 		friend class Clove::EventDispatcher; // friend can access Event's private & protected members
-	protected:
-		bool m_handled = false;
 	public:
+		bool handled = false;
 		virtual ~Event() = default;
 		virtual EventType GetEventType() const = 0;
 		virtual int GetGroupFlags() const = 0;
 		virtual std::string GetName() const = 0;
 		virtual std::string GetDebugName() const = 0;
 		bool IsInGroup(EventGroup group) { return GetGroupFlags() & group; }
-		bool Handled() { return m_handled; }
+		bool Handled() { return handled; }
 	};
 
 	/*
@@ -65,7 +64,7 @@ namespace Clove {
 				* Function called takes an action given the event
 				* E.g. Key press event -> move player
 				*/
-				m_event.m_handled = func(*(T*)&m_event);
+				m_event.handled = func(*(T*)&m_event);
 				return true;
 			}
 			return false;
