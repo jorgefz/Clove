@@ -1,29 +1,43 @@
 #pragma once
 #include "clovepch.h"
 
-// Platform
-
-#ifdef CLOVE_WINDOWS
-#	include "windows.h"
+/*
+	Platform detection.
+	Currently, only 64-bit Windows is suported.
+*/
+#ifdef _WIN32
+	#ifdef _WIN64 /* Windows x64 */
+		#include "Windows.h"
+	#else /* Windows x86 */
+		#error "x86 builds are not supported"
+	#endif
 #else
-//#	error Clove only supports Windows
+	#error "Clove only supports Windows"
 #endif
 
 
-// Where to output debug information, default is stderr
-#ifndef CLOVE_DEBUG_OUT
-#define CLOVE_DEBUG_OUT stderr
-#endif
+/*
+	Debug information macros, only used in DEBUG configuration.
+	Format messages using c-style printf functions.
+	E.g. CLOVE_INFO("This resolution might cause issues: %ux%u", width, height);
 
-// Debug message macros: MESSAGE(condition, c-style string format, varargs)
-// e.g. CLOVE_ASSERT(false, "The value is too large (%f)", 10.0f);
+	CLOVE_ERROR raises a debug break and interrupts your program.
+	CLOVE_ASSERT calls CLOVE_ERROR if the condition is met.
+	CLOVE_WARN prints out a warning message that starts with [WARNING]
+	CLOVE_INFO prints out a message that starts with [INFO]
+*/
 #ifdef CLOVE_DEBUG
+#	ifndef CLOVE_DEBUG_OUT /* file stream to output debug information to */
+#		define CLOVE_DEBUG_OUT stderr
+#	endif
+#	define CLOVE_ERROR(msg, ...) do { fprintf(CLOVE_DEBUG_OUT, " [ERROR] " msg "\n", ##__VA_ARGS__); __debugbreak(); } while(0);
 #	define CLOVE_ASSERT(condition, msg, ...) if (!(condition)) { fprintf(CLOVE_DEBUG_OUT, " [ERROR] " msg " \n", ##__VA_ARGS__); __debugbreak(); }
-#	define CLOVE_WARN(condition, msg, ...) if(!(condition)) { fprintf(CLOVE_DEBUG_OUT, " [WARNING] " msg " \n", ##__VA_ARGS__); }
-#	define CLOVE_INFO(msg, ...) fprintf(CLOVE_DEBUG_OUT, " [INFO] " msg "\n", ##__VA_ARGS__);
+#	define CLOVE_WARN(msg, ...) fprintf(CLOVE_DEBUG_OUT, " [WARNING] " msg " \n", ##__VA_ARGS__)
+#	define CLOVE_INFO(msg, ...) fprintf(CLOVE_DEBUG_OUT, " [INFO] " msg "\n", ##__VA_ARGS__)
 #else
-#	define CLOVE_ASSERT(condition, msg, ...) condition;
-#	define CLOVE_WARN(condition, msg, ...) condition;
+#	define CLOVE_ERROR(msg, ...)
+#	define CLOVE_ASSERT(condition, msg, ...) condition
+#	define CLOVE_WARN(msg, ...)
 #	define CLOVE_INFO(msg, ...)
 #endif
 
@@ -32,7 +46,11 @@
 #define CLOVE_BIND_METHOD_1(fn) std::bind(&fn, this, std::placeholders::_1)
 
 
-// Reference Counting System
+/*
+	Reference Counting System.
+	Currently, a Scope behaves like an unique_ptr,
+	and a Ref as a share_ptr.
+*/
 namespace Clove {
 	
 	template<typename T>

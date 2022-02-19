@@ -1,7 +1,7 @@
 #pragma once
 #include "Clove/Core/GameApp.h"
-//#include "clovepch.h"
 
+// The user should implement CreateApp from which to return a subclassed GameApp instance
 extern Clove::GameApp* Clove::CreateApp();
 
 int main(int argc, char** argv) {

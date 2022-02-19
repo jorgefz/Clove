@@ -5,6 +5,14 @@
 
 #include "Clove/Core/Window.h"
 
+/*
+
+Describes how the world is viewed and translated to the screen view.
+Sets up a Model View Projection matrix which is then passed to the shader
+to transform each vertex.
+
+*/
+
 namespace Clove {
 
 	class Camera {

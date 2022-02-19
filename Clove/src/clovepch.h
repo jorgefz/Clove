@@ -21,7 +21,4 @@
 
 #include "Clove/Debug/Instrumentor.h"
 
-
-#ifdef CLOVE_WINDOWS
-	#include <Windows.h>
-#endif
+#include "Clove/Core/Core.h"

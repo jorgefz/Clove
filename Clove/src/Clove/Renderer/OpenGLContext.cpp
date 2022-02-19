@@ -6,15 +6,15 @@
 
 namespace Clove {
 	
-	OpenGLContext::OpenGLContext(GLFWwindow* handle)
+	OpenGLContext::OpenGLContext(void* handle)
 		: m_window_handle(handle)
 	{
-		CLOVE_ASSERT(handle, "[OpenGLContext] window handle is null!");
+		CLOVE_ASSERT(handle, "OpenGLContext window handle is null!");
 	}
 	
 	void OpenGLContext::Init(){
 		CLOVE_PROFILE_FUNCTION();
-		glfwMakeContextCurrent(m_window_handle);
+		glfwMakeContextCurrent((GLFWwindow*)m_window_handle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		CLOVE_ASSERT(status, "Failed to load GLAD!");
 		CLOVE_INFO("GPU: %s", glGetString(GL_RENDERER));
@@ -24,6 +24,6 @@ namespace Clove {
 
 	void OpenGLContext::SwapBuffers() {
 		CLOVE_PROFILE_FUNCTION();
-		glfwSwapBuffers(m_window_handle);
+		glfwSwapBuffers((GLFWwindow*)m_window_handle);
 	}
 }

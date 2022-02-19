@@ -17,6 +17,12 @@ namespace Clove {
 	}
 
 	void Framebuffer::Resize(uint32_t width, uint32_t height) {
+
+		if ((int32_t)width <= 0 || (int32_t)height <= 0) {
+			CLOVE_WARN("Framebuffer resize to invalid value %ux%u", width, height);
+			return;
+		}
+
 		m_spec.width = width;
 		m_spec.height = height;
 		Framebuffer::Revalidate();

@@ -4,6 +4,11 @@
 
 namespace Clove {
 
+	/*
+		A Framebuffer renders geometry and shaders to a texture 
+		whose renderer ID can be retrieved with Framebuffer::GetColorAttachmentID().
+	*/
+
 
 	struct FramebufferSpec {
 		uint32_t width, height;

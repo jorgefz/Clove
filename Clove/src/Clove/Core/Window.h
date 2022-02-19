@@ -39,7 +39,7 @@ namespace Clove{
 		static void SetVSync(bool enabled);
 
 		float AspectRatio() {
-			return static_cast<float>(m_data.width) / static_cast<float>(m_data.height);
+			return (float)(m_data.width) / (float)(m_data.height);
 		}
 
 		void SetEventCallback(const EventCallbackFn& callback) { m_data.event_callback = callback; }
@@ -48,7 +48,7 @@ namespace Clove{
 		void* m_window_ptr;
 		bool m_initialised;
 		WindowData m_data;
-		GraphicsContext* m_context;
+		Ref<GraphicsContext> m_context;
 	};
 
 }

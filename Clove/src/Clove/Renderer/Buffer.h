@@ -1,6 +1,19 @@
 #pragma once
 #include "Clove/Core/Core.h"
 
+/*
+
+An OpenGL Vertex Buffer holds vertex data
+as raw bytes, which the shader takes but can't interpret yet.
+
+Now, the Buffer Layout describes how the buffer data
+is structured, e.g. it holds 4 vertices, and each has 3 floats for position, and 4 for color.
+
+An Index Buffer describes in which order to render the vertices aka by breaking models down
+into triangles.
+
+*/
+
 namespace Clove {
 
 	enum class ShaderDataType : unsigned int {
@@ -25,7 +38,7 @@ namespace Clove {
 			case ShaderDataType::Float4: return sizeof(float) * 4;
 			case ShaderDataType::Mat3:   return sizeof(float) * 3 * 3;
 			case ShaderDataType::Mat4:   return sizeof(float) * 4 * 4;
-			default: CLOVE_ASSERT(false, "Unknown ShaderdataType!");
+			default: CLOVE_ASSERT(false, "Unknown ShaderDataType!");
 		}
 		return 0;
 	}

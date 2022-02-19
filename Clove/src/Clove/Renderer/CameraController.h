@@ -5,6 +5,12 @@
 #include "Clove/Events/WindowEvent.h"
 #include "Clove/Events/MouseEvent.h"
 
+/*
+
+A handy API for the user to control a camera more easily.
+
+*/
+
 namespace Clove {
 
 	struct CameraBounds {

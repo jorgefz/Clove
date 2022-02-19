@@ -1,6 +1,12 @@
 #pragma once
-//#include "clovepch.h"
 #include "Clove/Renderer/Renderer.h"
+
+/*
+
+Loads and stores a texture, and sets up appropriate OpenGL containers.
+This can later be bound and passed to a shader for rendering.
+
+*/
 
 namespace Clove {
 

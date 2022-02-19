@@ -41,7 +41,7 @@ namespace Clove {
 			CLOVE_ASSERT(false, "Failed to create GLFW window!");
 		}
 
-		m_context = new OpenGLContext((GLFWwindow*)m_window_ptr);
+		m_context = CreateRef<OpenGLContext>(m_window_ptr);
 		m_context->Init();
 
 		Window::SetVSync(true); // activate VSYNC, problems with NVIDIA cards

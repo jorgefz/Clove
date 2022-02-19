@@ -50,7 +50,7 @@ namespace Clove {
 				element.GetOpenGLType(),
 				element.norm ? GL_TRUE : GL_FALSE,
 				layout.GetStride(),
-				(const void*)element.offset
+				(const void*)(const uintptr_t)element.offset
 			);
 			index++;
 		}

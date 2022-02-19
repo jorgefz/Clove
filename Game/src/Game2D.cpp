@@ -40,8 +40,8 @@ static float RandomFloat(float lower = 0.0f, float upper = 1.0f) {
 
 static glm::vec2 ScreenToWorld(const glm::vec2& pos, const Clove::CameraController& camera_control) {
 	
-	float width = (float)Clove::GameApp::GetInstance().GetWindow().GetWidth();
-	float height = (float)Clove::GameApp::GetInstance().GetWindow().GetHeight();
+	float width = (float)Clove::GameApp::Get().GetWindow().GetWidth();
+	float height = (float)Clove::GameApp::Get().GetWindow().GetHeight();
 
 	const Clove::CameraBounds& bounds = camera_control.GetBounds();
 
@@ -327,7 +327,7 @@ void Game2D::TestDockSpace() {
 	Clove::Renderer2D::ResetStats();
 
 	uint32_t id = m_framebuffer->GetColorAttachmentID();
-	ImGui::Image((void*)id, ImVec2{ 1280.0f, 720.0f }, {0,1}, {1,0}); // last two arguments flips the texture upright
+	ImGui::Image((void*)(uintptr_t)id, ImVec2{ 1280.0f, 720.0f }, {0,1}, {1,0}); // last two arguments flips the texture upright
 	ImGui::End();
 
 	ImGui::End();

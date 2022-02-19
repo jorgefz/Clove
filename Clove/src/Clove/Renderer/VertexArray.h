@@ -1,6 +1,15 @@
 #pragma once
 #include "Clove/Renderer/Buffer.h"
 
+
+/*
+
+An OpenGL Vertex Array hols a vertex buffer, which is the raw vertex data,
+a buffer layout, which tells the shader how to interpret this data,
+and an index buffer, which describes the order in which to render the vertices.
+
+*/
+
 namespace Clove {
 
 	class VertexArray {

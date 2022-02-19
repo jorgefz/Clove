@@ -4,7 +4,6 @@
 namespace Clove {
 
 	enum Key : int {
-		KEY_UNKNOWN		= -1,
 
 		KEY_SPACE			= 32,
 		KEY_APOSTROPHE		= 39,  /* ' */

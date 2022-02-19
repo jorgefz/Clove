@@ -2,6 +2,13 @@
 
 #include "Clove/Renderer/Texture.h"
 
+/*
+
+Calculates custom texture coordinates for a texture.
+This is useful for selecting tiles within texture atlases and sprite sheets.
+
+*/
+
 namespace Clove {
 
 	class SubTexture2D {

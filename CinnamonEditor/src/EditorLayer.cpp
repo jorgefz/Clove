@@ -266,7 +266,7 @@ namespace Clove {
 		
 		uint32_t id = m_framebuffer->GetColorAttachmentID();
 		// the last two arguments flips the texture upright:
-		ImGui::Image((void*)id, im_vp_size, { 0,1 }, { 1,0 });
+		ImGui::Image((void*)(uintptr_t)id, im_vp_size, { 0,1 }, { 1,0 });
 		ImGui::End();
 		ImGui::PopStyleVar();
 
