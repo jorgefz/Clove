@@ -6,7 +6,7 @@ workspace "Clove"
 		"Release",
 	}
 
-	startproject "Game"
+	startproject "CinnamonEditor"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -16,6 +16,7 @@ IncludeDir["GLAD"] = "Clove/vendor/GLAD/include"
 IncludeDir["ImGui"] = "Clove/vendor/ImGui"
 IncludeDir["stb"] = "Clove/vendor/stb"
 IncludeDir["glm"] = "Clove/vendor/glm"
+IncludeDir["entt"] = "Clove/vendor/entt/include"
 
 include "Clove/vendor/GLFW"
 include "Clove/vendor/GLAD"
@@ -53,7 +54,8 @@ project "Clove"
 		"%{IncludeDir.GLAD}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb}"
+		"%{IncludeDir.stb}",
+		"%{IncludeDir.entt}"
 	}
 
 	links { 
@@ -107,7 +109,8 @@ project "CinnamonEditor"
 	includedirs {
 		"Clove/src",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.entt}"
 	}
 
 	links {
@@ -154,7 +157,8 @@ project "Game"
 	includedirs {
 		"Clove/src",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.entt}"
 	}
 
 	links {
