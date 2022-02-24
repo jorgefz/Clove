@@ -40,6 +40,8 @@ namespace Clove {
 			: m_current_session(nullptr), m_profile_count(0)
 		{  }
 
+		~Instrumentor() { if(m_current_session) Instrumentor::EndSession(); }
+
 		void BeginSession(const std::string& name, const std::string& filepath = "results.json") {
 			m_out_stream.open(filepath);
 			Instrumentor::WriteHeader();
