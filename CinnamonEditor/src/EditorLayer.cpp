@@ -82,6 +82,15 @@ namespace Clove {
 		fbspec.width = GameApp::Get().GetWindow().GetWidth();
 		fbspec.height = GameApp::Get().GetWindow().GetHeight();
 		m_framebuffer = Framebuffer::Create(fbspec);
+
+		m_active_scene = CreateRef<Scene>();
+		
+		auto square = m_active_scene->CreateEntity();
+		Entity square_entity = { square, m_active_scene.get() };
+		square_entity.HasComponent<TransformComponent>();
+
+		m_active_scene->Reg().emplace<TransformComponent>(square);
+		m_active_scene->Reg().emplace<SpriteRendererComponent>(square, glm::vec4{1.0f, 0.0f, 1.0f, 1.0f});
 	}
 
 
@@ -96,17 +105,19 @@ namespace Clove {
 		if (m_viewport_focused) {
 			m_camera_control.OnUpdate(dt);
 		}
-
 		m_fps = 1.0f / dt;
 		
 		Renderer2D::ResetStats();
-
 		m_framebuffer->Bind();
-
 		RenderCommand::SetClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		RenderCommand::Clear();
 
+
 		Renderer2D::BeginScene(m_camera_control.GetCamera());
+
+		// update scene
+		m_active_scene->OnUpdate(dt);
+
 
 		for (uint32_t y = 0; y != (uint32_t)MapSize.y; y++) {
 			for (uint32_t x = 0; x != (uint32_t)MapSize.x; x++) {

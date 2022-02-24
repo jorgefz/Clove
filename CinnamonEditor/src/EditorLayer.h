@@ -20,6 +20,7 @@ namespace Clove {
 	private:
 		CameraController m_camera_control;
 		Ref<Framebuffer> m_framebuffer;
+		Ref<Scene> m_active_scene;
 
 		// These will be abstracted away by 2D renderer
 		Ref<Shader> m_shader;
@@ -27,7 +28,6 @@ namespace Clove {
 		Ref<Texture2D> m_TextureChess;
 		Ref<Texture2D> m_TextureRing;
 		Ref<Texture2D> m_TilesetNature;
-		Ref<SubTexture2D> m_TileGrass, m_TileBush, m_TileSign, m_TileTree;
 		std::unordered_map<char, Ref<SubTexture2D>> m_TextureMap;
 
 		bool m_mouse_dragging = false;

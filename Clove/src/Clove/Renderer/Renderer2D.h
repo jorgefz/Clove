@@ -14,6 +14,7 @@ namespace Clove {
 		glm::vec3		position		= glm::vec3{0.0f};	/* xyz location */
 		glm::vec2		size			= glm::vec3{1.0f,1.0f,0.0f}; /* width,height */
 		float			rotation		= 0.0f;				/* clock-wise rotation in DEGREES */
+		Ref<glm::mat4>	transform		= nullptr;			/* transform matrix; if defined, pos, size, and rotation are ignored */
 		glm::vec4		color			= glm::vec4{1.0f};	/* rgba color */
 		Ref<Texture2D>	texture			= nullptr;			/* texture */
 		Ref<SubTexture2D> subtexture	= nullptr;
@@ -39,6 +40,7 @@ namespace Clove {
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Clove::Texture2D>& texture, float tiling_factor = 1.0f);
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Clove::SubTexture2D>& subtexture, float tiling_factor = 1.0f);
 
+		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color);
 		static void DrawQuad(const QuadProperties& props);
 
 		struct Statistics {

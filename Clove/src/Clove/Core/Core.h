@@ -7,6 +7,7 @@
 */
 #ifdef _WIN32
 	#ifdef _WIN64 /* Windows x64 */
+		#define NOMINMAX // disables min and max macros from windows.h
 		#include "Windows.h"
 	#else /* Windows x86 */
 		#error "x86 builds are not supported"

@@ -17,13 +17,21 @@ and use the namespace "Clove::" to access classes and functions
 
 // Core
 #include "Clove/Core/Core.h"
+
 #include "Clove/Core/GameApp.h"
 #include "Clove/Core/Window.h"
+
 #include "Clove/Core/Input.h"
 #include "Clove/Core/KeyCodes.h"
 #include "Clove/Core/MouseCodes.h"
-#include "Clove/Core/Layer.h"
 
+#include "Clove/Core/Layer.h"
+#include "Clove/Renderer/CameraController.h"
+
+// Scene
+#include "Clove/Scene/Scene.h"
+#include "Clove/Scene/Components.h"
+#include "Clove/Scene/Entity.h"
 
 // Renderer
 #include "Clove/Renderer/Renderer.h"
@@ -37,7 +45,6 @@ and use the namespace "Clove::" to access classes and functions
 #include "Clove/Renderer/Framebuffer.h"
 
 #include "Clove/Renderer/Camera.h"
-#include "Clove/Renderer/CameraController.h"
 
 // Events
 #include "Clove/Events/Event.h"

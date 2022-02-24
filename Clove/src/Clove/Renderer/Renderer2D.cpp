@@ -205,9 +205,16 @@ namespace Clove {
 			{pos.x + size.x, pos.y + size.y, pos.z}, {pos.x, pos.y + size.y, pos.z},
 		};
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), props.position);
-		if (std::abs(rotation) > 1e-3) transform = glm::rotate(transform, rotation, {0.0f,0.0f,1.0f});
-		transform = glm::scale(transform, { props.size.x, props.size.y, 1.0f });
+		glm::mat4 transform;
+		
+		if (props.transform == nullptr) {
+			transform = glm::translate(glm::mat4(1.0f), props.position);
+			if (std::abs(rotation) > 1e-3) transform = glm::rotate(transform, rotation, { 0.0f,0.0f,1.0f });
+			transform = glm::scale(transform, { props.size.x, props.size.y, 1.0f });
+		}
+		else {
+			transform = *props.transform;
+		}
 
 		for (uint32_t i = 0; i != QuadVertices; ++i) {
 			QuadVertex vertex{};
@@ -269,6 +276,13 @@ namespace Clove {
 
 		Renderer2D::SubmitQuad(props);
 		return;
+	}
+
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color) {
+		QuadProperties props{};
+		props.transform = CreateRef<glm::mat4>(transform);
+		props.color = color;
+		Renderer2D::DrawQuad(props);
 	}
 
 
