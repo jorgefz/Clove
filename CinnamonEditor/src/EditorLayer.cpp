@@ -85,12 +85,9 @@ namespace Clove {
 
 		m_active_scene = CreateRef<Scene>();
 		
-		auto square = m_active_scene->CreateEntity();
-		Entity square_entity = { square, m_active_scene.get() };
-		square_entity.HasComponent<TransformComponent>();
+		m_square_entity = m_active_scene->CreateEntity("Square");
+		m_square_entity.AddComponent<SpriteRendererComponent>(glm::vec4{1.0f,0.0f,1.0f,1.0f});
 
-		m_active_scene->Reg().emplace<TransformComponent>(square);
-		m_active_scene->Reg().emplace<SpriteRendererComponent>(square, glm::vec4{1.0f, 0.0f, 1.0f, 1.0f});
 	}
 
 
@@ -248,7 +245,6 @@ namespace Clove {
 		}
 
 		Renderer2D::Statistics& stats = Renderer2D::GetStats();
-
 		ImGui::Begin("Renderer Stats");
 		ImGui::Text("FPS: %.1f", m_fps);
 		ImGui::Text("Draw calls: %d", stats.draw_calls);
@@ -256,8 +252,15 @@ namespace Clove {
 		ImGui::Text("Vertices: %d", stats.GetVertexCount());
 		ImGui::Text("Indices: %d", stats.GetIndexCount());
 		ImGui::Text("Triangles: %d", stats.quad_count * 2);
-		Renderer2D::ResetStats();
+
+		if (true) {
+			ImGui::Separator();
+			ImGui::Text("%s", m_square_entity.GetComponent<TagComponent>().tag.c_str());
+			auto& square_color = m_square_entity.GetComponent<SpriteRendererComponent>().color;
+			ImGui::ColorEdit4("Square Color", glm::value_ptr(square_color));
+		}
 		ImGui::End();
+		Renderer2D::ResetStats();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 		ImGui::Begin("Viewport");

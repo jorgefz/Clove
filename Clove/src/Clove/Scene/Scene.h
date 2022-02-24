@@ -4,15 +4,15 @@
 
 namespace Clove {
 
+	class Entity;
+
 	class Scene {
 	public:
 		Scene();
 		~Scene();
 
-		entt::entity CreateEntity();
+		Entity CreateEntity(const std::string& name = std::string());
 		void OnUpdate(float dt);
-
-		entt::registry& Reg() { return m_registry; };
 
 	private:
 		entt::registry m_registry;

@@ -4,6 +4,15 @@
 
 namespace Clove {
 
+	struct TagComponent {
+		std::string tag;
+
+		TagComponent() = default;
+		TagComponent(const TagComponent&) = default;
+		TagComponent(const std::string& in_tag) : tag(in_tag) {  }
+	};
+
+
 	struct TransformComponent {
 		glm::mat4 transform = glm::mat4{1.0f};
 

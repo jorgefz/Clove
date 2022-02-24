@@ -1,8 +1,10 @@
 #include "clovepch.h"
 #include "Scene.h"
 
-#include "Clove/Renderer/Renderer2D.h"
 #include <glm/glm.hpp>
+#include "Clove/Renderer/Renderer2D.h"
+#include "Clove/Scene/Entity.h"
+
 
 namespace Clove {
 
@@ -26,8 +28,12 @@ namespace Clove {
 		}
 	}
 
-	entt::entity Scene::CreateEntity() {
-		return m_registry.create();
+	Entity Scene::CreateEntity(const std::string& name) {
+		Entity entity = { m_registry.create(), this };
+		entity.AddComponent<TransformComponent>();
+		auto& tag = entity.AddComponent<TagComponent>(name);
+		tag.tag = name.empty() ? "Entity" : name;
+		return entity;
 	}
 
 }
