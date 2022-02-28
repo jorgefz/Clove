@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Clove/Renderer/Camera.h"
 #include "glm/glm.hpp"
 
 namespace Clove {
@@ -35,5 +36,13 @@ namespace Clove {
 
 	};
 
+	struct CameraComponent {
+		Camera camera;
+		bool primary = true;
+
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent&) = default;
+		CameraComponent(const glm::mat4& in_proj) : camera(in_proj) {  };
+	};
 
 }

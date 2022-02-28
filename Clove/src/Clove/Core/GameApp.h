@@ -9,7 +9,7 @@
 #include "Clove/Renderer/Shader.h"
 #include "Clove/Renderer/Buffer.h"
 #include "Clove/Renderer/VertexArray.h"
-#include "Clove/Renderer/Camera.h"
+#include "Clove/Renderer/OrthoCamera.h"
 
 namespace Clove {
 

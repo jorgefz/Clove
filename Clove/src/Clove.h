@@ -44,7 +44,7 @@ and use the namespace "Clove::" to access classes and functions
 #include "Clove/Renderer/SubTexture2D.h"
 #include "Clove/Renderer/Framebuffer.h"
 
-#include "Clove/Renderer/Camera.h"
+#include "Clove/Renderer/OrthoCamera.h"
 
 // Events
 #include "Clove/Events/Event.h"

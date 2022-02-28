@@ -1,9 +1,9 @@
 #include "clovepch.h"
-#include "Camera.h"
+#include "OrthoCamera.h"
 
 namespace Clove {
 
-	Camera::Camera(float left, float right, float bottom, float top) 
+	OrthoCamera::OrthoCamera(float left, float right, float bottom, float top)
 		: m_proj( glm::ortho(left, right, bottom, top, -1.0f, 1.0f) ),
 		  m_view(1.0f),
 		  m_position(0.0f,0.0f,0.0f)
@@ -12,46 +12,53 @@ namespace Clove {
 		m_view_proj = m_proj * m_view;
 	}
 
-	Camera::~Camera() {  }
+	OrthoCamera::OrthoCamera(const glm::mat4& projection)
+		: m_proj(projection), m_view(1.0f), m_position(0.0f)
+	{
+		CLOVE_PROFILE_FUNCTION();
+		m_view_proj = m_proj * m_view;
+	}
 
-	void Camera::SetProjection(float left, float right, float bottom, float top) {
+	OrthoCamera::~OrthoCamera() {  }
+
+	void OrthoCamera::SetProjection(float left, float right, float bottom, float top) {
 		CLOVE_PROFILE_FUNCTION();
 		m_proj = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
 		m_view_proj = m_proj * m_view;
 	}
 
-	const glm::vec3& Camera::GetPosition() const {
+	const glm::vec3& OrthoCamera::GetPosition() const {
 		return m_position;
 	}
-	void Camera::SetPosition(glm::vec3& position) {
+	void OrthoCamera::SetPosition(glm::vec3& position) {
 		m_position = position;
 	}
 
-	float Camera::GetRotation() {
+	float OrthoCamera::GetRotation() {
 		return m_rotation;
 	}
-	void Camera::SetRotation(float rotation) {
+	void OrthoCamera::SetRotation(float rotation) {
 		m_rotation = rotation;
 	}
 
-	float Camera::GetScale() {
+	float OrthoCamera::GetScale() {
 		return m_scale;
 	}
-	void Camera::SetScale(float scale) {
+	void OrthoCamera::SetScale(float scale) {
 		m_scale = scale;
 	}
 
-	const glm::mat4& Camera::GetProjectionMatrix() const {
+	const glm::mat4& OrthoCamera::GetProjectionMatrix() const {
 		return m_proj;
 	}
-	const glm::mat4& Camera::GetViewMatrix() const {
+	const glm::mat4& OrthoCamera::GetViewMatrix() const {
 		return m_view;
 	}
-	const glm::mat4& Camera::GetViewProjectionMatrix() const {
+	const glm::mat4& OrthoCamera::GetViewProjectionMatrix() const {
 		return m_view_proj;
 	}
 
-	void Camera::Update() {
+	void OrthoCamera::Update() {
 		CLOVE_PROFILE_FUNCTION();
 		const glm::mat4 identity = glm::mat4(1.0f);
 		glm::mat4 scaled = glm::scale(identity, glm::vec3(m_scale, m_scale, 1.0f)); // zoom

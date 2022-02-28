@@ -21,7 +21,9 @@ namespace Clove {
 		CameraController m_camera_control;
 		Ref<Framebuffer> m_framebuffer;
 		Ref<Scene> m_active_scene;
+
 		Entity m_square_entity;
+		Entity m_camera_entity;
 
 		// These will be abstracted away by 2D renderer
 		Ref<Shader> m_shader;

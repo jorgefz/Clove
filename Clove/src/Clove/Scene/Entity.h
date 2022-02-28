@@ -33,10 +33,10 @@ namespace Clove {
 			m_scene->m_registry.remove<T>(m_handle);
 		}
 
-		//operator bool() const { return (int)m_handle != entt::null; }
+		operator bool() const { return m_handle != entt::null; }
 	
 	private:
-		entt::entity m_handle{ 0 };
+		entt::entity m_handle{ entt::null };
 		Scene* m_scene;
 	};
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Clove/Renderer/OrthoCamera.h"
 #include "Clove/Renderer/Camera.h"
 #include "Clove/Renderer/Texture.h"
 #include "Clove/Renderer/SubTexture2D.h"
@@ -28,7 +29,8 @@ namespace Clove {
 		static void Init();
 		static void Shutdown();
 
-		static void BeginScene(const Camera& cam);
+		static void BeginScene(const Camera& cam, const glm::mat4& transform);
+		static void BeginScene(const OrthoCamera& cam);
 		static void EndScene();
 		static void Flush();
 

@@ -83,10 +83,14 @@ namespace Clove {
 		fbspec.height = GameApp::Get().GetWindow().GetHeight();
 		m_framebuffer = Framebuffer::Create(fbspec);
 
+		// Entities
 		m_active_scene = CreateRef<Scene>();
 		
 		m_square_entity = m_active_scene->CreateEntity("Square");
 		m_square_entity.AddComponent<SpriteRendererComponent>(glm::vec4{1.0f,0.0f,1.0f,1.0f});
+
+		m_camera_entity = m_active_scene->CreateEntity("Camera Entity");
+		m_camera_entity.AddComponent<CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
 
 	}
 
@@ -109,13 +113,13 @@ namespace Clove {
 		RenderCommand::SetClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		RenderCommand::Clear();
 
-
-		Renderer2D::BeginScene(m_camera_control.GetCamera());
+		//Renderer2D::BeginScene(m_camera_control.GetCamera());
 
 		// update scene
 		m_active_scene->OnUpdate(dt);
+		m_framebuffer->Unbind();
 
-
+		/*
 		for (uint32_t y = 0; y != (uint32_t)MapSize.y; y++) {
 			for (uint32_t x = 0; x != (uint32_t)MapSize.x; x++) {
 				
@@ -140,9 +144,10 @@ namespace Clove {
 				Renderer2D::DrawQuad(tilemap);
 			}
 		}
+		*/
 
-		Renderer2D::EndScene();
-		m_framebuffer->Unbind();
+		//Renderer2D::EndScene();
+
 
 	}
 

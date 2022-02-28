@@ -19,7 +19,7 @@ namespace Clove {
 		RenderCommand::SetViewport(0, 0, width, height);
 	}
 
-	void Renderer::BeginScene(Camera& camera) {
+	void Renderer::BeginScene(OrthoCamera& camera) {
 		m_scene_data->vp = camera.GetViewProjectionMatrix();
 	}
 

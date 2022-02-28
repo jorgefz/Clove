@@ -1,7 +1,7 @@
 #pragma once
 #include "Clove/Renderer/Buffer.h"
 #include "Clove/Renderer/VertexArray.h"
-#include "Clove/Renderer/Camera.h"
+#include "Clove/Renderer/OrthoCamera.h"
 #include "Clove/Renderer/Shader.h"
 
 namespace Clove {
@@ -10,7 +10,7 @@ namespace Clove {
 	public:
 		static void Init();
 		static void OnWindowResize(unsigned int width, unsigned int height);
-		static void BeginScene(Camera& camera);
+		static void BeginScene(OrthoCamera& camera);
 		static void EndScene();
 		static void Submit(
 			const Ref<VertexArray>& va,

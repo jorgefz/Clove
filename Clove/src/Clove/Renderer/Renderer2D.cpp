@@ -99,8 +99,20 @@ namespace Clove {
 	void Renderer2D::Shutdown() {
 		CLOVE_PROFILE_FUNCTION();
 	}
+
+	void Renderer2D::BeginScene(const Camera& cam, const glm::mat4& transform) {
+		CLOVE_PROFILE_FUNCTION();
+		Data.TextureShader->Bind();
+		auto& view_proj = cam.GetProjection() * glm::inverse(transform);
+		Data.TextureShader->SetUniformMat4f("uViewProjection", view_proj);
+
+		Data.vertex_batch.clear();
+		Data.texture_slots.clear();
+		Data.texture_slots.push_back(Data.WhiteTexture);
+		Data.quad_count = 0;
+	}
 	
-	void Renderer2D::BeginScene(const Camera& cam) {
+	void Renderer2D::BeginScene(const OrthoCamera& cam) {
 		CLOVE_PROFILE_FUNCTION();
 		Data.TextureShader->Bind();
 		Data.TextureShader->SetUniformMat4f("uViewProjection", cam.GetViewProjectionMatrix());
@@ -109,8 +121,6 @@ namespace Clove {
 		Data.texture_slots.clear();
 		Data.texture_slots.push_back(Data.WhiteTexture);
 		Data.quad_count = 0;
-		
-		//Renderer2D::ResetStats();
 		
 	}
 
